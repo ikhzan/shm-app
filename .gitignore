@@ -1,0 +1,21 @@
+# Python
+*.pyc
+__pycache__/
+env/
+*.sqlite3
+
+# Django
+*.log
+db.sqlite3
+/staticfiles/
+
+# Node/Angular
+node_modules/
+dist/
+.angular/
+
+# OS
+.DS_Store
+Thumbs.db
+
+.env
