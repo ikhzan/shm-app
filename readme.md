@@ -9,3 +9,8 @@
 - Database: MongoDB (via djongo or mongoengine)
 - Frontend: React.js or Vue.js (for interactive UI with real-time updates)
 - Sensor Data Stream: Handled via WebSockets or polling endpoints
+
+![Broker screen](./front_end/screenshots/broker-screen.png)
+
+
+![Sensor screen](./front_end/screenshots/sensor-screen.png)
