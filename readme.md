@@ -11,6 +11,5 @@
 - Sensor Data Stream: Handled via WebSockets or polling endpoints
 
 ![Broker screen](./front_end/screenshots/broker-screen.png)
-
-
 ![Sensor screen](./front_end/screenshots/sensor-screen.png)
+![Chat screen](./front_end/screenshots/chat-screen.png)
