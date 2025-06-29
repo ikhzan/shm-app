@@ -4,11 +4,13 @@ import { SensorComponent } from './sensor/sensor.component';
 import { BrokersComponent } from './brokers/brokers.component';
 import { LogsComponent } from './logs/logs.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { ChatComponent } from './chat/chat.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent}, 
     {path: 'sensors', component: SensorComponent},
     {path: 'brokers', component: BrokersComponent},
     {path: 'logs', component: LogsComponent},
+    {path: 'chat', component: ChatComponent},
     {path: '**', component: NotfoundComponent}
 ];

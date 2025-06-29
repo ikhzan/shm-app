@@ -16,8 +16,23 @@
         border-radius: 5px;
         width: 50%;
         margin: .2rem;
-        padding: 1rem;
+        // padding: 1rem;
     }
 
+    .left {
+        .title{
+            background-color:#113c60;
+            color: #f7f7f7;
+            width: 100px;
+            padding: 5px;
+            border-top-left-radius: 5px;
+            // border-bottom-right-radius: 10px;
+            // box-shadow: #939393 1.95px 1.95px 2.6px;
+        }
+
+        .body{
+            margin: 1rem;
+        }
+    }
     
 }

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit} from '@angular/core';
+import type { EChartsCoreOption } from 'echarts/core';
+import { getInstanceByDom, connect } from 'echarts/core';
 
 @Component({
   selector: 'app-home',
