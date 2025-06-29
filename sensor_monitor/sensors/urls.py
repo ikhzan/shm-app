@@ -8,4 +8,5 @@ urlpatterns = [
     path('insert/', views.insert_sensor_data), 
     path('all/', views.view_all_sensor_data),
     path('start-mqtt/', views.start_mqtt_now),
+    path('ask/', views.query_llm),
 ]
