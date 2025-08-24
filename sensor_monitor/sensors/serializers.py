@@ -1,13 +1,12 @@
 from rest_framework import serializers
-from .models import SensorReading
+from .models import SensorReading, EndDevice
 
 class SensorReadingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SensorReading
         fields = '__all__'
 
-class SensorReadingSerializer(serializers.Serializer):
-    sensor_id = serializers.CharField()
-    timestamp = serializers.DateTimeField()
-    data = serializers.DictField()
-    prediction = serializers.DictField()
+class EndDeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EndDevice
+        fields = '__all__'

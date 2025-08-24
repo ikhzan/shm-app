@@ -7,7 +7,8 @@
     <div class="chat-box">
       <div *ngFor="let msg of messages" [ngClass]="msg.role">
         <!-- <strong>{{ msg.role === "user" ? "You" : "Llama" }}:</strong> -->
-        <span><p>{{ msg.content }}</p></span>
+        <!-- <span><p>{{ msg.content }}</p></span> -->
+        <markdown [data]="msg.content"></markdown>
       </div>
     </div>
 

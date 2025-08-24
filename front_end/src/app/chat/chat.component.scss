@@ -1,11 +1,22 @@
 .chat {
-  border-radius: 5px;
-  background-color: #f7f7f7;
-  box-shadow: 5px 5px 5px #939393;
-  padding: 1rem;
+  //   border-radius: 5px;
+  //   background-color: #f7f7f7;
+  //   box-shadow: 5px 5px 5px #939393;
+  //   padding: 1rem;
 
   .title {
     margin-bottom: 1rem;
+    padding: 0.5rem;
+    text-transform: uppercase;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+  }
+
+  .content {
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #939393;
+    padding: 1rem;
   }
 
   .chat-box {
@@ -13,10 +24,7 @@
     overflow-y: auto;
     margin-bottom: 1rem;
     border-radius: 5px;
-    padding: 1rem;
-    box-shadow: 3px 3px #555545;
-    border: 0.2px solid #555545;
-    
+
     .user {
       text-align: right;
       margin: 15px 0;
@@ -37,24 +45,23 @@
     padding: 1rem;
     border-radius: 5px;
     border: none;
-    box-shadow: 3px 3px #555545;
-    // background-color: grey;
-    border: 0.1px solid #555545;
+    border: 0.1px solid rgba($color: #555545, $alpha: 0.5);
     margin-right: 0.5rem;
     width: 90%;
     font-size: 12px;
-
+    transition: border 0.2s;
     &:focus,
-    &::after {
-      border: 0.1px solid #555545;
+    &:active {
+      border: 0.1px solid rgba($color: #555545, $alpha: 0.2);
+      outline: none;
     }
   }
 
   .msg-btn {
     padding: 1rem;
     border-radius: 5px;
-    box-shadow: 3px 3px #555545;
-    background-color: blue;
+    box-shadow: 5px 5px 5px #939393;
+    background-color: #113c60;
     color: #f7f7f7;
     width: 9%;
 
@@ -63,4 +70,20 @@
       box-shadow: none;
     }
   }
+}
+
+::ng-deep markdown h1,
+::ng-deep markdown h2 {
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+::ng-deep markdown ol {
+  margin-left: 1.25rem;
+  line-height: 1.6;
+}
+
+::ng-deep markdown p {
+  margin-bottom: 0.75rem;
 }

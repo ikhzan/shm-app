@@ -1,14 +1,67 @@
 <div class="home">
-    <div class="left">
-        <div class="title">
-            <h5>title</h5>
+  <div class="row">
+    <div class="card">
+      <div class="title">
+        <h5>Live Sensor</h5>
+      </div>
+      <div class="body">
+        <div class="data">
+          <ul>
+            <li *ngFor="let msg of messages">
+              <strong>{{ msg.device_id }}</strong> ({{
+                msg.application_id
+              }})<br />
+              🕒 {{ msg.timestamp }}<br />
+              🔋 Battery: {{ msg.battery }} V<br />
+              🌡️ Temp: {{ msg.temperature }} °C<br />
+              💧 Humidity: {{ msg.humidity }} %<br />
+              📍 Location: {{ msg.location.latitude }},
+              {{ msg.location.longitude }}
+            </li>
+          </ul>
         </div>
-        <div class="body">
-            <p>left</p>
+        <div class="status {{ status }}">
+          <h3>Websocket: {{ status }}</h3>
         </div>
+      </div>
     </div>
-    <div class="right">
-        <p>right</p>
-    </div>
-</div>
 
+    <div class="card">
+      <div class="title">
+        <h5>Maps</h5>
+      </div>
+      <div class="body">
+        <div id="map" class="map-container"></div>
+      </div>
+    </div>
+  </div>
+  <div class="table-data">
+    <div class="title">
+      <h4>Data Sensor</h4>
+    </div>
+    <div class="body">
+      <table class="sensor-table">
+        <thead>
+          <tr>
+            <th>Device ID</th>
+            <th>Timestamp</th>
+            <th>Battery (V)</th>
+            <th>Temp (°C)</th>
+            <th>Humidity (%)</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of dataSensor">
+            <td>{{ r.device_id }}</td>
+            <td>{{ r.timestamp }}</td>
+            <td>{{ r.battery_voltage }}</td>
+            <td>{{ r.temp_sht }}</td>
+            <td>{{ r.humidity }}</td>
+            <td>{{ r.latitude }}, {{ r.longitude }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

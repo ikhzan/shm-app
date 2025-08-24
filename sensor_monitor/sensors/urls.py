@@ -7,6 +7,7 @@ urlpatterns = [
     path('create/', views.create_reading, name='create reading'),
     path('insert/', views.insert_sensor_data), 
     path('all/', views.view_all_sensor_data),
+    path('endall/', views.all_enddevice),
     path('start-mqtt/', views.start_mqtt_now),
     path('ask/', views.query_llm),
 ]

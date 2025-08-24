@@ -6,12 +6,11 @@ from rest_framework.response import Response
 from .models import SensorReading
 import datetime
 from .serializers import *
-import openai
 from dotenv import load_dotenv
-import threading
 import ollama
 from django.http import StreamingHttpResponse
 load_dotenv()
+
 
 @api_view(['POST'])
 def create_reading(request):
@@ -37,11 +36,16 @@ def insert_sensor_data(request):
     return Response({'status': '✅ Data inserted successfully'})
 
 @api_view(['GET'])
-def view_all_sensor_data(request):
-    readings = SensorReading.objects.order_by('-timestamp')[:100]  # latest 100
-    serializer = SensorReadingSerializer(readings, many=True)
+def all_enddevice(request):
+    enddevices = EndDevice.objects.all()
+    serializer = EndDeviceSerializer(enddevices,many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def view_all_sensor_data(request):
+    readings = SensorReading.objects.order_by('id')[:10]  # latest 100
+    serializer = SensorReadingSerializer(readings, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def analyze_sensor_data(request):

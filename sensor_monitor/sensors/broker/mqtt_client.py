@@ -1,15 +1,49 @@
-# mqtt_client.py (inside your app, e.g. sensors/mqtt_client.py)
-
 import os
 import json
 import paho.mqtt.client as mqtt
 from dotenv import load_dotenv
 import threading
+from .consumer import connected_clients
+import asyncio
+from ..models import SensorReading
+from django.utils.dateparse import parse_datetime
 
 load_dotenv()
 
+def handle_ttn_payload(data):
+    try:
+        # data = json.loads(payload_str)
+        device_info = data.get("end_device_ids", {})
+        uplink = data.get("uplink_message", {})
+        decoded = uplink.get("decoded_payload", {})
+        location = uplink.get("locations", {}).get("user", {})
+
+        reading = SensorReading(
+            device_id=device_info.get("device_id"),
+            application_id=device_info.get("application_ids", {}).get("application_id"),
+            timestamp=parse_datetime(data.get("received_at")),
+
+            battery_voltage=decoded.get("BatV"),
+            battery_status=decoded.get("Bat_status"),
+            external_sensor=decoded.get("Ext_sensor"),
+
+            humidity=decoded.get("Hum_SHT"),
+            temp_sht=decoded.get("TempC_SHT"),
+            temp_ds=decoded.get("TempC_DS"),
+
+            latitude=location.get("latitude"),
+            longitude=location.get("longitude"),
+
+            raw_payload=data  # optional
+        )
+        reading.save()
+        print(f"Saved reading from {reading.device_id} at {reading.timestamp}")
+    except Exception as e:
+        print(f"Error parsing TTN payload: {e}")
+
+
 def start_mqtt():
-    broker = os.getenv("MQTT_BROKER")
+    broker = os.getenv("MQTT_BROKER","")
     port = int(os.getenv("MQTT_PORT", 1883))
     username = os.getenv("MQTT_USERNAME")
     password = os.getenv("MQTT_PASSWORD")
@@ -22,7 +56,31 @@ def start_mqtt():
             print(f"Subscribed to {topic}")
 
     def on_message(client, userdata, msg):
-        print(f"[{msg.topic}] {msg.payload.decode()}")
+        payload_str = msg.payload.decode()
+        payload = json.loads(payload_str)
+        print(f"[{msg.topic}] {payload}")
+        print("send data to handle payload")
+        handle_ttn_payload(payload)
+
+        message = {
+            "device_id": payload["end_device_ids"]["device_id"],
+            "application_id": payload["end_device_ids"]["application_ids"]["application_id"],
+            "timestamp": payload["received_at"],
+            "battery": payload["uplink_message"]["decoded_payload"].get("BatV"),
+            "humidity": payload["uplink_message"]["decoded_payload"].get("Hum_SHT"),
+            "temperature": payload["uplink_message"]["decoded_payload"].get("TempC_SHT"),
+            "location": payload["uplink_message"]["locations"]["user"]
+        }
+
+        print(f"Broadcasting to {len(connected_clients)} clients")
+
+        for client in list(connected_clients):
+            try:
+                asyncio.run(client.send_ttn_message(message))
+                print(f"Active WebSocket: {client.__class__.__name__}")
+            except Exception as e:
+                print(f"Failed to send to client: {e}")
+
 
     client = mqtt.Client()
     client.username_pw_set(username, password)

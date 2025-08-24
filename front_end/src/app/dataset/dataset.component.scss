@@ -1,0 +1,44 @@
+.dataset {
+  .row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .card {
+      background-color: #f7f7f7;
+      box-shadow: 5px 5px 5px #939393;
+      border-radius: 5px;
+      width: 50%;
+      margin: 0.2rem;
+
+      .title {
+        background-color: #113c60;
+        color: #f7f7f7;
+        min-width: 100px;
+        padding: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+
+      .body {
+        // margin: 1rem;
+        font-size: 13px;
+        padding: 1rem;
+
+        h3 {
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        ul {
+          margin-top: 0.5rem;
+        }
+
+        li {
+          list-style: disc;
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
+}

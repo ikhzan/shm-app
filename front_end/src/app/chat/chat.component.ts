@@ -2,10 +2,11 @@ import { Component, NgZone } from '@angular/core';
 import { LlmService } from '../services/llm.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgFor } from '@angular/common';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-chat',
-  imports: [FormsModule, NgFor, CommonModule],
+  imports: [FormsModule, NgFor, CommonModule, MarkdownModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -14,7 +15,7 @@ export class ChatComponent {
   userInput = '';
   loading = false;
 
-  constructor(private llmService: LlmService) {}
+  constructor(private llmService: LlmService) { }
 
   sendMessage() {
     const prompt = this.userInput.trim();
@@ -36,7 +37,5 @@ export class ChatComponent {
       }
     });
   }
-
-
 
 }

@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BROKER = os.getenv("MQTT_BROKER")
+BROKER = os.getenv("MQTT_BROKER", "")
 PORT = int(os.getenv("MQTT_PORT", 1883))
 USERNAME = os.getenv("MQTT_USERNAME")
 PASSWORD = os.getenv("MQTT_PASSWORD")
-TOPICS = os.getenv("MQTT_TOPICS").split(',')
+TOPICS = os.getenv("MQTT_TOPICS", "").split(',')
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")

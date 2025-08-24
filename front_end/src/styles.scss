@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 // @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-*  {
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -9,14 +9,11 @@
 }
 
 body {
-  // font-family: "Poppins", sans-serif;
   font-family: "Inter", sans-serif;
-
-//   background-color: #d8d8d8;
   min-height: 100vh;
 }
 
-p{
+p {
   font-size: 13px;
   font-weight: normal;
 }
@@ -28,179 +25,182 @@ table {
   overflow: auto;
 
   thead {
-      background-color:#113c60;
-      color: azure;
+    background-color: #113c60;
+    color: azure;
 
-      th{
-          padding: 10px;
-          text-align: left;
-          font-size: 14px;
-          font-weight: 400;
-          text-transform: uppercase;
-      }
+    th {
+      padding: 10px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
   }
 
-  tbody{
-      border: none;
-      
-      tr{
-        transition: .4s;
+  tbody {
+    border: none;
+
+    tr {
+      transition: 0.4s;
+      font-size: 11px;
+
+      &:hover {
+        box-shadow: 0px 0px 10px #939393;
+        cursor: pointer;
+      }
+    }
+
+    tr:nth-child(even) {
+      background-color: #b5c1cb;
+    }
+
+    tr:nth-child(odd) {
+      color: rgb(105, 105, 112);
+    }
+
+    td {
+      font-size: 13px;
+      padding: 7px;
+      border: 0.5px solid #7d8d9b;
+      text-align: left;
+      font-weight: 500;
+
+      span {
+        padding-left: 5px;
+        padding-right: 5px;
+        border-radius: 5px;
         font-size: 12px;
-        
-        &:hover{
-          box-shadow: 0px 0px 10px #939393;
-          cursor: pointer;
-        }
       }
-
-      tr:nth-child(even){
-        background-color: #b5c1cb;
-      }
-
-      tr:nth-child(odd){
-        color: rgb(105, 105, 112);
-      }
-
-      td {
-          font-size: 13px;
-          padding: 7px;
-          border: .5px solid #7d8d9b;
-          text-align: left;
-          font-weight: 500;
-
-
-          span{
-              padding-left: 5px;
-              padding-right: 5px;
-              border-radius: 5px;
-              font-size: 12px;
-          }
-      }
+    }
   }
 }
 
-.show-limit{
+.show-limit {
   font-size: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  label{
-      margin-right: 5px;
-      margin-left: 5px;
+  label {
+    margin-right: 5px;
+    margin-left: 5px;
   }
 
-  select{
-      appearance: none;
-      width: 100%;
-      background-color: #fff;
-      border: 1px solid #caced1;
-      border-radius: 0.25rem;
-      color: #000;
-      cursor: pointer;
-      padding: 5px;
+  select {
+    appearance: none;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+    color: #000;
+    cursor: pointer;
+    padding: 5px;
   }
 }
 
-.top-table{
+.top-table {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
 
-  .search{
-    margin: .5rem;
-    border: .2px solid #c5cdd5;
+  .search {
+    margin: 0.5rem;
+    border: 0.2px solid #c5cdd5;
     border-radius: 5px;
     display: flex;
     justify-items: center;
     justify-content: space-between;
     background-color: #fff;
 
-    input[type="text"]{
-        padding: .3rem;
-        border-radius: 10px;
-        border: none;
-        font-size: 13px;
+    input[type="text"] {
+      padding: 0.3rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 13px;
 
-        &:focus{
-            outline: none;
-        }
-    }  
+      &:focus {
+        outline: none;
+      }
+    }
 
-    fa-icon{
-        margin: .2rem;
-        padding: .3rem .5rem;
-        border-radius: 5px 5px;
-        background-color: #c5cdd5;
-        font-size: 12px;
+    fa-icon {
+      margin: 0.2rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 5px 5px;
+      background-color: #c5cdd5;
+      font-size: 12px;
 
-        &:hover{
-            cursor: pointer;
-        }
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
 
-.bottom-table{
+.bottom-table {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
 
-  .page-no{
-      font-size: 14px;
+  .page-no {
+    font-size: 14px;
   }
 
-  .page-buttons{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      
-      .next-button, .prev-button{
-          background-color: #c1d8f7;
-          color: #000;
-          border: none;
-          padding: 5px 10px;
-          font-size: 13px;
-          cursor: pointer;
-          border-radius: 3px;
+  .page-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-          &:hover{
-            transition: .2s;
-            box-shadow: 0px 0px 5px  #939393;
-          }
-      }
+    .next-button,
+    .prev-button {
+      background-color: #c1d8f7;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 3px;
 
-      .next-button{
-          margin-left: 10px;
+      &:hover {
+        transition: 0.2s;
+        box-shadow: 0px 0px 5px #939393;
       }
+    }
+
+    .next-button {
+      margin-left: 10px;
+    }
   }
 }
 
-.info{
+.info {
   background-color: #0fadd5;
   color: #d3edf3;
 }
 
-.success{
+.success {
   background-color: #059c44;
   color: #d3e3d9;
   padding: 0.2rem;
 }
 
-.error, .failed{
+.error,
+.failed {
   background-color: #7a0c00;
   color: #ebdfdd;
   padding: 0.2rem;
 }
 
-.warn{
+.warn {
   background-color: #f1c40f;
   color: #56470d;
 }
 
-.CONNECTED, .INCOMING, .ACTIVE {
+.CONNECTED,
+.INCOMING,
+.ACTIVE {
   background-color: #0f581a;
   color: #fff;
   padding: 0.2rem;
@@ -208,7 +208,8 @@ table {
   font-size: 11px;
 }
 
-.DISCONNECTED, .OUTGOING {
+.DISCONNECTED,
+.OUTGOING {
   background-color: #ff3838;
   color: #fff;
   padding: 0.2rem;
@@ -216,7 +217,7 @@ table {
   font-size: 11px;
 }
 
-.modal{
+.modal {
   position: fixed;
   z-index: 1;
   padding-top: 100px;
@@ -225,82 +226,87 @@ table {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 
-  .modal-content{
-      position: relative;
-      background-color: #fefefe;
-      margin: auto;
-      padding: 0;
-      border: 1px solid #888;
-      width: 50%;
-      border-radius: 5px;
-      
-      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-      --webkit-animation-name: animatetop;
-      animation-name: animatetop;
-      animation-duration: 0.4s;
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 5px;
 
-      @keyframes animatetop{
-          from{top:-200px;opacity:0}
-          to{top:0;opacity:1}
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    --webkit-animation-name: animatetop;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+
+    @keyframes animatetop {
+      from {
+        top: -200px;
+        opacity: 0;
+      }
+      to {
+        top: 0;
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+
+      background-color: rgb(1, 38, 69);
+      color: #fff;
+      border-radius: 5px 5px 0 0;
+
+      h2 {
+        font-size: 15px;
+      }
+      fa-icon {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .modal-body {
+      padding: 1rem;
+      min-height: 60px;
+
+      p {
+        font-size: 13px;
+      }
+    }
+    .modal-btns {
+      display: flex;
+      // justify-content: space-between;
+      width: 20%;
+      margin: 10px 10px;
+
+      button {
+        padding: 5px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+
+        &:hover {
+          cursor: pointer;
+        }
       }
 
-      .modal-header{
-          display: flex;
-          justify-content: space-between;
-          padding: .5rem 1rem;
-         
-          background-color: rgb(1, 38, 69);
-          color: #fff;
-          border-radius: 5px 5px 0 0;
+      .delete-btn {
+        background-color: #f44336;
+        color: #fff;
 
-          h2{
-              font-size: 15px;
-          }
-          fa-icon{
-              &:hover{
-                  cursor: pointer;
-              }
-          }
+        &:hover {
+          background-color: #ff9800;
+          cursor: pointer;
+        }
       }
-      .modal-body{
-          padding: 1rem;
-          min-height: 60px;
-
-          p{
-              font-size: 13px;
-          }
-      }
-      .modal-btns{
-          display: flex;
-          // justify-content: space-between;
-          width: 20%;
-          margin: 10px 10px;
-
-          button{
-              padding: 5px;
-              margin-right: 10px;
-              border: none;
-              border-radius: 5px;
-
-              &:hover{
-                  cursor: pointer;
-              }
-          }
-
-           .delete-btn{
-              background-color: #f44336;
-              color: #fff;
-
-              &:hover{
-                  background-color: #ff9800;
-                  cursor: pointer;
-              }
-
-          }
-      }
+    }
   }
 }
 
@@ -313,12 +319,20 @@ table {
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
-@-webkit-keyframes spin{
-  0% { -webkit-transform: rotate(0deg);}
-  100%  { -webkit-transform: rotate(360deg);}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
-@keyframes spin{
-  0% { transform: rotate(0deg);}
-  100%  {transform: rotate(360deg);}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
