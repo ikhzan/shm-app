@@ -1,35 +1,37 @@
 from django.db import models
-
+    
 class SensorReading(models.Model):
-    device_id = models.CharField(max_length=64)
-    application_id = models.CharField(max_length=64)
-    timestamp = models.DateTimeField()
-    
-    battery_voltage = models.FloatField(null=True)
-    battery_status = models.IntegerField(null=True)
-    external_sensor = models.CharField(max_length=128, null=True)
-    
-    humidity = models.FloatField(null=True)
-    temp_sht = models.FloatField(null=True)
-    temp_ds = models.FloatField(null=True)
-    
+    device_id = models.CharField(max_length=100, null=True)
+    application_id = models.CharField(max_length=100, null=True)
+    timestamp = models.DateTimeField(null=True)
+
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
 
-    raw_payload = models.JSONField() 
+    sensor_data = models.JSONField(default=dict)
+    raw_payload = models.JSONField(default=dict)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f"{self.device_id}"
 
-
 class EndDevice(models.Model):
-    device_name = models.CharField(max_length=100)
-    device_status = models.CharField(max_length=10)
-    url_path = models.CharField(max_length=100)
-    gateway_path = models.CharField(max_length=100)
+    device_name = models.CharField(max_length=100,null=False,default='device name')
+    device_status = models.CharField(max_length=10,null=True,default='device status')
+    image_path = models.CharField(max_length=100,null=True, default='image path')
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
+    def __str__(self) -> str:
+        return f"{self.device_name}"
+
+class BorkerConnection(models.Model):
+    device_name = models.CharField(max_length=100,default='device name',null=False)
+    url_path = models.CharField(max_length=100,default='v3/humidity',null=False)
+    gateway_path = models.CharField(max_length=100,null=True,default="gateway path")
+    status = models.CharField(max_length=20,default='active',null=False)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
 

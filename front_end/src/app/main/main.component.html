@@ -1,0 +1,81 @@
+<div class="main">
+  <!-- navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <h1>
+        <a routerLink="" routerLinkActive="active" ariaCurrentWhenActive="page"
+          ><span>SHM</span></a
+        >
+      </h1>
+    </div>
+    <div class="navbar-items">
+      <div class="navbar-item">
+        <a
+          routerLink="/dataset"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Dataset</span></a
+        >
+      </div>
+      <div class="navbar-item">
+        <a
+          routerLink="/brokers"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Brokers</span></a
+        >
+      </div>
+      <div class="navbar-item">
+        <a
+          routerLink="/sensors"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Sensors</span></a
+        >
+      </div>
+      <div class="navbar-item">
+        <a
+          routerLink="/chat"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Chat</span></a
+        >
+      </div>
+    </div>
+    <div class="right-menu">
+      <div class="user">
+        <img src="{{ profilePath }}" alt="" />
+        <div class="user-menu">
+          <div class="row-one">
+            <fa-icon [icon]="faUser"></fa-icon>
+            <span>{{ username }}</span>
+          </div>
+          <div class="row-two">
+            <span class="logout" (click)="logout()">
+              <fa-icon [icon]="faSignOut"></fa-icon>
+              <span>Logout</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <div class="footer-left-text">
+          <p>Copyright 2024 ikhzan</p>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-right-text">
+          <p>ikhzan</p>
+          <!-- <p>{{ currentDateAndTime }}</p> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

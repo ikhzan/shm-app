@@ -1,0 +1,151 @@
+.home {
+  .row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .card {
+      background-color: #f7f7f7;
+      box-shadow: 5px 5px 5px #939393;
+      border-radius: 5px;
+      width: 50%;
+      margin: 0.2rem;
+
+      .title {
+        background-color: #113c60;
+        color: #f7f7f7;
+        min-width: 100px;
+        padding: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+
+      .body {
+        // margin: 1rem;
+        font-size: 13px;
+        padding: 1rem;
+
+        .map-container {
+          height: 100px;
+          // width: 100%;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        h4{
+          font-weight: bold;
+          margin-bottom: .5rem;
+        }
+        p{
+          margin-bottom: .5rem;
+          background-color: rgba($color: green, $alpha: .8);
+          color: white;
+          font-size: 13px;
+          padding: .5rem;
+          font-weight: 400;
+          border-radius: 5px;
+        }
+
+        h3 {
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        ul {
+          margin-top: 0.5rem;
+          padding-left: 1.5rem; /* Ensures bullets are properly indented */
+          margin-bottom: 1rem; /* Adds breathing room below the list */
+        }
+
+        li {
+          font-weight: 400;
+          margin-left: 1rem;
+          line-height: 1.5;
+          color: #333;
+        }
+      }
+    }
+  }
+
+  .data {
+    max-height: 300px; /* Adjust height as needed */
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #888 #eee;
+  }
+
+  .data::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .data::-webkit-scrollbar-track {
+    background: #eee;
+    border-radius: 8px;
+  }
+
+  .data::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 8px;
+    border: 2px solid #eee;
+  }
+
+  .status {
+    margin-top: 1rem;
+    border-radius: 5px;
+    padding: 0.4rem;
+    h3 {
+      font-weight: 600;
+      font-size: 12px;
+    }
+  }
+
+  .error {
+    background-color: red;
+  }
+  .disconnected {
+    background-color: orange;
+  }
+  .connected {
+    background-color: green;
+    color: #f7f7f7;
+  }
+
+  .table-data {
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    box-shadow: 5px 5px 5px #939393;
+    // padding: 1rem;
+
+    .title {
+      background-color: #113c60;
+      color: #f7f7f7;
+      min-width: 100px;
+      padding: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      margin-bottom: 1rem;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .body {
+      padding: 1rem;
+      font-size: 12px;
+
+      .info{
+        padding: .5rem;
+        background-color: rgba($color: green, $alpha: .8);
+        margin-bottom: .5rem;
+        border-radius: 5px;
+
+        p{
+          color: white;
+        }
+      }
+    }
+  }
+}

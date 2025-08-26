@@ -9,8 +9,10 @@ from .serializers import *
 from dotenv import load_dotenv
 import ollama
 from django.http import StreamingHttpResponse
-load_dotenv()
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
+load_dotenv()
 
 @api_view(['POST'])
 def create_reading(request):
@@ -36,14 +38,8 @@ def insert_sensor_data(request):
     return Response({'status': '✅ Data inserted successfully'})
 
 @api_view(['GET'])
-def all_enddevice(request):
-    enddevices = EndDevice.objects.all()
-    serializer = EndDeviceSerializer(enddevices,many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
 def view_all_sensor_data(request):
-    readings = SensorReading.objects.order_by('id')[:10]  # latest 100
+    readings = SensorReading.objects.order_by('-id')[:10]
     serializer = SensorReadingSerializer(readings, many=True)
     return Response(serializer.data)
 
@@ -90,3 +86,101 @@ def query_llm(request):
     prompt = request.data.get('prompt')
     return StreamingHttpResponse(generate_response(prompt), content_type='text/plain')
 
+
+# CRUD FOR END-DEVICE
+# Create
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_enddevice(request):
+    serializer = EndDeviceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+# Read
+@api_view(['GET'])
+def all_enddevice(request):
+    enddevices = EndDevice.objects.all()
+    serializer = EndDeviceSerializer(enddevices,many=True)
+    return Response(serializer.data)
+
+# Update
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_enddevice(request, pk):
+    try:
+        enddevice = EndDevice.objects.get(pk=pk)
+    except EndDevice.DoesNotExist:
+        return Response({'error': 'EndDevice not found'}, status=404)
+
+    serializer = EndDeviceSerializer(enddevice, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+# Delete
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_enddevice(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        enddevice = EndDevice.objects.get(pk=pk)
+    except EndDevice.DoesNotExist:
+        return Response({'error': 'EndDevice not found'}, status=404)
+
+    enddevice.delete()
+    return Response({'message': 'EndDevice deleted successfully'}, status=204)
+
+# CRUD FOR BROKER-CONNECTION
+# Create
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_brokerconnection(request):
+    serializer = BrokerConnectionSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+# Read
+@api_view(['GET'])
+def read_brokerconnection(request):
+    brokerconnections = BorkerConnection.objects.all()
+    serializer = BrokerConnectionSerializer(brokerconnections,many=True)
+    return Response(serializer.data)
+
+# Update
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_brokerconnection(request, pk):
+    try:
+        brokerconnections = BorkerConnection.objects.get(pk=pk)
+    except BorkerConnection.DoesNotExist:
+        return Response({'error': 'brokerconnections not found'}, status=404)
+
+    serializer = BrokerConnectionSerializer(brokerconnections, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+# Delete
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_brokerconnection(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        brokerconnection = BorkerConnection.objects.get(pk=pk)
+    except BorkerConnection.DoesNotExist:
+        return Response({'error': 'BorkerConnection not found'}, status=404)
+
+    brokerconnection.delete()
+    return Response({'message': 'BorkerConnection deleted successfully'}, status=204)

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LlmService {
- private apiUrl = 'http://localhost:8000/api/sensors/ask/';
+ private apiUrl = 'http://localhost:8000/api/ask/';
 
   constructor(private zone: NgZone) {}
 
