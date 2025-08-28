@@ -3,6 +3,7 @@
 - it supports data analysis and ai integration
 - consits of back-end and front-end infrastructure
 - communication with message broker mqtt
+- current production example at https://shmapp.online
 
 # Core Stack Overview:
 - Backend: Django + Django REST Framework (DRF)
