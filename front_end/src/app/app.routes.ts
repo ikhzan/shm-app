@@ -7,6 +7,8 @@ import { DatasetComponent } from './main/dataset/dataset.component';
 import { LoginComponent } from './login/login.component';
 import { SensorComponent } from './main/sensor/sensor.component';
 import { MainComponent } from './main/main.component';
+import { SensorChartComponent } from './main/sensor-chart/sensor-chart.component';
+import { SensorDetailComponent } from './main/sensor-detail/sensor-detail.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +18,8 @@ export const routes: Routes = [
             { path: 'brokers', component: BrokersComponent },
             { path: 'chat', component: ChatComponent },
             { path: 'dataset', component: DatasetComponent },
+            { path: 'chart', component: SensorChartComponent },
+            { path: 'device/:id', component: SensorDetailComponent },
         ]
     },
     { path: 'login', component: LoginComponent },

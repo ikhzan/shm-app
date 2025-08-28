@@ -1,0 +1,112 @@
+<div class="sensor_detail">
+  <div class="title">
+    <h3>Data History</h3>
+    <h4>{{ deviceId }}</h4>
+  </div>
+
+  <div class="top-table">
+    <div class="show-limit flex items-center gap-2">
+      <label for="show">Show:</label>
+      <select (change)="onPageSizeChange($event)">
+        <option *ngFor="let size of [10, 20, 50]" [value]="size">
+          {{ size }}
+        </option>
+      </select>
+      <label>Entries</label>
+    </div>
+
+    <div class="search">
+      <input
+        type="text"
+        placeholder="Search by temperature"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch(searchTerm)"
+        class="border rounded"
+      />
+      <fa-icon [icon]="faSearch"></fa-icon>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>SHM</th>
+        <th>Battery (V)</th>
+        <th>Temp (°C)</th>
+        <th>Humidity (%)</th>
+        <th>Spread Factor</th>
+        <th>RSSI</th>
+        <th>Location</th>
+        <th (click)="toggleSort()" class="toggle-sort">
+          Timestamp
+          <span *ngIf="sortDirection === 'asc'">▲</span>
+          <span *ngIf="sortDirection === 'desc'">▼</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="isLoading">
+        <td colspan="5" class="loading">Loading sensor data...</td>
+      </tr>
+      <tr *ngFor="let r of dataSensor">
+        <td>{{ r.id }}</td>
+        <td class="{{ getRangeClass(r.sensor_data?.Hum_SHT ?? 0) }}">
+          {{ r.sensor_data?.Hum_SHT ?? "N/A" }}
+        </td>
+        <td>{{ r.sensor_data?.BatV ?? "N/A" }}</td>
+        <td>
+          {{ r.sensor_data?.TempC_SHT ?? "N/A" }}
+          <span *ngIf="r.sensor_data?.TempC_SHT as temp">
+            {{ getTempIcon(temp) }}
+          </span>
+        </td>
+        <td>{{ r.sensor_data?.Hum_SHT ?? "N/A" }}</td>
+        <td>
+          {{
+            r.raw_payload?.settings?.data_rate?.lora?.spreading_factor ?? "N/A"
+          }}
+        </td>
+        <td>{{ r.raw_payload?.rx_metadata?.[0]?.rssi ?? 'N/A' }}</td>
+        <td>{{ r.latitude }}, {{ r.longitude }}</td>
+        <td>{{ r.timestamp | date : "medium" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="bottom-table flex justify-between items-center mt-4">
+    <div class="page-no">
+      <p>
+        Showing {{ (currentPage - 1) * pageSize + 1 }} to
+        {{ Math.min(currentPage * pageSize, filteredCount) }} of
+        {{ filteredCount }} entries
+      </p>
+    </div>
+
+    <div class="page-buttons">
+      <button
+        class="prev-button"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+      >
+        Prev
+      </button>
+      <div
+        class="page-control"
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+      >
+        <button
+          (click)="goToPage(i + 1)"
+          [class.active]="currentPage === i + 1"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+      <button
+        class="next-button"
+        (click)="nextPage()"
+        [disabled]="currentPage * pageSize >= filteredCount"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

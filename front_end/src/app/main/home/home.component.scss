@@ -32,16 +32,16 @@
           overflow: hidden;
         }
 
-        h4{
+        h4 {
           font-weight: bold;
-          margin-bottom: .5rem;
+          margin-bottom: 0.5rem;
         }
-        p{
-          margin-bottom: .5rem;
-          background-color: rgba($color: green, $alpha: .8);
+        p {
+          margin-bottom: 0.5rem;
+          background-color: rgba($color: green, $alpha: 0.8);
           color: white;
           font-size: 13px;
-          padding: .5rem;
+          padding: 0.5rem;
           font-weight: 400;
           border-radius: 5px;
         }
@@ -93,24 +93,68 @@
     border: 2px solid #eee;
   }
 
-  .status {
+  .connection-status {
+    display: flex;
     margin-top: 1rem;
-    border-radius: 5px;
-    padding: 0.4rem;
+    align-items: center;
+    gap: .5rem;
+
     h3 {
+      flex: 1;
       font-weight: 600;
-      font-size: 12px;
+      border-radius: 5px;
+      padding: 0.5rem;
+      font-size: 13px;
+      display: inline-flex;
+    }
+
+    .retry {
+      background-color: rgba($color: green, $alpha: 0.3);
+      color: green;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        background-color: #c0392b;
+        color: #f7f7f7;
+      }
+
     }
   }
 
-  .error {
+  .error,
+  .high {
     background-color: red;
   }
-  .disconnected {
+  .disconnected,
+  .elevated {
     background-color: orange;
   }
-  .connected {
+  .connected,
+  .safe {
     background-color: green;
+    color: #f7f7f7;
+  }
+  .moderate {
+    background-color: yellow;
+  }
+  .critical {
+    background-color: #c0392b;
+    color: #f7f7f7;
+  }
+  .emergency {
+    background-color: #8e44ad;
     color: #f7f7f7;
   }
 
@@ -119,6 +163,16 @@
     background-color: #f7f7f7;
     box-shadow: 5px 5px 5px #939393;
     // padding: 1rem;
+
+    .device_id {
+      text-decoration: none;
+      color: #113c60;
+      font-weight: 400;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
     .title {
       background-color: #113c60;
@@ -136,13 +190,13 @@
       padding: 1rem;
       font-size: 12px;
 
-      .info{
-        padding: .5rem;
-        background-color: rgba($color: green, $alpha: .8);
-        margin-bottom: .5rem;
+      .info {
+        padding: 0.5rem;
+        background-color: rgba($color: green, $alpha: 0.8);
+        margin-bottom: 0.5rem;
         border-radius: 5px;
 
-        p{
+        p {
           color: white;
         }
       }

@@ -16,9 +16,20 @@
         class="form-input"
         id="device_name"
         type="text"
-        placeholder="broker name"
+        placeholder="Broker Name"
         ngModel
         name="device_name"
+      />
+    </div>
+    <div class="form-control">
+      <label for="sensor_type">Sensor Type</label>
+      <input
+        class="form-input"
+        id="sensor_type"
+        type="text"
+        placeholder="Sensor Type"
+        ngModel
+        name="sensor_type"
       />
     </div>
     <div class="form-control">
@@ -27,7 +38,7 @@
         class="form-input"
         id="url_path"
         type="text"
-        placeholder="broker url"
+        placeholder="Broker URL"
         ngModel
         name="url_path"
       />
@@ -78,9 +89,10 @@
       <tr>
         <th class="check"></th>
         <th>Name</th>
+        <th>Sensor Type</th>
         <th>Status</th>
         <th>URL</th>
-        <th>Action</th>
+        <th *ngIf="isAuthenticated">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -90,9 +102,10 @@
       <tr *ngFor="let broker of dataBroker">
         <td><input type="checkbox" name="" id="{{ broker.id }}" /></td>
         <td>{{ broker.device_name }}</td>
+        <td>{{ broker.sensor_type }}</td>
         <td>{{ broker.status }}</td>
         <td>{{ broker.url_path }}</td>
-        <td>
+        <td *ngIf="isAuthenticated">
           <fa-icon
             [icon]="faTrash"
             class="delete-icon"

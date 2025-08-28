@@ -23,11 +23,17 @@ export class RestService {
   constructor(private http: HttpClient) { }
 
   fetchDataSensor(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl + "all/")
+    return this.http.get<any[]>(`${this.apiUrl}all/`);
   }
 
   fetchDataDevice(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl + "endall/")
+    return this.http.get<any[]>(`${this.apiUrl}endall/`);
+  }
+
+  fetchDataByDeviceId(deviceId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}detail_sensor/`, {
+      params: { sensor_id: deviceId } 
+    });
   }
 
   async submitEndDevice(endDevice: EndDeviceData): Promise<string> {
@@ -39,7 +45,7 @@ export class RestService {
         'Content-Type': 'application/json'
       });
 
-      const response = await firstValueFrom(this.http.post(this.apiUrl + "create_device/", endDevice, { headers }));
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_device/`, endDevice, { headers }));
       console.log("response " + response);
       return response.toString();
     } catch (error) {
@@ -55,7 +61,7 @@ export class RestService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.delete(this.apiUrl + 'delete_device/', {
+    return this.http.delete(`${this.apiUrl}delete_device/`, {
       headers,
       params: { id }
     });
@@ -69,7 +75,7 @@ export class RestService {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       });
-      const response = await firstValueFrom(this.http.put(this.apiUrl + "update_device/", endDevice, { headers }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_device/`, endDevice, { headers }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)
@@ -77,7 +83,7 @@ export class RestService {
   }
 
   fetchBrokerConnection(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl + "read_broker/")
+    return this.http.get<any[]>(`${this.apiUrl}read_broker/`)
   }
 
   async submitBroker(brokerData: BrokerData): Promise<string> {
@@ -87,7 +93,7 @@ export class RestService {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       });
-      const response = await firstValueFrom(this.http.post(this.apiUrl + "create_broker/", brokerData, { headers }))
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_broker/`, brokerData, { headers }))
       console.log('response ' + response)
       return response.toString();
     } catch (error) {
@@ -102,7 +108,7 @@ export class RestService {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       });
-      return this.http.delete(this.apiUrl + 'delete_broker/', { headers, params: { id } });
+      return this.http.delete(`${this.apiUrl}delete_broker/`, { headers, params: { id } });
     } catch (error) {
       throw 'Error delete broker'
     }
@@ -115,7 +121,7 @@ export class RestService {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json'
       });
-      const response = await firstValueFrom(this.http.put(this.apiUrl + "update_broker/", brokerData, { headers }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_broker/`, brokerData, { headers }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)

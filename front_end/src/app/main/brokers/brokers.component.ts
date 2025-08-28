@@ -29,11 +29,13 @@ export class BrokersComponent implements OnInit {
   pageSize = 10;
   currentPage = 1;
   brokerId: number | null = null;
+  isAuthenticated = false;
 
   constructor(private restService: RestService, private authService: AuthService, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.isAuthenticated = this.authService.isAuthenticated();
     this.loadBrokerData()
   }
 

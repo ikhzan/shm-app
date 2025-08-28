@@ -81,7 +81,7 @@
         <th>Name</th>
         <th>Status</th>
         <th>Image Path</th>
-        <th>Action</th>
+        <th *ngIf="isAuthenticated">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -93,7 +93,7 @@
         <td>{{ sensor.device_name }}</td>
         <td>{{ sensor.device_status }}</td>
         <td>{{ sensor.image_path }}</td>
-        <td>
+        <td *ngIf="isAuthenticated">
           <fa-icon
             [icon]="faTrash"
             class="delete-icon"

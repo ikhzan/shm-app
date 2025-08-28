@@ -1,0 +1,246 @@
+.sensorchart {
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  box-shadow: 5px 5px 5px #939393;
+  padding: 1rem;
+
+  .chart-block {
+    margin-bottom: 2rem;
+    max-width: 600px; // or whatever fits your layout
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+
+    canvas {
+      width: 100% !important;
+      height: 150px !important;
+    }
+
+    h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  // .ship-container {
+  //   position: relative;
+  //   width: 100%;
+  //   max-width: 800px;
+  // }
+
+  // .ship-image {
+  //   width: 100%;
+  //   display: block;
+  // }
+
+  // .sensor-lamp {
+  //   position: absolute;
+  //   width: 16px;
+  //   height: 16px;
+  //   border-radius: 50%;
+  //   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  //   transform: translate(-50%, -50%);
+  //   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  //   cursor: pointer;
+  //   &:hover .tooltip {
+  //     opacity: 1;
+  //     visibility: visible;
+  //   }
+  // }
+
+  // .ship-container {
+  //   position: relative;
+  //   width: 100%;
+  //   height: auto;
+  // }
+
+  // .ship-image {
+  //   width: 100%;
+  //   display: block;
+  // }
+
+  // .sensor-lamp {
+  //   position: absolute;
+  //   transform: translate(-50%, -50%); // centers the sensor
+  // }
+
+  // .lamp-green {
+  //   background-color: #2ecc71;
+  //   box-shadow: 0 0 10px #2ecc71;
+  // }
+
+  // .lamp-yellow {
+  //   background-color: #f1c40f;
+  //   box-shadow: 0 0 10px #f1c40f;
+  // }
+
+  // .lamp-red {
+  //   background-color: #e74c3c;
+  //   box-shadow: 0 0 10px #e74c3c;
+  // }
+
+  // @keyframes pulse {
+  //   0% {
+  //     transform: scale(1);
+  //   }
+  //   50% {
+  //     transform: scale(1.3);
+  //   }
+  //   100% {
+  //     transform: scale(1);
+  //   }
+  // }
+
+  // .lamp-red {
+  //   animation: pulse 1s infinite;
+  // }
+
+  // .tooltip {
+  //   position: absolute;
+  //   top: -28px;
+  //   left: 50%;
+  //   transform: translateX(-50%);
+  //   background-color: #333;
+  //   color: #fff;
+  //   padding: 4px 8px;
+  //   border-radius: 4px;
+  //   font-size: 12px;
+  //   white-space: nowrap;
+  //   opacity: 0;
+  //   visibility: hidden;
+  //   transition: opacity 0.2s ease;
+  //   z-index: 10;
+  // }
+
+  /* ship-hull.component.scss */
+  .ship-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .ship-image {
+    width: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  .sensor-icon {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    .tooltip {
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    &:hover .tooltip {
+      opacity: 1;
+    }
+  }
+
+  .tooltip {
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .lamp-safe {
+    color: green;
+  }
+
+  .lamp-warning {
+    color: orange;
+  }
+
+  .lamp-critical {
+    color: red;
+  }
+
+  .lamp-unknown {
+    color: gray;
+  }
+
+  .grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 10% 10%;
+    pointer-events: none;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-items: center;
+
+    h3 {
+      width: 95%;
+      color: #113c60;
+      font-weight: bold;
+      font-size: large;
+      text-transform: uppercase;
+      background-color: rgba($color: #6d87c8, $alpha: 0.3);
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+    h4 {
+      background-color: rgba($color: green, $alpha: 0.3);
+      color: green;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        background-color: rgba(0, 100, 0, 1);
+        color: #f7f7f7;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+}

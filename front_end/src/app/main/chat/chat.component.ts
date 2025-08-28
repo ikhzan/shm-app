@@ -14,6 +14,8 @@ export class ChatComponent {
   messages: { role: string; content: string }[] = [];
   userInput = '';
   loading = false;
+  loadingDots = '';
+  private dotInterval: any;
 
   constructor(private llmService: LlmService) { }
 
@@ -25,14 +27,28 @@ export class ChatComponent {
     this.userInput = '';
     this.loading = true;
 
+    this.loadingDots = '';
+    this.dotInterval = setInterval(() => {
+      this.loadingDots = this.loadingDots.length < 3 ? this.loadingDots + '.' : '';
+    }, 500);
+
+
     let aiMessage = { role: 'ai', content: '' };
     this.messages.push(aiMessage);
 
     this.llmService.streamResponse(prompt).subscribe({
       next: (chunk) => aiMessage.content += chunk,
-      complete: () => this.loading = false,
+      complete: () => {
+        this.loading = false;
+        clearInterval(this.dotInterval);
+        this.loadingDots = '';
+        this.loading = false;
+      },
       error: (err) => {
         aiMessage.content = '⚠️ Error: ' + err.message;
+        this.loading = false;
+        clearInterval(this.dotInterval);
+        this.loadingDots = '';
         this.loading = false;
       }
     });

@@ -21,8 +21,15 @@
             </li>
           </ul>
         </div>
-        <div class="status {{ status }}">
-          <h3>Websocket: {{ status }}</h3>
+        <div class="connection-status" >
+          <h3 class="status {{ status }}">Websocket: {{ status }}</h3>
+           <span
+           class="retry"
+            *ngIf="status === 'disconnected'"
+            (click)="reconnectService()"
+          >
+            Retry
+        </span>
         </div>
       </div>
     </div>
@@ -58,52 +65,42 @@
           <tbody>
             <tr class="bg-green-50">
               <td class="px-4 py-2 border-b">&lt; 50%</td>
-              <td class="px-4 py-2 border-b font-semibold text-green-700">
-                Safe
-              </td>
+              <td class="safe">Safe</td>
               <td class="px-4 py-2 border-b">
                 Structure is operating well within safe limits.
               </td>
             </tr>
             <tr class="bg-yellow-50">
               <td class="px-4 py-2 border-b">50% – 60%</td>
-              <td class="px-4 py-2 border-b font-semibold text-yellow-700">
-                Moderate
-              </td>
+              <td class="moderate">Moderate</td>
               <td class="px-4 py-2 border-b">
                 Slight increase in load or wear; still acceptable.
               </td>
             </tr>
             <tr class="bg-orange-50">
               <td class="px-4 py-2 border-b">60% – 70%</td>
-              <td class="px-4 py-2 border-b font-semibold text-orange-700">
-                Elevated
-              </td>
+              <td class="elevated">Elevated</td>
               <td class="px-4 py-2 border-b">
                 Noticeable stress; monitor for changes.
               </td>
             </tr>
             <tr class="bg-amber-100">
               <td class="px-4 py-2 border-b">70% – 80%</td>
-              <td class="px-4 py-2 border-b font-semibold text-amber-800">
-                High
-              </td>
+              <td class="high">High</td>
               <td class="px-4 py-2 border-b">
                 Approaching critical thresholds; increased vigilance needed.
               </td>
             </tr>
             <tr class="bg-red-50">
               <td class="px-4 py-2 border-b">80% – 90%</td>
-              <td class="px-4 py-2 border-b font-semibold text-red-700">
-                Critical
-              </td>
+              <td class="critical">Critical</td>
               <td class="px-4 py-2 border-b">
                 High stress levels; prepare for possible intervention.
               </td>
             </tr>
             <tr class="bg-red-100">
               <td class="px-4 py-2">> 90%</td>
-              <td class="px-4 py-2 font-semibold text-red-900">Emergency</td>
+              <td class="emergency">Emergency</td>
               <td class="px-4 py-2">
                 Immediate attention required; risk of failure or damage.
               </td>
@@ -152,14 +149,14 @@
         <thead>
           <tr>
             <th>Device ID</th>
-            <th>SHM Value</th>
-            <th>Timestamp</th>
+            <th>SHM</th>
             <th>Battery (V)</th>
             <th>Temp (°C)</th>
             <th>Humidity (%)</th>
             <th>Spread Factor</th>
             <th>RSSI</th>
             <!-- <th>Location</th> -->
+            <th>Timestamp</th>
           </tr>
         </thead>
         <tbody>
@@ -167,15 +164,31 @@
             <td colspan="5" class="loading">Loading sensor data...</td>
           </tr>
           <tr *ngFor="let r of dataSensor">
-            <td>{{ r.device_id }}</td>
-            <td class="{{ getRangeClass(r.sensor_data?.Hum_SHT ?? 0) }}">{{ r.sensor_data?.Hum_SHT ?? "N/A" }}</td>
-            <td>{{ r.timestamp | date : "medium" }}</td>
+            <td>
+              <a class="device_id" [routerLink]="['/device', r.device_id]">{{
+                r.device_id
+              }}</a>
+            </td>
+            <td class="{{ getRangeClass(r.sensor_data?.Hum_SHT ?? 0) }}">
+              {{ r.sensor_data?.Hum_SHT ?? "N/A" }}
+            </td>
             <td>{{ r.sensor_data?.BatV ?? "N/A" }}</td>
-            <td>{{ r.sensor_data?.TempC_SHT ?? "N/A" }}</td>
+            <td>
+              {{ r.sensor_data?.TempC_SHT ?? "N/A" }}
+              <span *ngIf="r.sensor_data?.TempC_SHT as temp">
+                {{ getTempIcon(temp) }}
+              </span>
+            </td>
             <td>{{ r.sensor_data?.Hum_SHT ?? "N/A" }}</td>
-            <td>{{ r.raw_payload?.settings?.data_rate?.lora?.spreading_factor ?? 'N/A' }}</td>
+            <td>
+              {{
+                r.raw_payload?.settings?.data_rate?.lora?.spreading_factor ??
+                  "N/A"
+              }}
+            </td>
             <!-- <td>{{ r.latitude }}, {{ r.longitude }}</td> -->
-             <td>{{ r.raw_payload?.rx_metadata?.[0]?.rssi ?? 'N/A' }}</td>
+            <td>{{ r.raw_payload?.rx_metadata?.[0]?.rssi ?? 'N/A' }}</td>
+            <td>{{ r.timestamp | date : "medium" }}</td>
           </tr>
         </tbody>
       </table>

@@ -5,10 +5,11 @@ import { RestService } from '../../services/rest.service';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule],
+  imports: [NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -43,6 +44,26 @@ export class HomeComponent implements OnInit {
       this.status = status;
     });
   }
+  
+  reconnectService(){
+    this.brokerService.reconnectManually();
+  }
+
+  private retrySensorData(attempts = 3, delayMs = 3000): void {
+    let attempt = 0;
+
+    const retryInterval = setInterval(() => {
+      if (attempt >= attempts || this.status !== 'Disconnected') {
+        clearInterval(retryInterval);
+        return;
+      }
+
+      console.warn(`Retrying sensor data... Attempt ${attempt + 1}`);
+      this.loadSensorData();
+      attempt++;
+    }, delayMs);
+  }
+
 
   private loadSensorData(): void {
     this.restService.fetchDataSensor().subscribe({
@@ -90,7 +111,6 @@ export class HomeComponent implements OnInit {
     this.applyFilters();
   }
 
-
   nextPage(): void {
     this.currentPage++;
     this.applyFilters();
@@ -101,6 +121,16 @@ export class HomeComponent implements OnInit {
       this.currentPage--;
       this.applyFilters();
     }
+  }
+
+  getTempIcon(temp: number | null | undefined): string {
+    if (temp == null) return '❓'; // Unknown
+    if (temp >= 35) return '🔥';  // Extreme heat
+    if (temp >= 30) return '☀️';  // Hot
+    if (temp >= 23) return '🌤️'; // Warm
+    if (temp >= 15) return '🌥️'; // Mild
+    if (temp >= 5) return '🌧️'; // Cool
+    return '❄️';                 // Cold
   }
 
 

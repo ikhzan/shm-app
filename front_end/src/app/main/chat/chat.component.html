@@ -8,6 +8,10 @@
       <div *ngFor="let msg of messages" [ngClass]="msg.role">
         <!-- <strong>{{ msg.role === "user" ? "You" : "Llama" }}:</strong> -->
         <!-- <span><p>{{ msg.content }}</p></span> -->
+        <div *ngIf="loading" class="ai-typing">
+          <span>Llama is thinking{{ loadingDots }}</span>
+        </div>
+
         <markdown [data]="msg.content"></markdown>
       </div>
     </div>
@@ -18,6 +22,8 @@
       placeholder="Type your message..."
       (keyup.enter)="sendMessage()"
     />
-    <button class="msg-btn" (click)="sendMessage()" [disabled]="loading">Send</button>
+    <button class="msg-btn" (click)="sendMessage()" [disabled]="loading">
+      Send
+    </button>
   </div>
 </div>
