@@ -11,6 +11,8 @@ db.sqlite3
 back_end/staticfiles/
 back_end/dummy2.json
 back_end/dummy.json
+back_end/media/sensor_images/*
+back_end/media/vehicle_images/*
 
 # Node/Angular
 node_modules/
