@@ -47,16 +47,15 @@ export class RestService {
     });
   }
 
-  async submitEndDevice(endDevice: EndDeviceData): Promise<string> {
+  async submitEndDevice(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
       console.log('Token:', token);
       const headers = new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token
       });
 
-      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_device/`, endDevice, { headers }));
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_device/`, data, { headers }));
       console.log("response " + response);
       return response.toString();
     } catch (error) {

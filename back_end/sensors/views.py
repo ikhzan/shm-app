@@ -93,7 +93,7 @@ def query_llm(request):
 # CRUD FOR LoraGateway
 # Create
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def create_gateway(request):
     serializer = LoraGatewaySerializer(data=request.data)
     if serializer.is_valid():
@@ -144,6 +144,7 @@ def delete_gateway(request):
 # CRUD FOR VEHICLE
 # Create
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_vehicle(request):
     serializer = VehicleSerializer(data=request.data)
@@ -207,6 +208,7 @@ def delete_vehicle(request):
 # Create
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_enddevice(request):
     serializer = EndDeviceSerializer(data=request.data)
     if serializer.is_valid():

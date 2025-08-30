@@ -4,84 +4,93 @@
     <h4 (click)="toggleForm()">Add Sensor</h4>
   </div>
 
-  <form
-    class="sensors-form"
-    #deviceForm="ngForm"
-    (ngSubmit)="onSubmit(deviceForm)"
-    *ngIf="formON"
-  >
-    <div class="form-control">
-      <label for="device_id">ID</label>
-      <input
-        class="form-input"
-        id="device_id"
-        type="text"
-        placeholder="Device ID"
-        ngModel
-        name="device_id"
-      />
-    </div>
-    <div class="form-control">
-      <label for="device_name">Name</label>
-      <input
-        class="form-input"
-        id="device_name"
-        type="text"
-        placeholder="Device name"
-        ngModel
-        name="device_name"
-      />
-    </div>
-    <div class="form-control">
-      <label for="dev_eui">Dev eui</label>
-      <input
-        class="form-input"
-        id="dev_eui"
-        type="text"
-        placeholder="Dev EUI"
-        ngModel
-        name="dev_eui"
-      />
-    </div>
-    <div class="form-control">
-      <label for="join_eui">Join eui</label>
-      <input
-        class="form-input"
-        id="join_eui"
-        type="text"
-        placeholder="Join EUI"
-        ngModel
-        name="join_eui"
-      />
-    </div>
-    <div class="form-control">
-      <label for="image_path">Image Path</label>
-      <input
-        class="form-input"
-        id="image_path"
-        type="text"
-        placeholder="Device Image URL"
-        ngModel
-        name="image_path"
-      />
-    </div>
-    <div class="form-control">
-      <label for="device_status">Device Status</label>
-      <div class="form-toggle">
+  <div class="sensor-form">
+    <form
+      class="sensors-form"
+      #deviceForm="ngForm"
+      (ngSubmit)="onSubmit(deviceForm)"
+      *ngIf="formON"
+    >
+      <div class="form-control">
+        <label for="device_id">ID</label>
         <input
-          type="checkbox"
-          [(ngModel)]="isOn"
-          name="toggleSwitch"
-          class="toggle"
+          class="form-input"
+          id="device_id"
+          type="text"
+          placeholder="Device ID"
+          ngModel
+          name="device_id"
         />
-        <span>{{ isOn ? "ON" : "OFF" }}</span>
       </div>
+      <div class="form-control">
+        <label for="device_name">Name</label>
+        <input
+          class="form-input"
+          id="device_name"
+          type="text"
+          placeholder="Device name"
+          ngModel
+          name="device_name"
+        />
+      </div>
+      <div class="form-control">
+        <label for="dev_eui">Dev eui</label>
+        <input
+          class="form-input"
+          id="dev_eui"
+          type="text"
+          placeholder="Dev EUI"
+          ngModel
+          name="dev_eui"
+        />
+      </div>
+      <div class="form-control">
+        <label for="join_eui">Join eui</label>
+        <input
+          class="form-input"
+          id="join_eui"
+          type="text"
+          placeholder="Join EUI"
+          ngModel
+          name="join_eui"
+        />
+      </div>
+      <div class="form-control">
+        <label for="image_path">Image Path</label>
+        <input
+          class="form-input"
+          ngModel
+          name="image_path"
+          type="file"
+          (change)="onFileChange($event)"
+        />
+      </div>
+      <div class="form-control">
+        <label for="device_status">Device Status</label>
+        <div class="form-toggle">
+          <input
+            type="checkbox"
+            [(ngModel)]="isOn"
+            name="toggleSwitch"
+            class="toggle"
+          />
+          <span>{{ isOn ? "ON" : "OFF" }}</span>
+        </div>
+      </div>
+      <div class="form-control">
+        <span></span>
+        <input class="btn" type="submit" value="Submit" />
+      </div>
+    </form>
+
+    <div class="ship-container" *ngIf="imagePreview">
+      <img
+        src="{{ imagePreview }}"
+        class="ship-image"
+      />
+      <div class="grid-overlay"></div>
     </div>
-    <div class="form-control">
-      <span></span>
-      <input class="btn" type="submit" value="Submit" />
-    </div>
-  </form>
+  </div>
 
   <div class="sensor-grid">
     <div class="sensor-card" *ngFor="let sensor of allSensors">
@@ -95,7 +104,13 @@
 
       <div class="sensor-footer">
         <div class="sensor-meta">
-          <h3><a class="device_id" [routerLink]="['/device/eui-a840418d81829f8a']">{{ sensor.device_name }}</a></h3>
+          <h3>
+            <a
+              class="device_id"
+              [routerLink]="['/device/eui-a840418d81829f8a']"
+              >{{ sensor.device_name }}</a
+            >
+          </h3>
           <p>{{ sensor.device_id }}</p>
         </div>
 
@@ -128,5 +143,5 @@
 <app-login-modal
   [visible]="loginModalON"
   (cancel)="closeLoginModal()"
-   (login)="handleLogin($event)"
+  (login)="handleLogin($event)"
 ></app-login-modal>

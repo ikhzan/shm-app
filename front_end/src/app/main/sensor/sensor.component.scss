@@ -53,7 +53,7 @@
         font-weight: 500;
       }
 
-      a{
+      a {
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
@@ -99,11 +99,11 @@
         }
       }
 
-      .delete{
+      .delete {
         background-color: #721c24;
         color: #eee;
 
-         &:hover {
+        &:hover {
           background-color: rgba($color: #721c24, $alpha: 0.3);
         }
       }
@@ -114,7 +114,6 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        
       }
     }
   }
@@ -161,6 +160,25 @@
         transform: scale(0.98);
       }
     }
+  }
+
+  .sensor-form {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .ship-container {
+    position: relative;
+    width: 50%;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .ship-image {
+    width: 100%;
+    height: 20%;
+    display: block;
+    object-fit: contain;
   }
 
   .sensors-form {
