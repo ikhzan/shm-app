@@ -5,7 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFile, faKeyboard, faAngleDown, faListAlt, faUserCircle, faUserAlt, faGear, faSignOut, faMicrophone, faMessage, faPhone, faImage, faVideo, faVoicemail, faContactCard, faLocation, faL } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../services/auth.service';
 import { LoginModalComponent } from '../shared/login-modal/login-modal.component';
-
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -16,7 +16,6 @@ import { LoginModalComponent } from '../shared/login-modal/login-modal.component
 export class MainComponent implements OnInit {
   title = 'front_end';
   username = localStorage.getItem('username');
-
   faListSquares = faListAlt
   faAngleDown = faAngleDown;
   faUser = faUserCircle
@@ -37,6 +36,7 @@ export class MainComponent implements OnInit {
   profilePath = 'assets/user/profile.png'
   isLoggedIn = false;
   isLoginModalVisible = false;
+  currentTime = '';
 
   constructor(private authService: AuthService) { }
 
@@ -49,6 +49,10 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn = !!localStorage.getItem('access_token');
+    interval(1000).subscribe(() => {
+      const now = new Date();
+      this.currentTime = now.toLocaleString(); // e.g. "18:03:25"
+    });
   }
 
   login() {

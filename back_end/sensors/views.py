@@ -12,6 +12,8 @@ from django.http import StreamingHttpResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, parser_classes
 
 load_dotenv()
 
@@ -142,15 +144,14 @@ def delete_gateway(request):
 # CRUD FOR VEHICLE
 # Create
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_vehicle(request):
-    print(f"Data {request.data}")
     serializer = VehicleSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
-    print(f"Error {serializer.errors}")
     return Response(serializer.errors, status=400)
+
 
 # Read
 @api_view(['GET'])

@@ -7,6 +7,7 @@ import { RestService } from '../../services/rest.service';
 import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
+import { RouterLink } from '@angular/router';
 
 export interface Credentials {
   username: string
@@ -15,7 +16,7 @@ export interface Credentials {
 
 @Component({
   selector: 'app-sensor',
-  imports: [FontAwesomeModule, NgFor, NgIf, NgClass, FormsModule, DeleteDataModalComponent, LoginModalComponent],
+  imports: [FontAwesomeModule,RouterLink, NgFor, NgIf, NgClass, FormsModule, DeleteDataModalComponent, LoginModalComponent],
   templateUrl: './sensor.component.html',
   styleUrl: './sensor.component.scss'
 })

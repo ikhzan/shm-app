@@ -59,7 +59,8 @@ export class VehicleComponent {
       next: (data) => {
         this.vehicles = data.vehicles;
         this.unlinkedSensors = data.unlinked_sensors;
-
+        console.log(`Vehicle-data: ${this.vehicles}`)
+        console.log(`Unlinked-data: ${this.unlinkedSensors}`)
         this.isLoading = false;
       },
       error: () => {
@@ -78,13 +79,17 @@ export class VehicleComponent {
 
   async onSubmit(form: NgForm) {
     try {
-      const vehicleData = {
-        name: form.value['name'],
-        image_path: form.value['image_path']
+      const formData = new FormData();
+      formData.append('name', form.value['name']);
+
+      if (this.selectedFile) {
+        formData.append('image_path', this.selectedFile);
       }
-      const sendData = await this.restService.newVehicle(vehicleData);
+
+      const sendData = await this.restService.newVehicle(formData);
       console.log("on-submit response " + sendData);
       form.reset();
+      this.imagePreview = null;
       this.loadVehicleData()
     } catch (error) {
       console.log("error on-submit " + error)

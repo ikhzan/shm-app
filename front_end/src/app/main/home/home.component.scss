@@ -20,6 +20,8 @@
   .critical {
     background-color: #c0392b;
     color: #fff;
+    box-shadow: 0 0 10px #e74c3c;
+          animation: pulse 1s infinite;
   }
   .emergency {
     background-color: #8e44ad;

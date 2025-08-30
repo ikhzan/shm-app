@@ -16,7 +16,7 @@ class EndDeviceSerializer(serializers.ModelSerializer):
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle
-        fields = ['name','image_path']
+        fields = ['name','image_path','end_devices']
 
 class BrokerConnectionSerializer(serializers.ModelSerializer):
     class Meta:

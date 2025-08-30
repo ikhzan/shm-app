@@ -25,6 +25,7 @@
       <div class="form-control">
         <label for="image_path">Image Path</label>
         <input
+          class="form-input"
           ngModel
           name="image_path"
           type="file"
@@ -32,12 +33,11 @@
         />
       </div>
       <div class="form-control">
-        <span></span>
         <input class="btn" type="submit" value="Submit" />
       </div>
     </form>
 
-    <div class="ship-container">
+    <div class="ship-container" *ngIf="imagePreview">
       <img
         src="{{ imagePreview }}"
         class="ship-image"
@@ -52,7 +52,8 @@
         [ngClass]="getLampClass(sensor.value)"
       >
         <div class="tooltip">
-          {{ sensor.device_name }}<br />x: {{ sensor.position_x }}%, y: {{ sensor.position_y }}%
+          {{ sensor.device_name }}<br />x: {{ sensor.position_x }}%, y:
+          {{ sensor.position_y }}%
         </div>
       </div>
     </div>
@@ -87,7 +88,11 @@
       <div class="sensor-footer">
         <div class="sensor-meta">
           <h3>{{ vehicle.name }}</h3>
-          <p>Sensors: {{ vehicle.sensors.length }}</p>
+          <p>
+            Sensors: ({{
+              vehicle.end_devices?.length > 0 ? vehicle.end_devices.length : 0
+            }})
+          </p>
         </div>
 
         <div class="sensor-actions" *ngIf="isAuthenticated">

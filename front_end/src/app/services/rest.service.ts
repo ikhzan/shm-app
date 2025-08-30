@@ -143,16 +143,16 @@ export class RestService {
     return this.http.get<{ vehicles: any[]; unlinked_sensors: any[] }>(`${this.apiUrl}all_vehicle/`);
   }
 
-  async newVehicle(endDevice: VehicleData): Promise<string> {
+  async newVehicle(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
-      console.log('Token:', token);
+      
       const headers = new HttpHeaders({
         'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        // 'Content-Type': 'multipart/form-data'
       });
 
-      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_vehicle/`, endDevice, { headers }));
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_vehicle/`, data, { headers }));
       console.log("response " + response);
       return response.toString();
     } catch (error) {

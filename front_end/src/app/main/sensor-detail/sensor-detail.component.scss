@@ -4,6 +4,32 @@
   box-shadow: 5px 5px 5px #939393;
   padding: 1rem;
 
+  .data-detail {
+    background-color: rgba($color: green, $alpha: 1);
+    color: #f7f7f7;
+    border-radius: 5px;
+    padding: 0.5rem;
+    width: 50%;
+
+    .detail {
+      display: flex;
+      margin-bottom: 0.2rem;
+      // background-color: rgba($color: white, $alpha: .5);
+      font-size: 13px;
+      // color: green;
+      
+      .name {
+        flex: .2;
+        // font-weight: 500;
+      }
+
+      .data {
+        flex: 1;
+        font-weight: 500;
+      }
+    }
+  }
+
   .title {
     margin-bottom: 1rem;
     display: flex;
@@ -19,9 +45,9 @@
       border-radius: 5px;
       padding: 0.5rem;
     }
-    
+
     h4 {
-        width: 20%;
+      width: 20%;
       background-color: rgba($color: red, $alpha: 0.3);
       color: red;
       padding: 0.5rem 1rem;
