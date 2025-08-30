@@ -207,7 +207,7 @@ def delete_vehicle(request):
 # CRUD FOR END-DEVICE
 # Create
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_enddevice(request):
     serializer = EndDeviceSerializer(data=request.data)
