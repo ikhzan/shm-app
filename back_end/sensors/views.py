@@ -88,17 +88,130 @@ def query_llm(request):
     return StreamingHttpResponse(generate_response(prompt), content_type='text/plain')
 
 
+# CRUD FOR LoraGateway
+# Create
+@api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+def create_gateway(request):
+    serializer = LoraGatewaySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+# Read
+@api_view(['GET'])
+def all_gateway(request):
+    enddevices = LoraGateway.objects.all()
+    serializer = LoraGatewaySerializer(enddevices,many=True)
+    return Response(serializer.data)
+
+# Update
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_gateway(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        enddevice = LoraGateway.objects.get(pk=pk)
+    except LoraGateway.DoesNotExist:
+        return Response({'error': 'Vehicle not found'}, status=404)
+
+    serializer = LoraGatewaySerializer(enddevice, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+# Delete
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_gateway(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        enddevice = LoraGateway.objects.get(pk=pk)
+    except LoraGateway.DoesNotExist:
+        return Response({'error': 'Vehicle not found'}, status=404)
+
+    enddevice.delete()
+    return Response({'message': 'Vehicle deleted successfully'}, status=204)
+
+# CRUD FOR VEHICLE
+# Create
+@api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+def create_vehicle(request):
+    print(f"Data {request.data}")
+    serializer = VehicleSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    print(f"Error {serializer.errors}")
+    return Response(serializer.errors, status=400)
+
+# Read
+@api_view(['GET'])
+def all_vehicle(request):
+    vehicles = Vehicle.objects.prefetch_related('end_devices').all()
+
+    unlinked_sensors = EndDevice.objects.filter(vehicle__isnull=True)
+
+    vehicle_data = VehicleSerializer(vehicles, many=True).data
+    unlinked_sensor_data = EndDeviceSerializer(unlinked_sensors, many=True).data
+
+    return Response({
+        "vehicles": vehicle_data,
+        "unlinked_sensors": unlinked_sensor_data
+    })
+
+
+# Update
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_vehicle(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        enddevice = Vehicle.objects.get(pk=pk)
+    except Vehicle.DoesNotExist:
+        return Response({'error': 'Vehicle not found'}, status=404)
+
+    serializer = VehicleSerializer(enddevice, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+
+# Delete
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_vehicle(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    try:
+        enddevice = Vehicle.objects.get(pk=pk)
+    except Vehicle.DoesNotExist:
+        return Response({'error': 'Vehicle not found'}, status=404)
+
+    enddevice.delete()
+    return Response({'message': 'Vehicle deleted successfully'}, status=204)
+
 # CRUD FOR END-DEVICE
 # Create
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def create_enddevice(request):
     serializer = EndDeviceSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
-
 
 # Read
 @api_view(['GET'])

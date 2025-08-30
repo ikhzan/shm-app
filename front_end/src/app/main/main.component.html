@@ -35,6 +35,14 @@
       </div>
       <div class="navbar-item">
         <a
+          routerLink="/vehicles"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>vehicles</span></a
+        >
+      </div>
+      <div class="navbar-item">
+        <a
           routerLink="/chart"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
@@ -58,10 +66,14 @@
             <fa-icon [icon]="faUser"></fa-icon>
             <span>{{ username }}</span>
           </div>
-          <div class="row-two">
-            <span class="logout" (click)="logout()">
+          <div class="row-two" >
+            <span class="logout" (click)="logout()" *ngIf="isLoggedIn">
               <fa-icon [icon]="faSignOut"></fa-icon>
               <span>Logout</span>
+            </span>
+            <span class="logout" (click)="login()" *ngIf="!isLoggedIn">
+              <fa-icon [icon]="faSignOut"></fa-icon>
+              <span>Login</span>
             </span>
           </div>
         </div>
@@ -87,3 +99,9 @@
     </div>
   </div>
 </div>
+
+<app-login-modal
+  [visible]="isLoginModalVisible"
+  (login)="handleLogin($event)"
+  (cancel)="isLoginModalVisible = false"
+></app-login-modal>

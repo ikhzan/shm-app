@@ -1,15 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { RestService } from '../../services/rest.service';
 import { AuthService } from '../../services/auth.service';
+import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
+import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
+
+export interface Credentials {
+  username: string
+  password: string
+}
 
 @Component({
   selector: 'app-sensor',
-  imports: [FontAwesomeModule, NgFor, NgIf, FormsModule],
+  imports: [FontAwesomeModule, NgFor, NgIf, NgClass, FormsModule, DeleteDataModalComponent, LoginModalComponent],
   templateUrl: './sensor.component.html',
   styleUrl: './sensor.component.scss'
 })
@@ -17,7 +23,7 @@ export class SensorComponent implements OnInit {
   faSearch = faSearch
   faTrash = faTrashAlt
   faClose = faClose
-  modalDeleteON = true
+  modalDeleteON = false
   allSensors: any[] = [];
   dataSensor: any[] = [];
   isLoading: boolean = false;
@@ -29,12 +35,19 @@ export class SensorComponent implements OnInit {
   formON: boolean = false;
   sensorId: number | null = null;
   isAuthenticated = false;
+  baseUrl: string = 'http://localhost:8000';
+  loginModalON = false;
+  @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
-  constructor(private restService: RestService, private authService: AuthService, private router: Router) { }
+  constructor(private restService: RestService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.loadSensorData()
+  }
+
+  getImageUrl(imagePath: string): string {
+    return this.baseUrl + imagePath; // Construct the full image URL
   }
 
   private loadSensorData(): void {
@@ -42,7 +55,6 @@ export class SensorComponent implements OnInit {
     this.restService.fetchDataDevice().subscribe({
       next: (data) => {
         this.allSensors = data;
-        this.applyFilters();
         this.isLoading = false;
       },
       error: () => {
@@ -54,8 +66,9 @@ export class SensorComponent implements OnInit {
   async onSubmit(form: NgForm) {
     try {
       const deviceData = {
+        device_id: form.value['device_id'],
         device_name: form.value['device_name'],
-        image_path: form.value['image_path'],
+        // image_path: form.value['image_path'],
         device_status: this.isOn ? 'online' : 'offline'
       }
       const sendData = await this.restService.submitEndDevice(deviceData);
@@ -67,52 +80,18 @@ export class SensorComponent implements OnInit {
     }
   }
 
-  applyFilters(): void {
-    const filtered = this.allSensors.filter(b =>
-      b.device_name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.dataSensor = filtered.slice(start, start + this.pageSize);
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onPageSizeChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.pageSize = +value;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-
-  nextPage(): void {
-    this.currentPage++;
-    this.applyFilters();
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.applyFilters();
-    }
-  }
-
   showDeleteModal(id: number) {
     console.log("Delete sensor " + id);
     this.sensorId = id;
-    this.modalDeleteON = false
+    this.modalDeleteON = true
   }
 
   closeDeleteModal() {
     this.sensorId = null;
-    this.modalDeleteON = true
+    this.modalDeleteON = false
   }
 
-  deleteFile() {
+  deleteSensor() {
     if (this.sensorId === null) return;
 
     this.restService.deleteEndDevice(this.sensorId).subscribe({
@@ -128,11 +107,40 @@ export class SensorComponent implements OnInit {
   }
 
   toggleForm() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
+     if (!this.authService.isAuthenticated()) {
+      this.openLoginModal();
     }
     this.formON = !this.formON;
+  }
+
+  getStatusClass(status: string): string {
+    return status === 'online' ? 'status-online' : 'status-offline';
+  }
+
+  editSensor(device_id: string) {
+    // Open form or modal with sensor data
+  }
+
+  openLoginModal() {
+    this.loginModalON = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalON = false;
+  }
+
+  handleLogin(credentials: Credentials) {
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.loginModal.resetState();
+        this.closeLoginModal();
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        this.loginModal.showError('Invalid username or password.');
+      }
+    });
   }
 
 }

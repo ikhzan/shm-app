@@ -4,7 +4,7 @@ import { RestService } from '../../services/rest.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sensor-detail',
@@ -78,10 +78,9 @@ export class SensorDetailComponent implements OnInit {
   }
 
   toggleSort(): void {
-  this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-  this.applyFilters();
-}
-
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.applyFilters();
+  }
 
   onSearch(term: string): void {
     this.searchTerm = term;

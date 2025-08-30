@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SensorReading, EndDevice, BorkerConnection
+from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -13,10 +13,20 @@ class EndDeviceSerializer(serializers.ModelSerializer):
         model = EndDevice
         fields = '__all__'
 
+class VehicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehicle
+        fields = ['name','image_path']
+
 class BrokerConnectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorkerConnection
-        fields = '__all__'
+        fields = '__all__'       
+
+class LoraGatewaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoraGateway
+        fields = '__all__'  
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):

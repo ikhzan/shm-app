@@ -23,97 +23,56 @@
     }
   }
 
-  // .ship-container {
-  //   position: relative;
-  //   width: 100%;
-  //   max-width: 800px;
-  // }
+  .sensor-lamp {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    &:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 
-  // .ship-image {
-  //   width: 100%;
-  //   display: block;
-  // }
+  .sensor-lamp {
+    position: absolute;
+    transform: translate(-50%, -50%); // centers the sensor
+  }
 
-  // .sensor-lamp {
-  //   position: absolute;
-  //   width: 16px;
-  //   height: 16px;
-  //   border-radius: 50%;
-  //   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-  //   transform: translate(-50%, -50%);
-  //   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  //   cursor: pointer;
-  //   &:hover .tooltip {
-  //     opacity: 1;
-  //     visibility: visible;
-  //   }
-  // }
+  .lamp-green {
+    background-color: #2ecc71;
+    box-shadow: 0 0 10px #2ecc71;
+    animation: pulse 1s infinite;
+  }
 
-  // .ship-container {
-  //   position: relative;
-  //   width: 100%;
-  //   height: auto;
-  // }
+  .lamp-yellow {
+    background-color: #f1c40f;
+    box-shadow: 0 0 10px #f1c40f;
+    animation: pulse 1s infinite;
+  }
 
-  // .ship-image {
-  //   width: 100%;
-  //   display: block;
-  // }
+  .lamp-red {
+    background-color: #e74c3c;
+    box-shadow: 0 0 10px #e74c3c;
+    animation: pulse 1s infinite;
+  }
 
-  // .sensor-lamp {
-  //   position: absolute;
-  //   transform: translate(-50%, -50%); // centers the sensor
-  // }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 
-  // .lamp-green {
-  //   background-color: #2ecc71;
-  //   box-shadow: 0 0 10px #2ecc71;
-  // }
-
-  // .lamp-yellow {
-  //   background-color: #f1c40f;
-  //   box-shadow: 0 0 10px #f1c40f;
-  // }
-
-  // .lamp-red {
-  //   background-color: #e74c3c;
-  //   box-shadow: 0 0 10px #e74c3c;
-  // }
-
-  // @keyframes pulse {
-  //   0% {
-  //     transform: scale(1);
-  //   }
-  //   50% {
-  //     transform: scale(1.3);
-  //   }
-  //   100% {
-  //     transform: scale(1);
-  //   }
-  // }
-
-  // .lamp-red {
-  //   animation: pulse 1s infinite;
-  // }
-
-  // .tooltip {
-  //   position: absolute;
-  //   top: -28px;
-  //   left: 50%;
-  //   transform: translateX(-50%);
-  //   background-color: #333;
-  //   color: #fff;
-  //   padding: 4px 8px;
-  //   border-radius: 4px;
-  //   font-size: 12px;
-  //   white-space: nowrap;
-  //   opacity: 0;
-  //   visibility: hidden;
-  //   transition: opacity 0.2s ease;
-  //   z-index: 10;
-  // }
-
-  /* ship-hull.component.scss */
   .ship-container {
     position: relative;
     width: 100%;
@@ -125,32 +84,6 @@
     width: 100%;
     display: block;
     object-fit: contain;
-  }
-
-  .sensor-icon {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    cursor: pointer;
-
-    .tooltip {
-      position: absolute;
-      top: -2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #222;
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    &:hover .tooltip {
-      opacity: 1;
-    }
   }
 
   .tooltip {

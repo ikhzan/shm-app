@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFile, faKeyboard, faAngleDown, faListAlt, faUserCircle, faUserAlt, faGear, faSignOut, faMicrophone, faMessage, faPhone, faImage, faVideo, faVoicemail, faContactCard, faLocation, faL } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../services/auth.service';
+import { LoginModalComponent } from '../shared/login-modal/login-modal.component';
 
 
 @Component({
   selector: 'app-main',
-  imports: [RouterOutlet, FontAwesomeModule, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, FontAwesomeModule, RouterLink, RouterLinkActive, NgIf, LoginModalComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   title = 'front_end';
   username = localStorage.getItem('username');
 
@@ -32,12 +35,40 @@ export class MainComponent {
   faFile = faFile
   isLogin = false
   profilePath = 'assets/user/profile.png'
+  isLoggedIn = false;
+  isLoginModalVisible = false;
+
+  constructor(private authService: AuthService) { }
 
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('username');
-    // Optional: redirect to login or home
-    window.location.href = '/login';
+    this.isLoggedIn = false;
   }
+
+  ngOnInit() {
+    this.isLoggedIn = !!localStorage.getItem('access_token');
+  }
+
+  login() {
+    this.isLoginModalVisible = true;
+  }
+
+  handleLogin(credentials: { username: string; password: string }) {
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        localStorage.setItem('username', credentials.username);
+        this.isLoginModalVisible = false;
+        this.isLoggedIn = true
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        // Optionally show error inside modal
+      }
+    });
+  }
+
+
 }

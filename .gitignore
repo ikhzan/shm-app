@@ -8,6 +8,9 @@ env/
 *.log
 db.sqlite3
 /staticfiles/
+back_end/staticfiles/
+back_end/dummy2.json
+back_end/dummy.json
 
 # Node/Angular
 node_modules/

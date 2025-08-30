@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { RestService } from '../../services/rest.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
+import { LoginModalComponent } from "../../shared/login-modal/login-modal.component";
 
+export interface Credentials {
+  username: string
+  password: string
+}
 
 @Component({
   selector: 'app-brokers',
-  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule],
+  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
   templateUrl: './brokers.component.html',
   styleUrl: './brokers.component.scss'
 })
@@ -18,7 +23,7 @@ export class BrokersComponent implements OnInit {
   faSearch = faSearch
   faTrash = faTrashAlt
   faClose = faClose
-  modalDeleteON = true
+  modalDeleteON = false
   isOn = false;
   formON: boolean = false;
   Math = Math;
@@ -30,8 +35,11 @@ export class BrokersComponent implements OnInit {
   currentPage = 1;
   brokerId: number | null = null;
   isAuthenticated = false;
+  loginModalON = false;
+  @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
-  constructor(private restService: RestService, private authService: AuthService, private router: Router) {
+  constructor(private restService: RestService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -53,8 +61,8 @@ export class BrokersComponent implements OnInit {
     });
   }
 
-  async onSubmit(form: NgForm){
-    try{
+  async onSubmit(form: NgForm) {
+    try {
       const brokerData = {
         device_name: form.value['device_name'],
         url_path: form.value['url_path'],
@@ -64,8 +72,8 @@ export class BrokersComponent implements OnInit {
       console.log("on-submit response " + sendData);
       form.reset();
       this.loadBrokerData()
-    }catch(error){
-        console.log("error on-submit " + error)
+    } catch (error) {
+      console.log("error on-submit " + error)
     }
   }
 
@@ -107,15 +115,19 @@ export class BrokersComponent implements OnInit {
   showDeleteModal(id: number) {
     console.log("Delete broker " + id);
     this.brokerId = id;
-    this.modalDeleteON = false
-  }
-
-  closeDeleteModal() {
-     this.brokerId = null;
     this.modalDeleteON = true
   }
 
-  deleteFile() {
+  closeDeleteModal() {
+    this.brokerId = null;
+    this.modalDeleteON = false
+  }
+
+  openDeleteModal() {
+    this.modalDeleteON = true;
+  }
+
+  deleteBroker() {
     if (this.brokerId === null) return;
 
     this.restService.deleteBroker(this.brokerId).subscribe({
@@ -132,9 +144,31 @@ export class BrokersComponent implements OnInit {
 
   toggleForm() {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
+      this.openLoginModal();
     }
+    
     this.formON = !this.formON;
+  }
+
+  openLoginModal() {
+    this.loginModalON = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalON = false;
+  }
+
+  handleLogin(credentials: Credentials) {
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.loginModal.resetState();
+        this.closeLoginModal();
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        this.loginModal.showError('Invalid username or password.');
+      }
+    });
   }
 }

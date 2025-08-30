@@ -16,23 +16,20 @@ export class BrokerService {
 
   private statusSubject = new BehaviorSubject<string>('Disconnected');
   public status$: Observable<string> = this.statusSubject.asObservable();
+  public reconnectStatus$ = new BehaviorSubject<string>('idle');
 
   private reconnectAttempts = 0;
   private readonly maxReconnectAttempts = 5;
-  private readonly reconnectDelayMs = 3000;
   private readonly baseDelayMs = 2000;
   private wsUrl = 'ws://localhost:8000/ws/ttn/';
 
   constructor() {
-    // this.socket = new WebSocket(this.wsUrl);
     this.connectWebSocket();
   }
 
   private connectWebSocket(): void {
+    this.reconnectStatus$.next('Reconnecting...');
     this.socket = new WebSocket(this.wsUrl);
-    if(this.socket){
-      
-    }
 
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);

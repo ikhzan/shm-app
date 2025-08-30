@@ -23,7 +23,7 @@ interface Sensor {
 
 @Component({
   selector: 'app-sensor-chart',
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor,NgClass],
   templateUrl: './sensor-chart.component.html',
   styleUrls: ['./sensor-chart.component.scss']
 })
@@ -34,14 +34,8 @@ export class SensorChartComponent implements OnInit {
   uniqueDeviceIds: string[] = [];
   isLoading = false;
   shipHull = 'assets/ships/ship-hull.gif'
+  sukhoi = 'assets/ships/sukhoi-su-35.gif'
   sensors: Sensor[] = [];
-
-  // sensors = [
-  //   { x: 20, y: 30, icon: '🌡️', status: 'safe', value: 50, name: 'Temperature' },       // Temperature sensor
-  //   { x: 50, y: 60, icon: '📈', status: 'warning', value: 70, name: 'Fatigue' },    // Fatigue sensor
-  //   { x: 75, y: 20, icon: '🛠️', status: 'critical', value: 90, name: 'Vibration' },   // Vibration sensor
-  // ];
-
 
   @ViewChildren('chartCanvas') chartCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
   @ViewChildren('humidityCanvas') humidityCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
@@ -128,22 +122,6 @@ export class SensorChartComponent implements OnInit {
     return 'lamp-red';
   }
 
-  // placeSensor(event: MouseEvent) {
-  //   const rect = (event.target as HTMLElement).getBoundingClientRect();
-  //   const x = ((event.clientX - rect.left) / rect.width) * 100;
-  //   const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-  //   this.sensors.push({
-  //     x,
-  //     y,
-  //     name: 'New Sensor',
-  //     value: 0,
-  //     icon: '❓',
-  //     status: 'unknown'
-  //   });
-  // }
-
-
   placeSensor(event: MouseEvent) {
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 100;
@@ -154,15 +132,13 @@ export class SensorChartComponent implements OnInit {
       y: parseFloat(y.toFixed(2)),
       icon: '📍',
       name: `Sensor ${this.sensors.length + 1}`,
-      value: 0,
+      value: 90,
       status: 'unknown'
     };
 
     this.sensors.push(sensor);
     console.log(`Placed at x: ${sensor.x}%, y: ${sensor.y}%`);
   }
-
-
 
   getSensorDefaults(type: string): { icon: string; status: string } {
     switch (type.toLowerCase()) {

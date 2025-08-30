@@ -16,6 +16,8 @@ export class AuthService {
   private userName = "username";
   private authStatus = new BehaviorSubject<boolean>(this.hasToken());
   private apiUrl = 'http://localhost:8000/api/';
+  private loginState = new BehaviorSubject<boolean>(false);
+  loginState$ = this.loginState.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -30,6 +32,11 @@ export class AuthService {
       })
     );
   }
+
+  setLoggedIn(state: boolean) {
+    this.loginState.next(state);
+  }
+
 
   // 🚪 Logout: Clear tokens
   logout(): void {

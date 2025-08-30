@@ -26,21 +26,22 @@
   </div> -->
 
   <div class="ship-container">
-  <img
-    src="{{ shipHull }}"
-    class="ship-image"
-    (click)="placeSensor($event)"
-  />
+    <img
+      src="{{ sukhoi }}"
+      class="ship-image"
+      (click)="placeSensor($event)"
+    />
     <div class="grid-overlay"></div>
-  <div
-    *ngFor="let sensor of sensors"
-    class="sensor-icon"
-    [style.left.%]="sensor.x"
-    [style.top.%]="sensor.y"
-  >
-    {{ sensor.icon }}
-    <div class="tooltip">{{ sensor.name }}<br />x: {{ sensor.x }}%, y: {{ sensor.y }}%</div>
+    <div
+      *ngFor="let sensor of sensors"
+      class="sensor-lamp"
+      [style.left.%]="sensor.x"
+      [style.top.%]="sensor.y"
+      [ngClass]="getLampClass(sensor.value)"
+    >
+      <div class="tooltip">
+        {{ sensor.name }}<br />x: {{ sensor.x }}%, y: {{ sensor.y }}%
+      </div>
+    </div>
   </div>
-</div>
-
 </div>

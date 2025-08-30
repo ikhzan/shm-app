@@ -1,0 +1,102 @@
+<div class="vehicles">
+  <div class="title">
+    <h3>Vehicles</h3>
+    <h4 (click)="toggleForm()">Add Vehicle</h4>
+  </div>
+
+  <div class="vehicle-form">
+    <form
+      class="sensors-form"
+      enctype="multipart/form-data"
+      #deviceForm="ngForm"
+      (ngSubmit)="onSubmit(deviceForm)"
+    >
+      <div class="form-control">
+        <label for="name">Vehicle Name</label>
+        <input
+          class="form-input"
+          id="name"
+          type="text"
+          placeholder="Device name"
+          ngModel
+          name="name"
+        />
+      </div>
+      <div class="form-control">
+        <label for="image_path">Image Path</label>
+        <input
+          ngModel
+          name="image_path"
+          type="file"
+          (change)="onFileChange($event)"
+        />
+      </div>
+      <div class="form-control">
+        <span></span>
+        <input class="btn" type="submit" value="Submit" />
+      </div>
+    </form>
+
+    <div class="ship-container">
+      <img
+        src="{{ imagePreview }}"
+        class="ship-image"
+        (click)="placeSensor($event)"
+      />
+      <div class="grid-overlay"></div>
+      <div
+        *ngFor="let sensor of sensors"
+        class="sensor-lamp"
+        [style.left.%]="sensor.position_x"
+        [style.top.%]="sensor.position_y"
+        [ngClass]="getLampClass(sensor.value)"
+      >
+        <div class="tooltip">
+          {{ sensor.device_name }}<br />x: {{ sensor.position_x }}%, y: {{ sensor.position_y }}%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unliked-sensors">
+    <h2>Unlinked Sensors</h2>
+    <div class="sensor-info">
+      <div class="description">
+        <p>
+          These sensors are avaible but not attached yet, so we can see it here
+        </p>
+      </div>
+      <ol>
+        <li *ngFor="let sensor of unlinkedSensors">
+          {{ sensor.value }} - {{ sensor.device_name }}
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="sensor-grid">
+    <div class="sensor-card" *ngFor="let vehicle of vehicles">
+      <div class="sensor-content">
+        <img
+          [src]="getImageUrl(vehicle.image_path)"
+          alt="{{ vehicle.name }}"
+          class="sensor_img"
+        />
+      </div>
+
+      <div class="sensor-footer">
+        <div class="sensor-meta">
+          <h3>{{ vehicle.name }}</h3>
+          <p>Sensors: {{ vehicle.sensors.length }}</p>
+        </div>
+
+        <div class="sensor-actions" *ngIf="isAuthenticated">
+          <button class="edit" (click)="editSensor(vehicle.id)">Edit</button>
+          <button class="delete" (click)="showDeleteModal(vehicle.id)">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

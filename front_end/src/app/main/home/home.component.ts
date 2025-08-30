@@ -1,15 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { BrokerService } from '../../services/broker.service';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { NgFor, NgIf, DatePipe, NgClass } from '@angular/common';
 import { RestService } from '../../services/rest.service';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { RouterLink } from '@angular/router';
+
+interface Sensor {
+  x: number; // left %
+  y: number; // top %
+  icon: string;
+  name: string;
+  value: number;
+  status: string;
+}
 
 @Component({
   selector: 'app-home',
-  imports: [NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule, RouterLink],
+  imports: [NgClass, NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -25,6 +34,13 @@ export class HomeComponent implements OnInit {
   searchTerm = '';
   pageSize = 10;
   currentPage = 1;
+  shipHull = 'assets/ships/ship-hull.gif'
+  sukhoi = 'assets/ships/sukhoi-su-35.gif'
+  chs6 = 'assets/ships/chs6.gif'
+  chinook = 'assets/ships/chnook.png'
+  sensors: Sensor[] = [];
+  isReconnecting = false;
+  reconnectStatus = "Retry";
 
   constructor(private brokerService: BrokerService, private restService: RestService) {
   }
@@ -44,26 +60,25 @@ export class HomeComponent implements OnInit {
       this.status = status;
     });
   }
-  
-  reconnectService(){
-    this.brokerService.reconnectManually();
-  }
 
-  private retrySensorData(attempts = 3, delayMs = 3000): void {
-    let attempt = 0;
+  reconnectService() {
+    this.reconnectStatus = 'Reconnecting...';
+    console.log("reconnectiong...")
+    this.brokerService.reconnectStatus$.subscribe({
+      next: status => {
+        this.reconnectStatus = status;
 
-    const retryInterval = setInterval(() => {
-      if (attempt >= attempts || this.status !== 'Disconnected') {
-        clearInterval(retryInterval);
-        return;
+        // Reset only when reconnect is complete or failed
+        if (status === 'Connected' || status === 'Failed') {
+          this.isReconnecting = false;
+        }
+      },
+      error: () => {
+        this.reconnectStatus = 'Failed — Retry';
+        this.isReconnecting = false;
       }
-
-      console.warn(`Retrying sensor data... Attempt ${attempt + 1}`);
-      this.loadSensorData();
-      attempt++;
-    }, delayMs);
+    });
   }
-
 
   private loadSensorData(): void {
     this.restService.fetchDataSensor().subscribe({
@@ -80,14 +95,38 @@ export class HomeComponent implements OnInit {
 
   getRangeClass(value: number): string {
     if (value > 90) {
-      return 'danger';
+      return 'emergency';
     } else if (value > 80) {
-      return 'warning';
+      return 'critical';
     } else if (value > 60) {
-      return 'safe';
+      return 'elevated';
     } else {
-      return 'low';
+      return 'safe';
     }
+  }
+
+  getLampClass(value: number): string {
+    if (value < 50) return 'lamp-green';
+    if (value < 70) return 'lamp-yellow';
+    return 'lamp-red';
+  }
+
+  placeSensor(event: MouseEvent) {
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+    const sensor: Sensor = {
+      x: parseFloat(x.toFixed(2)),
+      y: parseFloat(y.toFixed(2)),
+      icon: '📍',
+      name: `Sensor ${this.sensors.length + 1}`,
+      value: 40,
+      status: 'unknown'
+    };
+
+    this.sensors.push(sensor);
+    console.log(`Placed at x: ${sensor.x}%, y: ${sensor.y}%`);
   }
 
   applyFilters(): void {

@@ -1,0 +1,15 @@
+<div class="modal" [hidden]="!visible">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+      <fa-icon [icon]="faClose" (click)="onCancel()"></fa-icon>
+    </div>
+    <div class="modal-body">
+      <p>{{ message }}</p>
+    </div>
+    <div class="modal-btns">
+      <button (click)="onCancel()">Cancel</button>
+      <button class="delete-btn" (click)="onConfirm()">Delete</button>
+    </div>
+  </div>
+</div>

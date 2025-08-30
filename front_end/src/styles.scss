@@ -306,6 +306,7 @@ table {
         font-size: 13px;
       }
     }
+
     .modal-btns {
       display: flex;
       // justify-content: space-between;
@@ -331,6 +332,11 @@ table {
           background-color: #ff9800;
           cursor: pointer;
         }
+      }
+
+      .login-btn {
+        background-color: #113c60;
+        color: #fff;
       }
     }
   }

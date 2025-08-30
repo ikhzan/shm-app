@@ -24,11 +24,11 @@
     box-shadow: 5px 5px 5px #939393;
 
     .logo {
-    //   font-size: 14px;
-    //   background-color: rgba($color: #adb9c3, $alpha: .5);
-    //   padding: 1rem;
+      //   font-size: 14px;
+      //   background-color: rgba($color: #adb9c3, $alpha: .5);
+      //   padding: 1rem;
       h1 {
-        font-weight:bolder;
+        font-weight: bolder;
         font-size: 15px;
         a {
           text-decoration: none;
@@ -237,8 +237,7 @@
           }
 
           .row-two {
-            .logout
-            {
+            .logout {
               display: flex;
               align-items: center;
               padding: 10px;

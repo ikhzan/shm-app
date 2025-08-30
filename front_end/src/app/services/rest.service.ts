@@ -9,9 +9,20 @@ export interface BrokerData {
 }
 
 export interface EndDeviceData {
+  device_id:string,
   device_name: string,
   device_status: string,
+  // image_path: string
+}
+
+export interface VehicleData {
+  name: string,
   image_path: string
+}
+
+export interface GatewayData {
+  name: string,
+  url_path: string
 }
 
 @Injectable({
@@ -32,7 +43,7 @@ export class RestService {
 
   fetchDataByDeviceId(deviceId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}detail_sensor/`, {
-      params: { sensor_id: deviceId } 
+      params: { sensor_id: deviceId }
     });
   }
 
@@ -127,4 +138,103 @@ export class RestService {
       console.log("error update broker " + error)
     }
   }
+
+  fetchVehicle(): Observable<{ vehicles: any[]; unlinked_sensors: any[] }> {
+    return this.http.get<{ vehicles: any[]; unlinked_sensors: any[] }>(`${this.apiUrl}all_vehicle/`);
+  }
+
+  async newVehicle(endDevice: VehicleData): Promise<string> {
+    try {
+      const token = localStorage.getItem('access_token');
+      console.log('Token:', token);
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_vehicle/`, endDevice, { headers }));
+      console.log("response " + response);
+      return response.toString();
+    } catch (error) {
+      console.log("Error submit Vehicle" + error)
+      throw "error sending data"
+    }
+  }
+
+  async updateVehicle(vehicleData: VehicleData): Promise<void> {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_vehicle/`, vehicleData, { headers }))
+      console.log('response ' + response)
+    } catch (error) {
+      console.log("error update broker " + error)
+    }
+  }
+
+  deleteVehicle(id: number): Observable<any> {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+      return this.http.delete(`${this.apiUrl}delete_vehicle/`, { headers, params: { id } });
+    } catch (error) {
+      throw 'Error delete vehicle'
+    }
+  }
+
+  fetchLoraGateway(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}all_gateway/`);
+  }
+
+  async newGateway(endDevice: GatewayData): Promise<string> {
+    try {
+      const token = localStorage.getItem('access_token');
+      console.log('Token:', token);
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_gateway/`, endDevice, { headers }));
+      console.log("response " + response);
+      return response.toString();
+    } catch (error) {
+      console.log("Error submit Gateway" + error)
+      throw "error sending data"
+    }
+  }
+
+  async updateGateway(gatewayData: GatewayData): Promise<void> {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_gateway/`, gatewayData, { headers }))
+      console.log('response ' + response)
+    } catch (error) {
+      console.log("error update broker " + error)
+    }
+  }
+
+  deleteGateway(id: number): Observable<any> {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = new HttpHeaders({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      });
+      return this.http.delete(`${this.apiUrl}delete_gateway/`, { headers, params: { id } });
+    } catch (error) {
+      throw 'Error delete vehicle'
+    }
+  }
+
 }
