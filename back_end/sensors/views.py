@@ -14,6 +14,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, parser_classes
+import requests
+import json
 
 load_dotenv()
 
@@ -147,10 +149,25 @@ def delete_gateway(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_vehicle(request):
-    serializer = VehicleSerializer(data=request.data)
+    try:
+        end_devices_raw = request.data.get('end_devices', '[]')
+        end_devices_data = json.loads(end_devices_raw)
+    except json.JSONDecodeError:
+        return Response({'end_devices': 'Invalid format'}, status=400)
+
+    # Build clean initial data for serializer
+    initial_data = {
+        'name': request.data.get('name'),
+        'image_path': request.FILES.get('image_path'),
+        'end_devices': end_devices_data
+    }
+
+    serializer = VehicleRelatedSerializer(data=initial_data)
     if serializer.is_valid():
-        serializer.save()
+        vehicle = serializer.save()
         return Response(serializer.data, status=201)
+
+    print("Serializer errors:", serializer.errors)
     return Response(serializer.errors, status=400)
 
 
@@ -169,6 +186,26 @@ def all_vehicle(request):
         "unlinked_sensors": unlinked_sensor_data
     })
 
+@api_view(['GET'])
+def vehicle_detail(request):
+    vehicle_id = request.query_params.get('id')
+    if not vehicle_id:
+        return Response({"error": "Missing vehicle ID in query parameters"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        vehicle_data = Vehicle.objects.filter(id=vehicle_id)
+        serializer = VehicleSerializer(vehicle_data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as ex:
+        print(f"Error fetching sensor data: {ex}")
+        return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def linked_sensor_device(request):
+    vehicles = Vehicle.objects.filter(end_devices__isnull=False).distinct().prefetch_related('end_devices')
+
+    serializer = VehicleSerializer(vehicles, many=True)
+    return Response({"vehicles": serializer.data})
 
 # Update
 @api_view(['PUT'])
@@ -318,3 +355,28 @@ def delete_brokerconnection(request):
 
     brokerconnection.delete()
     return Response({'message': 'BorkerConnection deleted successfully'}, status=204)
+
+
+@permission_classes([IsAuthenticated])
+def get_lora_devices(request):
+    try:
+        server_address = os.getenv("SERVER_ADDRESS","")
+        # https://zaim-university.eu1.cloud.thethings.industries/api/v3/applications/humidity-sensor/devices
+        THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications/humidity-sensor/devices"
+        BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
+
+        headers = {
+            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        response = requests.get(THINGS_STACK_API_URL, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            print("Device data:", data)
+            return data
+        else:
+            print(f"Error {response.status_code}: {response.text}")
+            return Response({'error': f'{response.text}'},status=204)
+    except requests.RequestException as e:
+        return Response({'error': str(e)}, status=500)
