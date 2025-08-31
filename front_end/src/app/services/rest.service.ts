@@ -9,7 +9,7 @@ export interface BrokerData {
 }
 
 export interface EndDeviceData {
-  device_id:string,
+  device_id: string,
   device_name: string,
   device_status: string,
   // image_path: string
@@ -18,6 +18,22 @@ export interface EndDeviceData {
 export interface VehicleData {
   name: string,
   image_path: string
+}
+
+export interface EndDevice {
+  id: number;
+  device_name: string;
+  position_x: number;
+  position_y: number;
+  value: number;
+  device_status: string;
+}
+
+export interface Vehicle {
+  id: number;
+  name: string;
+  image_path: string;
+  end_devices: EndDevice[];
 }
 
 export interface GatewayData {
@@ -45,6 +61,23 @@ export class RestService {
     return this.http.get<any[]>(`${this.apiUrl}detail_sensor/`, {
       params: { sensor_id: deviceId }
     });
+  }
+
+  fetchDataByVehicleId(vehicleId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}detail_vehicle/`, {
+      params: { id: vehicleId }
+    });
+  }
+
+  fetchLoraDevices(): Observable<any[]> {
+    const token = localStorage.getItem('access_token');
+    return this.http.get<any[]>(`${this.apiUrl}lora/devices/`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+  }
+
+  fetchLinkedDevices(): Observable<{ vehicles: Vehicle[] }> {
+    return this.http.get<{ vehicles: Vehicle[] }>(`${this.apiUrl}linked_devices/`);
   }
 
   async submitEndDevice(data: FormData): Promise<string> {
@@ -145,7 +178,7 @@ export class RestService {
   async newVehicle(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
-      
+
       const headers = new HttpHeaders({
         'Authorization': 'Bearer ' + token,
         // 'Content-Type': 'multipart/form-data'

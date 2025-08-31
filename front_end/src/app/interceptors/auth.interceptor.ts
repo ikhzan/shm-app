@@ -12,13 +12,16 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  const authReq = token
+  const isRefreshRequest = req.url.includes('/api/refresh/');
+
+  const authReq = token && !isRefreshRequest
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      // ✅ Only attempt refresh if it's not already a refresh request
+      if (error.status === 401 && !isRefreshRequest) {
         return authService.refreshToken().pipe(
           switchMap(newToken => {
             const retryReq = req.clone({
@@ -27,11 +30,12 @@ export const authInterceptor: HttpInterceptorFn = (
             return next(retryReq);
           }),
           catchError(() => {
-            authService.logout();
+            authService.logout(); // ✅ Clear tokens and redirect
             return throwError(() => new Error('Session expired'));
           })
         );
       }
+
       return throwError(() => error);
     })
   );

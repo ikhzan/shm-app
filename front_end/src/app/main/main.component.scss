@@ -120,7 +120,9 @@
 
     @media only screen and (max-width: 900px) {
       .navbar-items {
-        display: none;
+        display: flex;
+        position: relative;
+        bottom: 0;
       }
     }
 

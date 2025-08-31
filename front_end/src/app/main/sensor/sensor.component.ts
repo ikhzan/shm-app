@@ -68,12 +68,6 @@ export class SensorComponent implements OnInit {
 
   async onSubmit(form: NgForm) {
     try {
-      const deviceData = {
-        device_id: form.value['device_id'],
-        device_name: form.value['device_name'],
-        image_path: form.value['image_path'],
-        device_status: this.isOn ? 'online' : 'offline'
-      }
       const formData = new FormData();
       formData.append('device_id', form.value['device_id']);
       formData.append('device_name', form.value['device_name']);

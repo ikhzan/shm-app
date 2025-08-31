@@ -38,9 +38,12 @@ export class HomeComponent implements OnInit {
   sukhoi = 'assets/ships/sukhoi-su-35.gif'
   chs6 = 'assets/ships/chs6.gif'
   chinook = 'assets/ships/chnook.png'
+  baseUrl: string = 'http://localhost:8000';
   sensors: Sensor[] = [];
   isReconnecting = false;
   reconnectStatus = "Retry";
+  vehicles: any[] = [];
+  linkedSensors: any[] = [];
 
   constructor(private brokerService: BrokerService, private restService: RestService) {
   }
@@ -48,7 +51,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.loadSensorData();
-
+    this.loadLinkedDevices();
     // Refresh sensor data when a new message arrives
     this.brokerService.messages$.subscribe(message => {
       this.messages.unshift(message);
@@ -67,7 +70,6 @@ export class HomeComponent implements OnInit {
     this.brokerService.reconnectStatus$.subscribe({
       next: status => {
         this.reconnectStatus = status;
-
         // Reset only when reconnect is complete or failed
         if (status === 'Connected' || status === 'Failed') {
           this.isReconnecting = false;
@@ -89,6 +91,18 @@ export class HomeComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
+      }
+    });
+  }
+
+  private loadLinkedDevices(): void {
+    this.restService.fetchLinkedDevices().subscribe({
+      next: (data) => {
+        this.vehicles = data.vehicles;
+        console.log(`Datavehicles ${this.vehicles}`)
+      },
+      error: (err) => {
+        console.log(`Error loadLinkeddevices ${err}`)
       }
     });
   }
@@ -172,5 +186,8 @@ export class HomeComponent implements OnInit {
     return '❄️';                 // Cold
   }
 
+  getImageUrl(imagePath: string): string {
+    return this.baseUrl + imagePath; // Construct the full image URL
+  }
 
 }

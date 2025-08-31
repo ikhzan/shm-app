@@ -1,0 +1,36 @@
+<div class="vehicle_detail">
+  <div class="title">
+    <h3>Vehicle</h3>
+    <h4>{{ vehicleID }}</h4>
+  </div>
+  <div class="detail" *ngFor="let vehicle of dataVehicle">
+    <div class="vehicle">
+      <img
+        class="vehicle_img"
+        [src]="getImageUrl(vehicle.image_path)"
+        alt="{{ vehicle.name }}"
+      />
+      <h3 class="vehicle_name">{{ vehicle.name }}</h3>
+    </div>
+    <div
+      *ngIf="vehicle.end_devices?.length > 0; else noDevices"
+      class="sensors"
+    >
+      <h4>Sensors</h4>
+      <p>These sensors are attached here</p>
+      <div class="sensor-list" *ngFor="let sensor of vehicle.end_devices">
+        <img [src]="getImageUrl(sensor.image_path)" alt="" />
+        <ul>
+          <li class="device_name">{{ sensor.device_name }}</li>
+          <li>Device ID: {{ sensor.device_id }}</li>
+          <li>Status: {{ sensor.device_status }}</li>
+          <li>Position: {{ sensor.position_x }}%</li>
+          <li>Position: {{ sensor.position_y }}%</li>
+        </ul>
+      </div>
+    </div>
+    <ng-template #noDevices class="sensors">
+      <p class="sensors">No sensors assigned to this vehicle.</p>
+    </ng-template>
+  </div>
+</div>

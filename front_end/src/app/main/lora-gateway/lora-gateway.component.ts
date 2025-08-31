@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './lora-gateway.component.scss'
 })
 export class LoraGatewayComponent {
-
+  loraInfoImg = 'assets/lora/lora-info.png'
+  constructor(){}
 }

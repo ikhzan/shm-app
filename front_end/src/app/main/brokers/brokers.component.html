@@ -2,6 +2,7 @@
   <div class="title">
     <h3>Brokers</h3>
     <h4 (click)="toggleForm()">Add Broker</h4>
+    <h4 (click)="loadLora()">Load Lora <span class="loading-lora" *ngIf="loadingLora != null">{{ loadingLora }}</span></h4>
   </div>
 
   <form
@@ -70,6 +71,14 @@
       <li>For evaluation and proof-of-concepts</li>
     </ul>
     <p>Manage cloud subscription</p>
+  </div>
+
+  <div class="lora-gateway-info">
+    <app-lora-gateway />
+  </div>
+
+  <div class="lora-app-info">
+    <app-lora-app />
   </div>
 
   <div class="top-table">
@@ -161,6 +170,5 @@
 <app-login-modal
   [visible]="loginModalON"
   (cancel)="closeLoginModal()"
-   (login)="handleLogin($event)"
+  (login)="handleLogin($event)"
 ></app-login-modal>
-

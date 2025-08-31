@@ -7,6 +7,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from "../../shared/login-modal/login-modal.component";
+import { LoraGatewayComponent } from '../lora-gateway/lora-gateway.component';
+import { LoraAppComponent } from '../lora-app/lora-app.component';
 
 export interface Credentials {
   username: string
@@ -15,7 +17,7 @@ export interface Credentials {
 
 @Component({
   selector: 'app-brokers',
-  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
+  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent, LoraGatewayComponent, LoraAppComponent],
   templateUrl: './brokers.component.html',
   styleUrl: './brokers.component.scss'
 })
@@ -36,6 +38,7 @@ export class BrokersComponent implements OnInit {
   brokerId: number | null = null;
   isAuthenticated = false;
   loginModalON = false;
+  loadingLora: string | null = null
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private restService: RestService,
@@ -59,6 +62,20 @@ export class BrokersComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private loadDataLoraDevices() {
+    this.restService.fetchLoraDevices().subscribe({
+      next: (data) => {
+        console.log(`Data Lora Devices ${data}`)
+        this.loadingLora = null
+      },
+      error: (e) => {
+        this.loadingLora = 'Error'
+        console.log(`Error fetch data lora ${e}`)
+        this.loadingLora = null
+      }
+    })
   }
 
   async onSubmit(form: NgForm) {
@@ -98,7 +115,6 @@ export class BrokersComponent implements OnInit {
     this.applyFilters();
   }
 
-
   nextPage(): void {
     this.currentPage++;
     this.applyFilters();
@@ -110,7 +126,6 @@ export class BrokersComponent implements OnInit {
       this.applyFilters();
     }
   }
-
 
   showDeleteModal(id: number) {
     console.log("Delete broker " + id);
@@ -142,11 +157,21 @@ export class BrokersComponent implements OnInit {
     });
   }
 
+  loadLora() {
+    if (!this.authService.isAuthenticated()) {
+      this.openLoginModal();
+    } else {
+      console.log('user is authenticated and loading data..')
+      this.loadingLora = 'loading...'
+      this.loadDataLoraDevices();
+    }
+  }
+
   toggleForm() {
     if (!this.authService.isAuthenticated()) {
       this.openLoginModal();
     }
-    
+
     this.formON = !this.formON;
   }
 

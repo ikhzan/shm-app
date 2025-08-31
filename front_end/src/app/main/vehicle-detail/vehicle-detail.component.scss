@@ -1,0 +1,117 @@
+.vehicle_detail {
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  box-shadow: 5px 5px 5px #939393;
+  padding: 1rem;
+
+  .title {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-items: center;
+
+    h3 {
+      width: 80%;
+      color: #113c60;
+      font-weight: bold;
+      font-size: large;
+      text-transform: uppercase;
+      background-color: rgba($color: #6d87c8, $alpha: 0.3);
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+
+    h4 {
+      width: 20%;
+      background-color: rgba($color: red, $alpha: 0.3);
+      color: red;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        background-color: red;
+        color: #f7f7f7;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .detail {
+    display: flex;
+
+    .vehicle {
+      justify-content: start;
+      // border: 1px solid green;
+
+      .vehicle_img {
+        max-width: 400px;
+        max-height: 460px;
+        object-fit: contain;
+      }
+
+      h3{
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+
+    .sensors {
+      margin-left: 1rem;
+      padding: .5rem;
+      flex: 1;
+      border-radius: 5px;
+
+      h4{
+        font-weight: 500;
+        margin-bottom: .5rem;
+      }
+
+      .sensor-list{
+        border-radius: 5px;
+        display: flex;
+        gap: .5rem;
+        
+        justify-items: start;
+        padding: .4rem;
+        margin-bottom: .5rem;
+
+        img{
+          width: 200px;
+        }
+
+        ul{
+          background-color: rgba($color: green, $alpha: .3);
+          color: rgb(42, 57, 42);
+          width: 50%;
+          padding: .4rem;
+          border-radius: 0 5px 5px 0;
+        }
+
+        li{
+          list-style: none;
+          font-size: 13px;
+          margin-bottom: .2rem;
+          font-weight: 400;
+        }
+
+        .device_name{
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

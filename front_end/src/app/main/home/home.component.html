@@ -117,109 +117,30 @@
   <div class="row">
     <div class="card">
       <div class="title">
-        <h5>Vehicles #1</h5>
-      </div>
-      <div class="body">
-        <div class="ships">
-          <div class="ship-container">
-            <img
-              src="{{ shipHull }}"
-              class="ship-image"
-              (click)="placeSensor($event)"
-            />
-            <div class="grid-overlay"></div>
-            <div
-                class="sensor-lamp"
-                [style.left.%]="20"
-                [style.top.%]="10"
-                [ngClass]="getLampClass(40)"
-              >
-              <div class="tooltip">
-                <a class="device_id" [routerLink]="['/device/eui-a840418d81829f8a']">eui-a840418d81829f8a</a>
-              </div>
-            </div>
-
-             <div
-                class="sensor-lamp"
-                [style.left.%]="40"
-                [style.top.%]="70"
-                [ngClass]="getLampClass(80)"
-              >
-              <div class="tooltip">humidity-2</div>
-            </div>
-
-             <div
-                class="sensor-lamp"
-                [style.left.%]="50"
-                [style.top.%]="10"
-                [ngClass]="getLampClass(60)"
-              >
-              <div class="tooltip">humidity-3</div>
-            </div>
-          </div>
-          <div class="ship-container">
-            <img
-              src="{{ sukhoi }}"
-              class="ship-image"
-              (click)="placeSensor($event)"
-            />
-            <div class="grid-overlay"></div>
-            <div
-              *ngFor="let sensor of sensors"
-              class="sensor-lamp"
-              [style.left.%]="sensor.x"
-              [style.top.%]="sensor.y"
-              [ngClass]="getLampClass(sensor.value)"
-            >
-              <div class="tooltip">
-                {{ sensor.name }}<br />x: {{ sensor.x }}%, y: {{ sensor.y }}%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="title">
         <h5>Vehicles #2</h5>
       </div>
       <div class="body">
         <div class="ships">
-          <div class="ship-container">
+          <div class="ship-container" *ngFor="let vehicle of vehicles">
             <img
-              src="{{ chs6 }}"
+              [src]="getImageUrl(vehicle.image_path)"
               class="ship-image"
-              (click)="placeSensor($event)"
+              alt="{{ vehicle.name }}"
             />
             <div class="grid-overlay"></div>
             <div
-              *ngFor="let sensor of sensors"
-              class="sensor-lamp"
-              [style.left.%]="sensor.x"
-              [style.top.%]="sensor.y"
-              [ngClass]="getLampClass(sensor.value)"
-            >
+                *ngFor="let sensor of vehicle.end_devices"
+                class="sensor-lamp"
+                [style.left.%]="sensor.position_x"
+                [style.top.%]="sensor.position_y"
+                [ngClass]="getLampClass(sensor.value)"
+              >
               <div class="tooltip">
-                {{ sensor.name }}<br />x: {{ sensor.x }}%, y: {{ sensor.y }}%
-              </div>
-            </div>
-          </div>
-          <div class="ship-container">
-            <img
-              src="{{ chinook }}"
-              class="ship-image"
-              (click)="placeSensor($event)"
-            />
-            <div class="grid-overlay"></div>
-            <div
-              *ngFor="let sensor of sensors"
-              class="sensor-lamp"
-              [style.left.%]="sensor.x"
-              [style.top.%]="sensor.y"
-              [ngClass]="getLampClass(sensor.value)"
-            >
-              <div class="tooltip">
-                {{ sensor.name }}<br />x: {{ sensor.x }}%, y: {{ sensor.y }}%
+                <a
+                  class="device_id"
+                  [routerLink]="['/device',sensor.device_id ]"
+                  >{{ sensor.device_id }}</a
+                >
               </div>
             </div>
           </div>
@@ -273,7 +194,6 @@
             <th>Humidity (%)</th>
             <th>Spread Factor</th>
             <th>RSSI</th>
-            <!-- <th>Location</th> -->
             <th>Timestamp</th>
           </tr>
         </thead>

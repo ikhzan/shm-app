@@ -1,24 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { RestService } from '../../services/rest.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
+import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
+
+export interface Credentials {
+  username: string
+  password: string
+}
 
 interface Sensor {
+  id: number;
   position_x: number; // left %
   position_y: number; // top %
-  icon: string;
   device_name: string;
   value: number;
-  status: string;
+  device_status: string;
 }
 
 @Component({
   selector: 'app-vehicle',
-  imports: [FormsModule, FontAwesomeModule, NgIf, NgFor, NgClass],
+  imports: [FormsModule, FontAwesomeModule, NgIf, NgFor, NgClass, RouterLink, DeleteDataModalComponent, LoginModalComponent],
   providers: [DatePipe],
   templateUrl: './vehicle.component.html',
   styleUrl: './vehicle.component.scss'
@@ -29,15 +36,17 @@ export class VehicleComponent {
   allVehicles: any[] = [];
   vehicles: any[] = [];
   unlinkedSensors: Sensor[] = [];
-  sensors: Sensor[] = [];
+  placedSensors: Sensor[] = [];
   isLoading: boolean = false;
-  sensorId: number | null = null;
+  vehicleId: number | null = null;
   isAuthenticated = false;
-  modalDeleteON = true
+  modalDeleteON = false
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  loginModalON = false;
   shipHull = 'assets/ships/ship-hull.gif'
   baseUrl: string = 'http://localhost:8000';
+  @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private readonly authService: AuthService,
     private readonly restService: RestService,
@@ -59,8 +68,6 @@ export class VehicleComponent {
       next: (data) => {
         this.vehicles = data.vehicles;
         this.unlinkedSensors = data.unlinked_sensors;
-        console.log(`Vehicle-data: ${this.vehicles}`)
-        console.log(`Unlinked-data: ${this.unlinkedSensors}`)
         this.isLoading = false;
       },
       error: () => {
@@ -81,15 +88,22 @@ export class VehicleComponent {
     try {
       const formData = new FormData();
       formData.append('name', form.value['name']);
-
       if (this.selectedFile) {
         formData.append('image_path', this.selectedFile);
       }
+      const sensorPayload = this.placedSensors.map(sensor => ({
+        id: sensor.id,
+        position_x: sensor.position_x,
+        position_y: sensor.position_y
+      }));
 
+      formData.append('end_devices', JSON.stringify(sensorPayload));
       const sendData = await this.restService.newVehicle(formData);
       console.log("on-submit response " + sendData);
+
       form.reset();
       this.imagePreview = null;
+      this.placedSensors = [];
       this.loadVehicleData()
     } catch (error) {
       console.log("error on-submit " + error)
@@ -97,22 +111,22 @@ export class VehicleComponent {
   }
 
   showDeleteModal(id: number) {
-    console.log("Delete sensor " + id);
-    this.sensorId = id;
-    this.modalDeleteON = false
-  }
-
-  closeDeleteModal() {
-    this.sensorId = null;
+    console.log("Delete vehicle " + id);
+    this.vehicleId = id;
     this.modalDeleteON = true
   }
 
-  deleteFile() {
-    if (this.sensorId === null) return;
+  closeDeleteModal() {
+    this.vehicleId = null;
+    this.modalDeleteON = false
+  }
 
-    this.restService.deleteEndDevice(this.sensorId).subscribe({
+  deleteFile() {
+    if (this.vehicleId === null) return;
+
+    this.restService.deleteEndDevice(this.vehicleId).subscribe({
       next: () => {
-        console.log(`Sensor ${this.sensorId} deleted`);
+        console.log(`Sensor ${this.vehicleId} deleted`);
         this.closeDeleteModal();
         this.loadVehicleData();
       },
@@ -122,21 +136,27 @@ export class VehicleComponent {
     });
   }
 
-  placeSensor(event: MouseEvent) {
+  placeHolder(event: MouseEvent) {
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 100;
     const y = ((event.clientY - rect.top) / rect.height) * 100;
 
+    const removedSensor = this.unlinkedSensors.pop();
+    if (!removedSensor) {
+      console.warn('No unlinked sensors left to place.');
+      return;
+    }
+
     const sensor: Sensor = {
+      id: removedSensor.id,
       position_x: parseFloat(x.toFixed(2)),
       position_y: parseFloat(y.toFixed(2)),
-      icon: '📍',
-      device_name: `Sensor ${this.sensors.length - 1}`,
-      value: 0,
-      status: 'unknown'
+      device_name: removedSensor.device_name,
+      value: 20,
+      device_status: 'online'
     };
 
-    this.sensors.push(sensor);
+    this.placedSensors.push(sensor);
     console.log(`Placed at x: ${sensor.position_x}%, y: ${sensor.position_y}%`);
   }
 
@@ -163,12 +183,44 @@ export class VehicleComponent {
     return status === 'online' ? 'status-online' : 'status-offline';
   }
 
-  editSensor(device_id: string) {
+  editVehicle(device_id: string) {
     // Open form or modal with sensor data
   }
 
-  deleteSensor(device_id: string) {
-    // Confirm and delete logic
+  deleteVehicle() {
+    if (this.vehicleId === null) return;
+
+    this.restService.deleteVehicle(this.vehicleId).subscribe({
+      next: () => {
+        console.log(`Sensor ${this.vehicleId} deleted`);
+        this.closeDeleteModal();
+        this.loadVehicleData();
+      },
+      error: err => {
+        console.error('Delete failed:', err);
+      }
+    });
   }
 
+  openLoginModal() {
+    this.loginModalON = true;
+  }
+
+  closeLoginModal() {
+    this.loginModalON = false;
+  }
+
+  handleLogin(credentials: Credentials) {
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          this.loginModal.resetState();
+          this.closeLoginModal();
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          this.loginModal.showError('Invalid username or password.');
+        }
+      });
+    }
 }
