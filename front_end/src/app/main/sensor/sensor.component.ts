@@ -117,8 +117,10 @@ export class SensorComponent implements OnInit {
   toggleForm() {
     if (!this.authService.isAuthenticated()) {
       this.openLoginModal();
+    } else {
+      this.formON = !this.formON;
     }
-    this.formON = !this.formON;
+
   }
 
   getStatusClass(status: string): string {

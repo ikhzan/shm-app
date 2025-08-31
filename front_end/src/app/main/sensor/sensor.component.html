@@ -4,7 +4,7 @@
     <h4 (click)="toggleForm()">Add Sensor</h4>
   </div>
 
-  <div class="sensor-form">
+  <div class="sensor-form" *ngIf="formON">
     <form
       class="sensors-form"
       #deviceForm="ngForm"

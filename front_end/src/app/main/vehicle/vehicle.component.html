@@ -4,7 +4,7 @@
     <h4 (click)="toggleForm()">Add Vehicle</h4>
   </div>
 
-  <div class="vehicle-form">
+  <div class="vehicle-form" *ngIf="formON">
     <form
       class="sensors-form"
       enctype="multipart/form-data"

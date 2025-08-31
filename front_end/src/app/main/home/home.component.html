@@ -115,13 +115,13 @@
   </div>
 
   <div class="row">
-    <div class="card">
+    <div class="card" *ngFor="let vehicle of vehicles">
       <div class="title">
-        <h5>Vehicles #2</h5>
+        <h5>{{ vehicle.name }}</h5>
       </div>
       <div class="body">
         <div class="ships">
-          <div class="ship-container" *ngFor="let vehicle of vehicles">
+          <div class="ship-container">
             <img
               [src]="getImageUrl(vehicle.image_path)"
               class="ship-image"
@@ -129,16 +129,16 @@
             />
             <div class="grid-overlay"></div>
             <div
-                *ngFor="let sensor of vehicle.end_devices"
-                class="sensor-lamp"
-                [style.left.%]="sensor.position_x"
-                [style.top.%]="sensor.position_y"
-                [ngClass]="getLampClass(sensor.value)"
-              >
+              *ngFor="let sensor of vehicle.end_devices"
+              class="sensor-lamp"
+              [style.left.%]="sensor.position_x"
+              [style.top.%]="sensor.position_y"
+              [ngClass]="getLampClass(sensor.value)"
+            >
               <div class="tooltip">
                 <a
                   class="device_id"
-                  [routerLink]="['/device',sensor.device_id ]"
+                  [routerLink]="['/device', sensor.device_id]"
                   >{{ sensor.device_id }}</a
                 >
               </div>

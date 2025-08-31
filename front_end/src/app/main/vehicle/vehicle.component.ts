@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { RestService } from '../../services/rest.service';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -49,8 +49,7 @@ export class VehicleComponent {
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private readonly authService: AuthService,
-    private readonly restService: RestService,
-    private readonly router: Router) {
+    private readonly restService: RestService) {
   }
 
   ngOnInit(): void {
@@ -78,10 +77,11 @@ export class VehicleComponent {
 
   toggleForm() {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
+      this.openLoginModal();
+    } else {
+      this.formON = !this.formON;
     }
-    this.formON = !this.formON;
+
   }
 
   async onSubmit(form: NgForm) {
@@ -211,16 +211,16 @@ export class VehicleComponent {
   }
 
   handleLogin(credentials: Credentials) {
-      this.authService.login(credentials).subscribe({
-        next: (response) => {
-          console.log('Login successful:', response);
-          this.loginModal.resetState();
-          this.closeLoginModal();
-        },
-        error: (err) => {
-          console.error('Login failed:', err);
-          this.loginModal.showError('Invalid username or password.');
-        }
-      });
-    }
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.loginModal.resetState();
+        this.closeLoginModal();
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        this.loginModal.showError('Invalid username or password.');
+      }
+    });
+  }
 }
