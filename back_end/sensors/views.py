@@ -1,13 +1,11 @@
 import os
 from django.shortcuts import render
-from ml_engine import run_inference, prepare_input, predict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import SensorReading
 import datetime
 from .serializers import *
 from dotenv import load_dotenv
-import ollama
 from django.http import StreamingHttpResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -48,20 +46,6 @@ def view_all_sensor_data(request):
     serializer = SensorReadingSerializer(readings, many=True)
     return Response(serializer.data)
 
-@api_view(['POST'])
-def analyze_sensor_data(request):
-    data = request.data.get('data')
-    prediction = run_inference(data)
-    
-    # Optionally store the reading + result
-    SensorReading(
-        sensor_id=request.data.get('sensor_id', 'unknown'),
-        data={'values': data},  # optional: wrap raw data too
-        prediction={'torch': prediction}  # 👈 wrap as dict
-    ).save()
-
-    return Response({'prediction': prediction})
-
 
 @api_view(['POST'])
 def start_mqtt_now(request):
@@ -75,21 +59,6 @@ def start_mqtt_now(request):
 
 def home_page(request):
     return render(request, 'home.html')
-
-
-def generate_response(prompt):
-    stream = ollama.chat(
-        model='llama3.2:latest',
-        messages=[{'role': 'user', 'content': prompt}],
-        stream=True
-    )
-    for chunk in stream:
-        yield chunk['message']['content']
-
-@api_view(['POST'])
-def query_llm(request):
-    prompt = request.data.get('prompt')
-    return StreamingHttpResponse(generate_response(prompt), content_type='text/plain')
 
 
 # CRUD FOR LoraGateway
