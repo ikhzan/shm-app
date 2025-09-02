@@ -5,8 +5,8 @@
   padding: 1rem;
 
   .data-detail {
-    background-color: rgba($color: green, $alpha: 1);
-    color: #f7f7f7;
+    background-color: rgba($color: #6d87c8, $alpha: .2);
+    color: #113c60;
     border-radius: 5px;
     padding: 0.5rem;
     width: 50%;
@@ -20,7 +20,7 @@
       
       .name {
         flex: .2;
-        // font-weight: 500;
+        font-weight: 400;
       }
 
       .data {

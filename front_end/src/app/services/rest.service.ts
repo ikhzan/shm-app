@@ -53,8 +53,8 @@ export class RestService {
     return this.http.get<any[]>(`${this.apiUrl}all/`);
   }
 
-  fetchDataDevice(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}endall/`);
+  fetchDataDevice(): Observable<{ end_devices: any[]; unattached_brokers: any[] }> {
+    return this.http.get<{ end_devices: any[]; unattached_brokers: any[] }>(`${this.apiUrl}all_enddevice/`);
   }
 
   fetchDataByDeviceId(deviceId: string): Observable<any[]> {
@@ -83,11 +83,11 @@ export class RestService {
   async submitEndDevice(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
-      console.log('Token:', token);
+      
       const headers = new HttpHeaders({
         'Authorization': 'Bearer ' + token
       });
-
+      console.log('new-end-device:', data);
       const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_device/`, data, { headers }));
       console.log("response " + response);
       return response.toString();

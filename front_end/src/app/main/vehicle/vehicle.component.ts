@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
+import { MediaService } from '../../services/media.service';
 
 export interface Credentials {
   username: string
@@ -45,11 +46,10 @@ export class VehicleComponent {
   imagePreview: string | null = null;
   loginModalON = false;
   shipHull = 'assets/ships/ship-hull.gif'
-  baseUrl: string = 'http://localhost:8000';
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private readonly authService: AuthService,
-    private readonly restService: RestService) {
+    private readonly restService: RestService, private mediaService: MediaService) {
   }
 
   ngOnInit(): void {
@@ -57,9 +57,10 @@ export class VehicleComponent {
     this.loadVehicleData()
   }
 
-  getImageUrl(imagePath: string): string {
-    return this.baseUrl + imagePath; // Construct the full image URL
+  getImage(path: string): string {
+    return this.mediaService.getImageUrl(path);
   }
+
 
   private loadVehicleData(): void {
     this.isLoading = true;

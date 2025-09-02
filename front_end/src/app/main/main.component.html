@@ -11,26 +11,19 @@
     <div class="navbar-items">
       <div class="navbar-item">
         <a
-          routerLink="/dataset"
+          routerLink="/sensors"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
-          ><span>Dataset</span></a
+          ><span>Sensors</span></a
         >
       </div>
+
       <div class="navbar-item">
         <a
           routerLink="/brokers"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
           ><span>Brokers</span></a
-        >
-      </div>
-      <div class="navbar-item">
-        <a
-          routerLink="/sensors"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          ><span>Sensors</span></a
         >
       </div>
       <div class="navbar-item">
@@ -43,34 +36,26 @@
       </div>
       <div class="navbar-item">
         <a
+          routerLink="/dataset"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Dataset</span></a
+        >
+      </div>
+      <div class="navbar-item">
+        <a
           routerLink="/chart"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
           ><span>Chart</span></a
         >
       </div>
-       <!-- <div class="navbar-item">
-        <a
-          routerLink="/lora-gateway"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          ><span>Lora-Gateway</span></a
-        >
-      </div> -->
-      <!-- <div class="navbar-item">
-        <a
-          routerLink="/chat"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          ><span>Chat</span></a
-        >
-      </div> -->
     </div>
     <div class="right-menu">
       <div class="user">
         <img src="{{ profilePath }}" alt="" />
         <div class="user-menu">
-          <div class="row-one">
+          <div class="row-one" *ngIf="isLoggedIn">
             <fa-icon [icon]="faUser"></fa-icon>
             <span>{{ username }}</span>
           </div>

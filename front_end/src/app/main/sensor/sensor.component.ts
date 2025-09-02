@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
 import { RouterLink } from '@angular/router';
+import { MediaService } from '../../services/media.service';
 
 export interface Credentials {
   username: string
@@ -27,6 +28,8 @@ export class SensorComponent implements OnInit {
   modalDeleteON = false
   allSensors: any[] = [];
   dataSensor: any[] = [];
+  unattachedBrokers: any[] = [];
+  selectedBrokerId: number | null = null;
   isLoading: boolean = false;
   searchTerm = '';
   pageSize = 10;
@@ -42,7 +45,7 @@ export class SensorComponent implements OnInit {
   selectedFile: File | null = null;
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
-  constructor(private restService: RestService, private authService: AuthService) { }
+  constructor(private restService: RestService, private authService: AuthService, private mediaService: MediaService) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
@@ -57,7 +60,8 @@ export class SensorComponent implements OnInit {
     this.isLoading = true;
     this.restService.fetchDataDevice().subscribe({
       next: (data) => {
-        this.allSensors = data;
+        this.allSensors = data.end_devices;
+        this.unattachedBrokers = data.unattached_brokers;
         this.isLoading = false;
       },
       error: () => {
@@ -68,14 +72,25 @@ export class SensorComponent implements OnInit {
 
   async onSubmit(form: NgForm) {
     try {
+
       const formData = new FormData();
       formData.append('device_id', form.value['device_id']);
       formData.append('device_name', form.value['device_name']);
       formData.append('device_status', this.isOn ? 'online' : 'offline');
       formData.append('dev_eui', form.value['dev_eui']);
       formData.append('join_eui', form.value['join_eui']);
+
+      if (this.selectedBrokerId !== null) {
+        formData.append('broker_id', String(this.selectedBrokerId ?? ''));
+      }
+
       if (this.selectedFile) {
         formData.append('image_path', this.selectedFile);
+      }
+
+      if (!form.valid) {
+        alert('Please fill out all required fields.');
+        return;
       }
 
       const sendData = await this.restService.submitEndDevice(formData);
@@ -164,6 +179,10 @@ export class SensorComponent implements OnInit {
         this.loginModal.showError('Invalid username or password.');
       }
     });
+  }
+
+  getImage(path: string): string {
+    return this.mediaService.getImageUrl(path);
   }
 
 }

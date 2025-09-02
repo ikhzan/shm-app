@@ -5,13 +5,13 @@ from dotenv import load_dotenv
 import threading
 from .consumer import connected_clients
 import asyncio
-from ..models import SensorReading, BorkerConnection
+from ..models import SensorReading, BrokerConnection
 from django.utils.dateparse import parse_datetime
 
 load_dotenv()
 
 def load_brokers():
-    brokerconnections = BorkerConnection.objects.all()
+    brokerconnections = BrokerConnection.objects.all()
     url_paths = [broker.url_path for broker in brokerconnections]
     return url_paths
 

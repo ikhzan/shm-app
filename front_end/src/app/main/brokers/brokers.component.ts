@@ -17,7 +17,7 @@ export interface Credentials {
 
 @Component({
   selector: 'app-brokers',
-  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent, LoraGatewayComponent, LoraAppComponent],
+  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
   templateUrl: './brokers.component.html',
   styleUrl: './brokers.component.scss'
 })

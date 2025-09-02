@@ -7,7 +7,7 @@
     <div class="vehicle">
       <img
         class="vehicle_img"
-        [src]="getImageUrl(vehicle.image_path)"
+        [src]="getImage(vehicle.image_path)"
         alt="{{ vehicle.name }}"
       />
       <h3 class="vehicle_name">{{ vehicle.name }}</h3>
@@ -19,7 +19,7 @@
       <h4>Sensors</h4>
       <p>These sensors are attached here</p>
       <div class="sensor-list" *ngFor="let sensor of vehicle.end_devices">
-        <img [src]="getImageUrl(sensor.image_path)" alt="" />
+        <img [src]="getImage(sensor.image_path)" alt="" />
         <ul>
           <li class="device_name">{{ sensor.device_name }}</li>
           <li>Device ID: {{ sensor.device_id }}</li>

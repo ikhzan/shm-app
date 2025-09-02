@@ -162,11 +162,6 @@
     }
   }
 
-  .sensor-form {
-    display: flex;
-    gap: 1rem;
-  }
-
   .ship-container {
     position: relative;
     width: 50%;
@@ -187,6 +182,34 @@
     margin-bottom: 1rem;
     width: 48%;
 
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      background-color: #fff;
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      option {
+        padding: 0.5rem;
+        background-color: #fff;
+        color: #333;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+    }
+
     .form-control {
       margin-bottom: 0.6rem;
       display: flex;
@@ -204,11 +227,17 @@
       .form-input {
         padding: 0.5rem;
         margin-left: 1rem;
-        border: solid 0.1px rgba($color: #000000, $alpha: 0.5);
+        border: 1px solid #ccc;
         border-radius: 5px;
         background-color: rgba($color: white, $alpha: 1);
         font-size: 13px;
         width: 100%;
+
+        &:focus {
+          border-color: #007bff;
+          outline: none;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
       }
 
       .form-toggle {
@@ -222,11 +251,6 @@
         .toggle {
           font-size: 1rem;
         }
-      }
-
-      .form-input:focus,
-      .form-input:active {
-        border: none;
       }
 
       .btn {

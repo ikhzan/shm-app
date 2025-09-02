@@ -9,7 +9,7 @@ urlpatterns = [
     path('insert/', views.insert_sensor_data), 
     path('all/', views.view_all_sensor_data),
     path('start-mqtt/', views.start_mqtt_now),
-    path('endall/', views.all_enddevice),
+    path('all_enddevice/', views.all_enddevice),
     path('create_device/', views.create_enddevice),
     path('update_device/', views.update_enddevice),
     path('delete_device/', views.delete_enddevice),

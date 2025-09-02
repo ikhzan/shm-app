@@ -133,7 +133,7 @@ def create_vehicle(request):
 
     serializer = VehicleRelatedSerializer(data=initial_data)
     if serializer.is_valid():
-        vehicle = serializer.save()
+        serializer.save()
         return Response(serializer.data, status=201)
 
     print("Serializer errors:", serializer.errors)
@@ -216,7 +216,8 @@ def delete_vehicle(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_enddevice(request):
-    serializer = EndDeviceSerializer(data=request.data)
+    print(f"create_enddevice {request.data}")
+    serializer = EndDevicePostSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=201)
@@ -226,8 +227,18 @@ def create_enddevice(request):
 @api_view(['GET'])
 def all_enddevice(request):
     enddevices = EndDevice.objects.all()
-    serializer = EndDeviceSerializer(enddevices,many=True)
-    return Response(serializer.data)
+    enddevice_serializer = EndDeviceSerializer(enddevices, many=True)
+
+    # Get unattached brokers
+    unattached_brokers = BrokerConnection.objects.filter(end_device__isnull=True)
+    broker_serializer = BrokerConnectionSerializer(unattached_brokers, many=True)
+
+    # Combine both in one response
+    return Response({
+        'end_devices': enddevice_serializer.data,
+        'unattached_brokers': broker_serializer.data
+    })
+
 
 @api_view(['GET'])
 def sensor_detail(request):
@@ -291,7 +302,7 @@ def create_brokerconnection(request):
 # Read
 @api_view(['GET'])
 def read_brokerconnection(request):
-    brokerconnections = BorkerConnection.objects.all()
+    brokerconnections = BrokerConnection.objects.all()
     serializer = BrokerConnectionSerializer(brokerconnections,many=True)
     return Response(serializer.data)
 
@@ -300,8 +311,8 @@ def read_brokerconnection(request):
 @permission_classes([IsAuthenticated])
 def update_brokerconnection(request, pk):
     try:
-        brokerconnections = BorkerConnection.objects.get(pk=pk)
-    except BorkerConnection.DoesNotExist:
+        brokerconnections = BrokerConnection.objects.get(pk=pk)
+    except BrokerConnection.DoesNotExist:
         return Response({'error': 'brokerconnections not found'}, status=404)
 
     serializer = BrokerConnectionSerializer(brokerconnections, data=request.data)
@@ -318,8 +329,8 @@ def delete_brokerconnection(request):
     if not pk:
         return Response({'error': 'Missing id parameter'}, status=400)
     try:
-        brokerconnection = BorkerConnection.objects.get(pk=pk)
-    except BorkerConnection.DoesNotExist:
+        brokerconnection = BrokerConnection.objects.get(pk=pk)
+    except BrokerConnection.DoesNotExist:
         return Response({'error': 'BorkerConnection not found'}, status=404)
 
     brokerconnection.delete()

@@ -81,7 +81,7 @@
     <div class="sensor-card" *ngFor="let vehicle of vehicles">
       <div class="sensor-content">
         <img
-          [src]="getImageUrl(vehicle.image_path)"
+          [src]="getImage(vehicle.image_path)"
           alt="{{ vehicle.name }}"
           class="sensor_img"
         />

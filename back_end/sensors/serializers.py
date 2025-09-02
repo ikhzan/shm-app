@@ -13,6 +13,20 @@ class EndDeviceSerializer(serializers.ModelSerializer):
         model = EndDevice
         fields = '__all__'
 
+class EndDevicePostSerializer(serializers.ModelSerializer):
+    broker_id = serializers.PrimaryKeyRelatedField(
+        queryset=BrokerConnection.objects.all(),
+        source='broker',
+        required=False
+    )
+
+    class Meta:
+        model = EndDevice
+        fields = [
+            'device_id', 'device_name', 'device_status',
+            'dev_eui', 'join_eui', 'image_path', 'broker_id'
+        ]
+
 class EndDeviceUpdateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     position_x = serializers.FloatField()
@@ -61,7 +75,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 
 class BrokerConnectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BorkerConnection
+        model = BrokerConnection
         fields = '__all__'       
 
 class LoraGatewaySerializer(serializers.ModelSerializer):

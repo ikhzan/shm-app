@@ -319,6 +319,12 @@
         background-color: rgba($color: white, $alpha: 1);
         font-size: 13px;
         width: 100%;
+
+        &:focus {
+          border-color: #007bff;
+          outline: none;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
       }
 
       .form-toggle {
@@ -332,11 +338,6 @@
         .toggle {
           font-size: 1rem;
         }
-      }
-
-      .form-input:focus,
-      .form-input:active {
-        border: none;
       }
 
       .btn {

@@ -20,6 +20,7 @@
           placeholder="Device ID"
           ngModel
           name="device_id"
+          required
         />
       </div>
       <div class="form-control">
@@ -31,6 +32,7 @@
           placeholder="Device name"
           ngModel
           name="device_name"
+          required
         />
       </div>
       <div class="form-control">
@@ -63,6 +65,7 @@
           name="image_path"
           type="file"
           (change)="onFileChange($event)"
+          required
         />
       </div>
       <div class="form-control">
@@ -78,16 +81,22 @@
         </div>
       </div>
       <div class="form-control">
+        <label for="broker">Broker</label>
+        <select id="broker" [(ngModel)]="selectedBrokerId" name="broker" required>
+          <option *ngFor="let broker of unattachedBrokers" [value]="broker.id">
+            {{ broker.id }} - {{ broker.device_name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-control">
         <span></span>
         <input class="btn" type="submit" value="Submit" />
       </div>
     </form>
 
     <div class="ship-container" *ngIf="imagePreview">
-      <img
-        src="{{ imagePreview }}"
-        class="ship-image"
-      />
+      <img src="{{ imagePreview }}" class="ship-image" />
       <div class="grid-overlay"></div>
     </div>
   </div>
@@ -96,7 +105,7 @@
     <div class="sensor-card" *ngFor="let sensor of allSensors">
       <div class="sensor-content">
         <img
-          [src]="getImageUrl(sensor.image_path)"
+          [src]="getImage(sensor.image_path)"
           alt="{{ sensor.device_name }}"
           class="sensor_img"
         />
@@ -105,11 +114,9 @@
       <div class="sensor-footer">
         <div class="sensor-meta">
           <h3>
-            <a
-              class="device_id"
-              [routerLink]="['/device',sensor.device_id]"
-              >{{ sensor.device_name }}</a
-            >
+            <a class="device_id" [routerLink]="['/device', sensor.device_id]">{{
+              sensor.device_name
+            }}</a>
           </h3>
           <p>{{ sensor.device_id }}</p>
         </div>

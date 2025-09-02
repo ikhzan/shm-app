@@ -35,13 +35,12 @@ class LoraGateway(models.Model):
     def __str__(self) -> str:
         return f"{self.name}"
 
-class BorkerConnection(models.Model):
+class BrokerConnection(models.Model):
     device_name = models.CharField(max_length=100,default='device name',null=False)
     url_path = models.CharField(max_length=100,default='v3/humidity',null=False)
     gateway_path = models.CharField(max_length=100,null=True,default="gateway path")
     status = models.CharField(max_length=20,default='active',null=False)
     sensor_type = models.CharField(max_length=100, default='humidity', null=True)
-    
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
 
@@ -59,10 +58,9 @@ class EndDevice(models.Model):
     join_eui = models.CharField(max_length=100, default='00:00:00:00:00:00:00:11', null=True)
     image_path = models.ImageField(upload_to='sensor_images/', null=True, default='image path')
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, blank=True, related_name='end_devices')
-    broker = models.OneToOneField(BorkerConnection,on_delete=models.CASCADE, null=True, blank=True,related_name='end_device')
+    broker = models.OneToOneField(BrokerConnection,on_delete=models.CASCADE, null=True, blank=True,related_name='end_device')
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self) -> str:
         return self.device_name
-
