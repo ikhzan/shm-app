@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import threading
 from .consumer import connected_clients
 import asyncio
-from ..models import SensorReading, BrokerConnection
+from ..models import SensorReading, BrokerConnection, EndDevice
+from ..serializers import EndDeviceLastDataSerializer
 from django.utils.dateparse import parse_datetime
 
 load_dotenv()
@@ -36,11 +37,30 @@ def create_sensor_reading(device_info, data, decoded, location):
             raw_payload=data
         )
         reading.save()
+        update_enddevice(device_info.get("device_id"),sensor_data)
         print(f"✅ Saved reading from {reading.device_id} at {reading.timestamp}")
         return reading
 
     except Exception as e:
         print(f"❌ Error parsing TTN payload: {e}")
+
+def update_enddevice(device_id, last_data):
+    try:
+        enddevice = EndDevice.objects.filter(device_id=device_id).first()
+        if not enddevice:
+            print(f"EndDevice with device_id {device_id} not found.")
+            return
+
+        data = {'last_data': last_data}
+        serializer = EndDeviceLastDataSerializer(enddevice, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return serializer.data
+        else:
+            print(f"Serializer errors: {serializer.errors}")
+
+    except Exception as ex:
+        print(f"Error updating end device: {ex}")
 
 
 def handle_ttn_payload(data):

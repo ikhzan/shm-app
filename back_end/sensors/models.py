@@ -51,14 +51,16 @@ class BrokerConnection(models.Model):
 class EndDevice(models.Model):
     device_id = models.CharField(max_length=100, null=False, unique=True)  # Ensure unique device IDs
     device_name = models.CharField(max_length=100, null=False, default='device name')
-    device_status = models.CharField(max_length=10, null=True, default='device status')
+    device_status = models.CharField(max_length=100, null=True, default='oneline')
     position_x = models.FloatField(null=False, default=25.0)  # Use FloatField for coordinates
     position_y = models.FloatField(null=False, default=55.0)
     dev_eui = models.CharField(max_length=100, default='00:00:00:00:00:00:00:11', null=True)
     join_eui = models.CharField(max_length=100, default='00:00:00:00:00:00:00:11', null=True)
     image_path = models.ImageField(upload_to='sensor_images/', null=True, default='image path')
+    application_id = models.CharField(max_length=100, default='humidity_sensor',null=True)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True, blank=True, related_name='end_devices')
     broker = models.OneToOneField(BrokerConnection,on_delete=models.CASCADE, null=True, blank=True,related_name='end_device')
+    last_data = models.JSONField(default=dict, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

@@ -8,10 +8,7 @@ class SensorReadingSerializer(serializers.ModelSerializer):
         model = SensorReading
         fields = '__all__'
 
-class EndDeviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EndDevice
-        fields = '__all__'
+
 
 class EndDevicePostSerializer(serializers.ModelSerializer):
     broker_id = serializers.PrimaryKeyRelatedField(
@@ -26,6 +23,16 @@ class EndDevicePostSerializer(serializers.ModelSerializer):
             'device_id', 'device_name', 'device_status',
             'dev_eui', 'join_eui', 'image_path', 'broker_id'
         ]
+
+class EndDeviceLastDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EndDevice
+        fields = ['device_id', 'last_data']  # include other fields if needed
+        read_only_fields = ['device_id']     # device_id usually should not be changed
+    # Optionally, add validation for last_data if needed
+    def validate_last_data(self, value):
+        # Add custom validation logic if required
+        return value
 
 class EndDeviceUpdateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -61,22 +68,39 @@ class VehicleRelatedSerializer(serializers.ModelSerializer):
 
         return vehicle
 
+class BrokerConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BrokerConnection
+        fields = '__all__'  
 
 class SensorPositionSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     position_x = serializers.FloatField()
     position_y = serializers.FloatField()
 
+class EndDeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EndDevice
+        fields = '__all__'
+
+class EndDeviceGetSerializer(serializers.ModelSerializer):
+    broker = BrokerConnectionSerializer(read_only=True)
+
+    class Meta:
+        model = EndDevice
+        fields = [
+            'id',
+            'device_id', 'device_name', 'device_status',
+            'position_x', 'position_y',
+            'dev_eui', 'join_eui', 'image_path',
+            'application_id', 'vehicle', 'broker'
+        ]
+
 class VehicleSerializer(serializers.ModelSerializer):
     end_devices = EndDeviceSerializer(many=True)
     class Meta:
         model = Vehicle
         fields = ['id','name','image_path','end_devices']
-
-class BrokerConnectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BrokerConnection
-        fields = '__all__'       
 
 class LoraGatewaySerializer(serializers.ModelSerializer):
     class Meta:

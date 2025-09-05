@@ -14,6 +14,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, parser_classes
 import requests
 import json
+from django.db.models import Q
 
 load_dotenv()
 
@@ -226,19 +227,18 @@ def create_enddevice(request):
 # Read
 @api_view(['GET'])
 def all_enddevice(request):
+    # Get all end devices
     enddevices = EndDevice.objects.all()
-    enddevice_serializer = EndDeviceSerializer(enddevices, many=True)
+    enddevice_serializer = EndDeviceGetSerializer(enddevices, many=True)
 
-    # Get unattached brokers
+    # Get brokers not attached to any end device
     unattached_brokers = BrokerConnection.objects.filter(end_device__isnull=True)
     broker_serializer = BrokerConnectionSerializer(unattached_brokers, many=True)
 
-    # Combine both in one response
     return Response({
         'end_devices': enddevice_serializer.data,
         'unattached_brokers': broker_serializer.data
     })
-
 
 @api_view(['GET'])
 def sensor_detail(request):
@@ -247,30 +247,71 @@ def sensor_detail(request):
         return Response({"error": "Missing sensor_id in query parameters"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
+        end_device = EndDevice.objects.filter(device_id=device_id)
+        enddevice_serializer = EndDeviceGetSerializer(end_device,many=True)
         sensor_data = SensorReading.objects.filter(device_id=device_id)
         serializer = SensorReadingSerializer(sensor_data, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            'end_devices': enddevice_serializer.data,
+            'sensor_data': serializer.data
+        })
+        # return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as ex:
         print(f"Error fetching sensor data: {ex}")
+        return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+from django.db.models import Q
+
+@api_view(['GET'])
+def device_edit_form(request):
+    device_id = request.query_params.get('sensor_id')
+
+    try:
+        end_device = EndDevice.objects.filter(device_id=device_id).first()
+        attached_broker_ids = EndDevice.objects.exclude(broker=None).values_list('broker__pk', flat=True)
+        free_brokers = BrokerConnection.objects.exclude(pk__in=attached_broker_ids)
+
+        # If editing and the device has a broker, include it back in the list
+        if end_device and end_device.broker:
+            free_brokers = BrokerConnection.objects.filter(
+                Q(pk__in=free_brokers.values_list('pk', flat=True)) | Q(pk=end_device.broker.pk)
+            )
+
+        broker_serializer = BrokerConnectionSerializer(free_brokers, many=True)
+
+        if end_device:
+            device_serializer = EndDeviceGetSerializer(end_device)
+            return Response({
+                "device": device_serializer.data,
+                "brokers": broker_serializer.data
+            })
+
+        return Response({
+            "device": None,
+            "brokers": broker_serializer.data
+        })
+
+    except Exception as ex:
+        print(f"Error in edit form endpoint: {ex}")
         return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Update
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_enddevice(request):
-    pk = request.query_params.get('id')
-    if not pk:
-        return Response({'error': 'Missing id parameter'}, status=400)
+def update_enddevice(request,device_id):
+    print(f"update_device {request.data}")
+
     try:
-        enddevice = EndDevice.objects.get(pk=pk)
+        enddevice = EndDevice.objects.get(device_id=device_id)
     except EndDevice.DoesNotExist:
         return Response({'error': 'EndDevice not found'}, status=404)
 
-    serializer = EndDeviceSerializer(enddevice, data=request.data)
+    serializer = EndDevicePostSerializer(enddevice, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
 
 # Delete
 @api_view(['DELETE'])
@@ -336,12 +377,28 @@ def delete_brokerconnection(request):
     brokerconnection.delete()
     return Response({'message': 'BorkerConnection deleted successfully'}, status=204)
 
+def sync_devices(devices):
+    for item in devices:
+        ids = item.get('ids', {})
+        device_data = {
+            'device_id': ids.get('device_id'),
+            'dev_eui': ids.get('dev_eui'),
+            'join_eui': ids.get('join_eui'),
+            'device_name': ids.get('device_id'),
+            'position_x': 0.0,
+            'position_y': 0.0,
+            'application_id': ids.get('application_ids', {}).get('application_id') or 'unknown-app',
+        }
+        EndDevice.objects.update_or_create(
+            device_id=device_data['device_id'],
+            defaults=device_data
+        )
 
 @permission_classes([IsAuthenticated])
+@api_view(['GET'])
 def get_lora_devices(request):
     try:
         server_address = os.getenv("SERVER_ADDRESS","")
-        # https://zaim-university.eu1.cloud.thethings.industries/api/v3/applications/humidity-sensor/devices
         THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications/humidity-sensor/devices"
         BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
 
@@ -353,8 +410,26 @@ def get_lora_devices(request):
 
         if response.status_code == 200:
             data = response.json()
-            print("Device data:", data)
-            return data
+            devices = data.get('end_devices', [])
+
+            for item in devices:
+                ids = item.get('ids', {})
+                device_data = {
+                    'device_id': ids.get('device_id'),
+                    'dev_eui': ids.get('dev_eui'),
+                    'join_eui': ids.get('join_eui'),
+                    'device_name': ids.get('device_id'),
+                    'position_x': 0.0,
+                    'position_y': 0.0,
+                    'application_id': ids.get('application_ids', {}).get('application_id') or 'unknown-app',
+                }
+            
+                serialiazer = EndDeviceSerializer(data=device_data)
+                if(serialiazer.is_valid()):
+                    serialiazer.save()
+
+            # print("Device data:", data)
+            return Response(data,status=200)
         else:
             print(f"Error {response.status_code}: {response.text}")
             return Response({'error': f'{response.text}'},status=204)

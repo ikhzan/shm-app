@@ -1,89 +1,158 @@
-.login-content {
-//   border: 1px solid red;
-    display: flex;
+.login-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0; // shorthand for top:0; right:0; bottom:0; left:0;
+  padding-top: 100px;
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 
-    .login-info{
-        border: 1px solid green;
-        margin-left: 1rem;
-        background-color: rgba($color: green, $alpha: 0.2);
-        border-radius: 5px;
-        padding: 1rem;
-
-        h4{
-            text-transform: uppercase;
-            font-weight: 500;
-            margin-bottom: .5rem;
-        }
-    }
-
-  .response {
-    font-size: 13px;
-    color: #f70000;
-  }
-
-  .version {
-    display: flex;
-    //   justify-content: center;
-    margin-top: 1rem;
-    color: rgba($color: #000000, $alpha: 0.7);
-
-    p {
-      font-size: 13px;
-    }
-  }
-
-  .form-group {
-    margin-bottom: 2rem;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-size: 13px;
-    font-weight: bold;
-  }
-  .form-group input[type="text"],
-  .form-group input[type="password"] {
-    width: 400px;
-    height: 40px;
-    padding: 10px;
-    border: 1px solid #ccc;
+  .login-modal-content {
+    position: relative;
+    background-color: #fefefe;
+    width: 40%;
+    max-width: 480px;
+    min-width: 320px;
+    height: auto;
+    max-height: 70vh;
+    border: 1px solid #888;
     border-radius: 5px;
-  }
-
-  .login-btns {
-    gap: 0.4rem;
-    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2),
+      0 6px 20px rgba(0, 0, 0, 0.19);
+    animation: animatetop 0.4s ease forwards;
     display: flex;
-    margin-top: 20px;
-    text-align: center;
+    flex-direction: column;
 
-    .login-btn {
-      flex: 1;
-      border: none;
-      padding: 0.5rem;
-      background-color: #113c60;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 5px;
-
-      &:hover {
-        cursor: pointer;
+    @keyframes animatetop {
+      from {
+        top: -200px;
+        opacity: 0;
+      }
+      to {
+        top: 0;
+        opacity: 1;
       }
     }
 
-    .register-btn {
-      flex: 1;
-      padding: 0.5rem;
-      font-size: 14px;
-      border-radius: 5px;
-      border: none;
-      // width: 100%;
-      text-decoration: none;
-      color: #333;
-      cursor: pointer;
-      background-color: #f70000;
+    .login-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background-color: #113c60;
       color: #fff;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+      h2 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      fa-icon {
+        cursor: pointer;
+        font-size: 1.25rem;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #f70000;
+        }
+      }
+    }
+
+    form.login-form {
+      padding: 1rem 1.5rem 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+
+      .login-control,
+      .form-control {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+
+        label {
+          font-weight: 600;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          margin-bottom: 0.4rem;
+          color: #333;
+        }
+
+        input {
+          height: 40px;
+          padding: 0 0.75rem;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 1rem;
+          transition: border-color 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: #113c60;
+            box-shadow: 0 0 5px rgba(17, 60, 96, 0.5);
+          }
+        }
+      }
+
+      .error-message {
+        color: #f70000;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        min-height: 1.2em; // reserve space even if no error
+      }
+
+      .control {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1rem;
+
+        button {
+          min-width: 100px;
+          padding: 0.5rem 1rem;
+          border-radius: 5px;
+          font-size: 1rem;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &.register-btn {
+            background-color: #f70000;
+            color: #fff;
+
+            &:hover:not(:disabled) {
+              background-color: #c50000;
+            }
+          }
+
+          &.login-btn {
+            background-color: #113c60;
+            color: #fff;
+
+            &:hover:not(:disabled) {
+              background-color: #0e2f4a;
+            }
+
+            &:disabled {
+              background-color: #7a9bbf;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+
+      .version {
+        margin-top: .5rem;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 0.8rem;
+        user-select: none;
+      }
     }
   }
 }

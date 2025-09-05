@@ -57,8 +57,14 @@ export class RestService {
     return this.http.get<{ end_devices: any[]; unattached_brokers: any[] }>(`${this.apiUrl}all_enddevice/`);
   }
 
-  fetchDataByDeviceId(deviceId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}detail_sensor/`, {
+  fetchDataByDeviceId(deviceId: string): Observable<{ end_devices: any[]; sensor_data: any[] }> {
+    return this.http.get<{ end_devices: any[]; sensor_data: any[] }>(`${this.apiUrl}detail_sensor/`, {
+      params: { sensor_id: deviceId }
+    });
+  }
+
+  fetchDataEditForm(deviceId: string): Observable<{ device: any[]; brokers: any[] }> {
+    return this.http.get<{ device: any[]; brokers: any[] }>(`${this.apiUrl}edit_sensor/`, {
       params: { sensor_id: deviceId }
     });
   }
@@ -69,9 +75,9 @@ export class RestService {
     });
   }
 
-  fetchLoraDevices(): Observable<any[]> {
+  fetchLoraDevices(): Observable<any> {
     const token = localStorage.getItem('access_token');
-    return this.http.get<any[]>(`${this.apiUrl}lora/devices/`, {
+    return this.http.get<any>(`${this.apiUrl}lora/devices/`, {
       headers: { Authorization: 'Bearer ' + token }
     });
   }
@@ -83,7 +89,7 @@ export class RestService {
   async submitEndDevice(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
-      
+
       const headers = new HttpHeaders({
         'Authorization': 'Bearer ' + token
       });
@@ -111,14 +117,13 @@ export class RestService {
   }
 
 
-  async updateEndDevice(endDevice: EndDeviceData): Promise<void> {
+  async updateEndDevice(device_id: string, data: FormData): Promise<void> {
     try {
       const token = localStorage.getItem('access_token');
       const headers = new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token
       });
-      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_device/`, endDevice, { headers }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_device/${device_id}/`, data, { headers }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)

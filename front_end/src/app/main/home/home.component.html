@@ -138,7 +138,7 @@
               <div class="tooltip">
                 <a
                   class="device_id"
-                  [routerLink]="['/device', sensor.device_id]"
+                  [routerLink]="['/sensors', sensor.device_id]"
                   >{{ sensor.device_id }}</a
                 >
               </div>
@@ -203,7 +203,7 @@
           </tr>
           <tr *ngFor="let r of dataSensor">
             <td>
-              <a class="device_id" [routerLink]="['/device', r.device_id]">{{
+              <a class="device_id" [routerLink]="['/sensors', r.device_id]">{{
                 r.device_id
               }}</a>
             </td>

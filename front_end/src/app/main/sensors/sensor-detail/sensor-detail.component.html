@@ -4,18 +4,53 @@
     <h4>{{ deviceId }}</h4>
   </div>
 
-  <div class="data-detail">
-    <div class="detail">
-      <div class="name">Dev EUI</div>
-      <div class="data">00.00.00.00.11</div>
+  <div class="data-analytics">
+    <div class="sensor-detail" *ngFor="let device of endDevice">
+      <ul>
+        <li>
+          <h4 class="name">Dev EUI</h4>
+          <h4 class="data">{{ device.dev_eui }}</h4>
+        </li>
+        <li>
+          <h4 class="name">Join EUI</h4>
+          <h4 class="data">{{ device.join_eui }}</h4>
+        </li>
+        <li>
+          <h4 class="name">Application ID</h4>
+          <h4 class="data">{{ device.application_id }}</h4>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <h4 class="name">Broker Name</h4>
+          <h4 class="data">{{ device.broker.device_name }}</h4>
+        </li>
+        <li>
+          <h4 class="name">Broker Status</h4>
+          <h4 class="data">{{ device.broker.status }}</h4>
+        </li>
+        <li>
+          <h4 class="name">Broker Sensor Type</h4>
+          <h4 class="data">{{ device.broker.sensor_type }}</h4>
+        </li>
+        <li>
+          <h4 class="name">Broker URL</h4>
+          <h4 class="data">{{ device.broker.url_path }}</h4>
+        </li>
+      </ul>
     </div>
-    <div class="detail">
-      <div class="name">Join EUI</div>
-      <div class="data">00.00.00.00.11</div>
-    </div>
-    <div class="detail">
-      <div class="name">Application ID</div>
-      <div class="data">00.00.00.00.11</div>
+
+    <div *ngIf="!isLoading" class="charts-container">
+      <!-- Humidity charts -->
+      <div *ngFor="let deviceId of humidityDeviceIds" class="chart-block">
+        <h4>Humidity</h4>
+        <canvas #humidityCanvas></canvas>
+      </div>
+      <!-- Temperature charts -->
+      <div *ngFor="let deviceId of temperatureDeviceIds" class="chart-block">
+        <h4>Temperature</h4>
+        <canvas #temperatureCanvas></canvas>
+      </div>
     </div>
   </div>
 

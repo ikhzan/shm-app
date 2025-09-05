@@ -1,0 +1,135 @@
+.sensor_detail {
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  box-shadow: 5px 5px 5px #939393;
+  padding: 1rem;
+
+  .data-analytics {
+    display: flex;
+    flex-wrap: wrap;
+
+    .data-broker {
+      background-color: rgba(109, 135, 200, 0.2);
+      width: 50%;
+    }
+
+    .data-detail {
+      background-color: rgba(109, 135, 200, 0.2); // simplified rgba
+      color: #113c60;
+      border-radius: 6px;
+      padding: 1rem;
+      width: 50%;
+    }
+
+    .sensor-detail {
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+
+      ul {
+        width: 100%;
+        background-color: rgba(109, 135, 200, 0.2); // simplified rgba
+        color: #113c60;
+        padding: 0.5rem;
+        border-radius: 5px;
+
+        li {
+          list-style: none;
+          display: flex;
+          margin-bottom: 0.3rem;
+
+          .name {
+            flex: 0 0 25%;
+            font-weight: 600;
+            color: #0d2a4a;
+          }
+
+          .data {
+            flex: 1;
+            font-weight: 400;
+            color: #113c60;
+            word-break: break-word;
+          }
+        }
+      }
+    }
+
+    .charts-container {
+      display: flex; // make container flex to layout chart blocks
+      flex-wrap: wrap; // allow wrapping
+      gap: 1rem; // space between chart blocks
+      width: 100%;
+
+      .chart-block {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 1rem;
+        flex: 1 1 300px; // grow, shrink, base width 300px
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+
+        h4 {
+          font-size: 1.1rem;
+          margin-bottom: 0.75rem;
+          color: #113c60;
+          font-weight: 600;
+        }
+
+        canvas {
+          width: 100% !important;
+          height: 180px !important;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .title {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-items: center;
+
+    h3 {
+      width: 80%;
+      color: #113c60;
+      font-weight: bold;
+      font-size: large;
+      text-transform: uppercase;
+      background-color: rgba($color: #6d87c8, $alpha: 0.3);
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+
+    h4 {
+      width: 20%;
+      background-color: rgba($color: red, $alpha: 0.3);
+      color: red;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        background-color: red;
+        color: #f7f7f7;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+}

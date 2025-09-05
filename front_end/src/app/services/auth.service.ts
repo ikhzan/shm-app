@@ -11,8 +11,8 @@ export interface Credentials {
   providedIn: 'root'
 })
 export class AuthService {
-  private accessTokenKey = 'access_token';
-  private refreshTokenKey = 'refresh_token';
+  private accessTokenKey = 'access';
+  private refreshTokenKey = 'refresh';
   private userName = "username";
   private authStatus = new BehaviorSubject<boolean>(this.hasToken());
   private apiUrl = 'http://localhost:8000/api/';
@@ -29,6 +29,7 @@ export class AuthService {
         localStorage.setItem(this.refreshTokenKey, tokens.refresh);
         localStorage.setItem(this.userName, tokens.username);
         this.authStatus.next(true);
+        this.setLoggedIn(true);
       })
     );
   }
@@ -36,7 +37,6 @@ export class AuthService {
   setLoggedIn(state: boolean) {
     this.loginState.next(state);
   }
-
 
   // 🚪 Logout: Clear tokens
   logout(): void {
@@ -78,6 +78,5 @@ export class AuthService {
   private hasToken(): boolean {
     return !!localStorage.getItem(this.accessTokenKey);
   }
-
 
 }

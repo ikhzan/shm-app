@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faClose, faSearch, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { RestService } from '../../services/rest.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from "../../shared/login-modal/login-modal.component";
-import { LoraGatewayComponent } from '../lora-gateway/lora-gateway.component';
-import { LoraAppComponent } from '../lora-app/lora-app.component';
 
 export interface Credentials {
   username: string
@@ -25,6 +23,7 @@ export class BrokersComponent implements OnInit {
   faSearch = faSearch
   faTrash = faTrashAlt
   faClose = faClose
+  faEdit = faEdit
   modalDeleteON = false
   isOn = false;
   formON: boolean = false;
@@ -38,7 +37,8 @@ export class BrokersComponent implements OnInit {
   brokerId: number | null = null;
   isAuthenticated = false;
   loginModalON = false;
-  loadingLora: string | null = null
+  endDevices: any[] = [];
+  loadingLora: string | null = "Load Lora"
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private restService: RestService,
@@ -68,12 +68,13 @@ export class BrokersComponent implements OnInit {
     this.restService.fetchLoraDevices().subscribe({
       next: (data) => {
         console.log(`Data Lora Devices ${data}`)
-        this.loadingLora = null
+        this.loadingLora = "Load Lora"
+        this.endDevices = data.end_devices;
       },
       error: (e) => {
         this.loadingLora = 'Error'
         console.log(`Error fetch data lora ${e}`)
-        this.loadingLora = null
+        this.loadingLora = "Load Lora"
       }
     })
   }
@@ -155,6 +156,10 @@ export class BrokersComponent implements OnInit {
         console.error('Delete failed:', err);
       }
     });
+  }
+
+  editBroker(){
+    
   }
 
   loadLora() {

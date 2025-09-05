@@ -123,8 +123,16 @@
     display: flex;
     justify-items: center;
 
+    .loading-lora {
+      margin-left: 0.5rem;
+      font-weight: 600;
+      color: green;
+      text-transform: uppercase;
+      
+    }
+
     h3 {
-      width: 90%;
+      flex: 1;
       color: #113c60;
       font-weight: bold;
       font-size: large;
@@ -162,112 +170,23 @@
     }
   }
 
-  .ship-container {
-    position: relative;
-    width: 50%;
-    max-width: 800px;
-    margin: auto;
+  .image_container {
+    width: 30%;
+    height: 300px;
+    width: 600px;
   }
 
-  .ship-image {
+  .image_preview {
     width: 100%;
-    height: 20%;
+    height: 100%;
     display: block;
     object-fit: contain;
+    border: 1px solid red;
   }
 
-  .sensors-form {
-    display: block !important;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    width: 48%;
-
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-      background-color: #fff;
-      margin-left: 1rem;
-      margin-bottom: 1rem;
-      cursor: pointer;
-
-      &:focus {
-        border-color: #007bff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-      }
-
-      option {
-        padding: 0.5rem;
-        background-color: #fff;
-        color: #333;
-
-        &:hover {
-          background-color: #f0f0f0;
-        }
-      }
-    }
-
-    .form-control {
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: start;
-      justify-content: left;
-
-      label,
-      span {
-        padding: 0.5rem;
-        width: 200px;
-        font-size: 13px;
-        font-weight: 500;
-      }
-
-      .form-input {
-        padding: 0.5rem;
-        margin-left: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: rgba($color: white, $alpha: 1);
-        font-size: 13px;
-        width: 100%;
-
-        &:focus {
-          border-color: #007bff;
-          outline: none;
-          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-      }
-
-      .form-toggle {
-        margin-left: 1rem;
-        display: flex;
-        justify-content: start;
-        background-color: rgba($color: white, $alpha: 1);
-        width: 100%;
-        padding-left: 0.5rem;
-
-        .toggle {
-          font-size: 1rem;
-        }
-      }
-
-      .btn {
-        border: none;
-        width: 100%;
-        padding: 0.5rem;
-        margin-left: 1rem;
-        background-color: #113c60;
-        color: white;
-        border-radius: 5px;
-        box-shadow: 1px 1px 1px #939393;
-
-        &:hover {
-          cursor: pointer;
-          box-shadow: none;
-        }
-      }
-    }
+  .sensor-form {
+    display: flex;
+    gap: 1rem;
   }
+
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RestService } from '../../services/rest.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
-import { MediaService } from '../../services/media.service';
+import { RestService } from '../../../services/rest.service';
+import { MediaService } from '../../../services/media.service';
 
 @Component({
   selector: 'app-vehicle-detail',

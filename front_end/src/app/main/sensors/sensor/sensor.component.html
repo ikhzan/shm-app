@@ -2,87 +2,90 @@
   <div class="title">
     <h3>Sensors</h3>
     <h4 (click)="toggleForm()">Add Sensor</h4>
+    <h4 (click)="loadLora()" class="loading-lora" *ngIf="loadingLora != null">
+      {{ loadingLora }}
+    </h4>
   </div>
 
   <div class="sensor-form" *ngIf="formON">
     <form
-      class="sensors-form"
-      #deviceForm="ngForm"
-      (ngSubmit)="onSubmit(deviceForm)"
-      *ngIf="formON"
+      [formGroup]="deviceForm"
+      (ngSubmit)="onSubmit()"
+      class="form-group"
+      enctype="multipart/form-data"
     >
       <div class="form-control">
         <label for="device_id">ID</label>
         <input
-          class="form-input"
           id="device_id"
+          class="form-input"
           type="text"
-          placeholder="Device ID"
-          ngModel
-          name="device_id"
+          formControlName="device_id"
           required
         />
       </div>
+
       <div class="form-control">
         <label for="device_name">Name</label>
         <input
-          class="form-input"
           id="device_name"
+          class="form-input"
           type="text"
-          placeholder="Device name"
-          ngModel
-          name="device_name"
+          formControlName="device_name"
           required
         />
       </div>
+
       <div class="form-control">
-        <label for="dev_eui">Dev eui</label>
+        <label for="dev_eui">Dev EUI</label>
         <input
-          class="form-input"
           id="dev_eui"
+          class="form-input"
           type="text"
-          placeholder="Dev EUI"
-          ngModel
-          name="dev_eui"
+          formControlName="dev_eui"
         />
       </div>
+
       <div class="form-control">
-        <label for="join_eui">Join eui</label>
+        <label for="join_eui">Join EUI</label>
         <input
-          class="form-input"
           id="join_eui"
+          class="form-input"
           type="text"
-          placeholder="Join EUI"
-          ngModel
-          name="join_eui"
+          formControlName="join_eui"
         />
       </div>
+
       <div class="form-control">
-        <label for="image_path">Image Path</label>
+        <label for="position_x">Position X</label>
         <input
+          id="position_x"
           class="form-input"
-          ngModel
-          name="image_path"
-          type="file"
-          (change)="onFileChange($event)"
+          type="number"
+          formControlName="position_x"
           required
         />
       </div>
+
       <div class="form-control">
-        <label for="device_status">Device Status</label>
-        <div class="form-toggle">
-          <input
-            type="checkbox"
-            [(ngModel)]="isOn"
-            name="toggleSwitch"
-            class="toggle"
-          />
-          <span>{{ isOn ? "ON" : "OFF" }}</span>
-        </div>
+        <label for="position_y">Position Y</label>
+        <input
+          id="position_y"
+          class="form-input"
+          type="number"
+          formControlName="position_y"
+          required
+        />
       </div>
+
       <div class="form-control">
-        <label for="broker">Broker</label>
-        <select id="broker" [(ngModel)]="selectedBrokerId" name="broker" required>
+        <label for="broker_id">Broker</label>
+        <select
+          id="broker_id"
+          class="form-input"
+          formControlName="broker_id"
+          required
+        >
           <option *ngFor="let broker of unattachedBrokers" [value]="broker.id">
             {{ broker.id }} - {{ broker.device_name }}
           </option>
@@ -90,14 +93,26 @@
       </div>
 
       <div class="form-control">
-        <span></span>
-        <input class="btn" type="submit" value="Submit" />
+        <label for="image_path">Image</label>
+        <input
+          id="image_path"
+          class="form-input"
+          type="file"
+          (change)="onFileChange($event)"
+        />
+      </div>
+      <div class="form-control">
+        <input
+          class="btn"
+          type="submit"
+          [disabled]="isLoading"
+          value="{{ isEditMode ? 'Update' : 'Create' }}"
+        />
       </div>
     </form>
 
-    <div class="ship-container" *ngIf="imagePreview">
-      <img src="{{ imagePreview }}" class="ship-image" />
-      <div class="grid-overlay"></div>
+    <div class="image_container" *ngIf="imagePreview">
+      <img  [src]="imagePreview" class="image_preview" />
     </div>
   </div>
 
@@ -114,11 +129,14 @@
       <div class="sensor-footer">
         <div class="sensor-meta">
           <h3>
-            <a class="device_id" [routerLink]="['/device', sensor.device_id]">{{
-              sensor.device_name
-            }}</a>
+            <a
+              class="device_id"
+              [routerLink]="['/sensors', sensor.device_id]"
+              >{{ sensor.device_name }}</a
+            >
           </h3>
           <p>{{ sensor.device_id }}</p>
+          <p>Broker: {{ sensor.broker?.device_name }}</p>
         </div>
 
         <div
@@ -129,7 +147,9 @@
         </div>
 
         <div class="sensor-actions" *ngIf="isAuthenticated">
-          <button class="edit" (click)="editSensor(sensor.id)">Edit</button>
+          <button class="edit" (click)="editSensor(sensor.device_id)">
+            Edit
+          </button>
           <button class="delete" (click)="showDeleteModal(sensor.id)">
             Delete
           </button>

@@ -4,6 +4,11 @@
   box-shadow: 5px 5px 5px #939393;
   padding: 1rem;
 
+  .action-btns{
+    display: flex;
+    justify-content: space-around;
+  }
+
   .important-info {
     background-color: rgba($color: red, $alpha: 0.3);
     padding: 1rem;
@@ -100,72 +105,5 @@
     text-align: center;
     color: #939393;
     margin: 1rem;
-  }
-
-  .brokers-form {
-    display: block;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    // background-color: rgba($color: grey, $alpha: .2);
-    width: 48%;
-
-    .form-control {
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: start;
-      justify-content: left;
-      //   border: 1px solid red;
-
-      label,
-      span {
-        padding: 0.5rem;
-        width: 200px;
-        font-size: 14px;
-        font-weight: 600;
-      }
-
-      .form-input {
-        padding: 0.5rem;
-        margin-left: 1rem;
-        border: solid 0.2px rgba($color: #000000, $alpha: 0.5);
-        border-radius: 5px;
-        background-color: rgba($color: white, $alpha: 1);
-        font-size: 13px;
-        width: 100%;
-
-        &:focus {
-          border-color: #007bff;
-          outline: none;
-          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-      }
-
-      .form-toggle {
-        margin-left: 1rem;
-        display: flex;
-        justify-content: start;
-        background-color: rgba($color: white, $alpha: 1);
-        width: 100%;
-        padding-left: 0.5rem;
-
-        .toggle {
-          font-size: 1rem;
-        }
-      }
-
-      .btn {
-        border: none;
-        width: 100%;
-        padding: 0.5rem;
-        margin-left: 1rem;
-        background-color: #113c60;
-        color: white;
-        border-radius: 5px;
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
-    }
   }
 }

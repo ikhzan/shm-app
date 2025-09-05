@@ -2,11 +2,10 @@
   <div class="title">
     <h3>Brokers</h3>
     <h4 (click)="toggleForm()">Add Broker</h4>
-    <h4 (click)="loadLora()">Load Lora <span class="loading-lora" *ngIf="loadingLora != null">{{ loadingLora }}</span></h4>
   </div>
 
   <form
-    class="brokers-form"
+    class="form-group"
     #brokerForm="ngForm"
     (ngSubmit)="onSubmit(brokerForm)"
     *ngIf="formON"
@@ -126,11 +125,16 @@
         <td>{{ broker.status }}</td>
         <td>{{ broker.url_path }}</td>
         <td *ngIf="isAuthenticated">
-          <fa-icon
-            [icon]="faTrash"
-            class="delete-icon"
-            (click)="showDeleteModal(broker.id)"
-          ></fa-icon>
+          
+          <div class="action-btns">
+            <fa-icon [icon]="faEdit" class="edit-icon"></fa-icon>
+            <fa-icon
+              [icon]="faTrash"
+              class="delete-icon"
+              (click)="showDeleteModal(broker.id)"
+            ></fa-icon>
+            
+          </div>
         </td>
       </tr>
       <tr *ngIf="!isLoading && dataBroker.length === 0">

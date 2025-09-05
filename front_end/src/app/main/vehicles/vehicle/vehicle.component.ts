@@ -1,14 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { RestService } from '../../services/rest.service';
 import { RouterLink } from '@angular/router';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
-import { LoginModalComponent } from '../../shared/login-modal/login-modal.component';
-import { MediaService } from '../../services/media.service';
+import { DeleteDataModalComponent } from '../../../shared/delete-data-modal/delete-data-modal.component';
+import { LoginModalComponent } from '../../../shared/login-modal/login-modal.component';
+import { AuthService } from '../../../services/auth.service';
+import { RestService } from '../../../services/rest.service';
+import { MediaService } from '../../../services/media.service';
 
 export interface Credentials {
   username: string

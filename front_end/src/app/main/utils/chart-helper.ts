@@ -50,19 +50,22 @@ export class ChartHelper {
     yMin: number,
     yMax: number
   ): Chart {
+    const rgbaColor = color.replace('1)', '0.1)').replace('rgb', 'rgba');
+
     return new Chart(ctx, {
       type: 'line',
       data: {
-        labels: data.map((_, i) => `#${i + 1}`),
+        labels: data.map((_, i) => `#${i + 1}`), // Keep index-based labels
         datasets: [{
           label,
           data: data.map(d => d.value),
           borderColor: color,
-          backgroundColor: color.replace('1)', '0.1)').replace('rgb', 'rgba'),
-          // fill: true,
+          backgroundColor: rgbaColor,
           tension: 0.4,
-          pointRadius: 1.5,
-          pointHoverRadius: 3
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          pointBackgroundColor: color,
+          borderWidth: 2
         }]
       },
       options: {
@@ -72,20 +75,29 @@ export class ChartHelper {
           duration: 500,
           easing: 'easeOutQuart'
         },
+        interaction: {
+          mode: 'nearest',
+          intersect: false
+        },
         plugins: {
           legend: {
-            display: true,
-            labels: {
-              font: { size: 10 },
-              boxWidth: 10
-            }
+            display: false
           },
           tooltip: {
-            mode: 'index',
+            mode: 'nearest',
             intersect: false,
             bodyFont: { size: 10 },
-            titleFont: { size: 11 }
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            padding: 6,
+            cornerRadius: 4,
+            callbacks: {
+              label: (tooltipItem) => {
+              
+                return `${tooltipItem.formattedValue}`;
+              }
+            }
           }
+
         },
         scales: {
           x: {
@@ -99,12 +111,14 @@ export class ChartHelper {
             max: yMax,
             ticks: {
               font: { size: 9 },
-              stepSize: 10
+              stepSize: 10,
+              color: '#666'
             },
             title: {
               display: true,
               text: yLabel,
-              font: { size: 10 }
+              font: { size: 10 },
+              color: '#444'
             },
             grid: {
               color: '#eee'
@@ -114,4 +128,5 @@ export class ChartHelper {
       }
     });
   }
+
 }

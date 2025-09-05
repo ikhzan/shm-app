@@ -6,7 +6,7 @@
 
   <div class="vehicle-form" *ngIf="formON">
     <form
-      class="sensors-form"
+      class="form-group"
       enctype="multipart/form-data"
       #deviceForm="ngForm"
       (ngSubmit)="onSubmit(deviceForm)"
@@ -37,43 +37,46 @@
       </div>
     </form>
 
-    <div class="ship-container" *ngIf="imagePreview">
-      <img
-        [src]="imagePreview"
-        class="ship-image"
-        (click)="placeHolder($event)"
-      />
-
-      <div class="grid-overlay"></div>
-
-      <div
-        *ngFor="let sensor of placedSensors"
-        class="sensor-lamp"
-        [style.left.%]="sensor.position_x"
-        [style.top.%]="sensor.position_y"
-        [ngClass]="getLampClass(sensor.value)"
-      >
-        <div class="tooltip">
-          {{ sensor.device_name }}<br />
-          x: {{ sensor.position_x }}%, y: {{ sensor.position_y }}%
+    <div class="shops">
+      <div class="unliked-sensors">
+        <h2>Unlinked Sensors</h2>
+        <div class="sensor-info">
+          <div class="description">
+            <p>
+              These sensors are avaible but not attached yet, so we can see it
+              here
+            </p>
+          </div>
+          <ol>
+            <li *ngFor="let sensor of unlinkedSensors">
+              {{ sensor.device_name }} with ID: {{ sensor.id }}
+            </li>
+          </ol>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="unliked-sensors">
-    <h2>Unlinked Sensors</h2>
-    <div class="sensor-info">
-      <div class="description">
-        <p>
-          These sensors are avaible but not attached yet, so we can see it here
-        </p>
+      <div class="ship-container" *ngIf="imagePreview">
+        <img
+          [src]="imagePreview"
+          class="ship-image"
+          (click)="placeHolder($event)"
+        />
+
+        <div class="grid-overlay"></div>
+
+        <div
+          *ngFor="let sensor of placedSensors"
+          class="sensor-lamp"
+          [style.left.%]="sensor.position_x"
+          [style.top.%]="sensor.position_y"
+          [ngClass]="getLampClass(sensor.value)"
+        >
+          <div class="tooltip">
+            {{ sensor.device_name }}<br />
+            x: {{ sensor.position_x }}%, y: {{ sensor.position_y }}%
+          </div>
+        </div>
       </div>
-      <ol>
-        <li *ngFor="let sensor of unlinkedSensors">
-          {{ sensor.device_name }} with ID: {{ sensor.id }}
-        </li>
-      </ol>
     </div>
   </div>
 
@@ -90,7 +93,7 @@
       <div class="sensor-footer">
         <div class="sensor-meta">
           <h3>
-            <a class="sensor_id" [routerLink]="['/vehicle', vehicle.id]">
+            <a class="sensor_id" [routerLink]="['/vehicles', vehicle.id]">
               {{ vehicle.name }}</a
             >
           </h3>
@@ -111,7 +114,6 @@
     </div>
   </div>
 </div>
-
 
 <app-delete-data-modal
   [visible]="modalDeleteON"
