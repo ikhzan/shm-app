@@ -65,9 +65,9 @@ export class SensorComponent implements OnInit, OnDestroy {
       this.isAuthenticated = status;
       console.log(`isAuthenticated ${this.isAuthenticated}`)
       if (status) {
-        this.formON = true;  // open form automatically on login
+        this.formON = true; 
       } else {
-        this.formON = false; // optionally close form on logout
+        this.formON = false;
       }
       this.loadSensorData();
     });

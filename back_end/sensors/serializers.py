@@ -67,6 +67,29 @@ class VehicleRelatedSerializer(serializers.ModelSerializer):
                 continue  # Optionally log or raise
 
         return vehicle
+    
+    def update(self, instance, validated_data):
+        end_devices_data = validated_data.pop('end_devices', [])
+
+        # Update vehicle fields
+        instance.name = validated_data.get('name', instance.name)
+        if 'image_path' in validated_data:
+            instance.image_path = validated_data['image_path']
+        instance.save()
+
+        # Update related end_devices
+        for sensor_data in end_devices_data:
+            try:
+                sensor = EndDevice.objects.get(id=sensor_data['id'])
+                sensor.position_x = sensor_data['position_x']
+                sensor.position_y = sensor_data['position_y']
+                sensor.vehicle = instance
+                sensor.save()
+            except EndDevice.DoesNotExist:
+                continue
+
+        return instance
+
 
 class BrokerConnectionSerializer(serializers.ModelSerializer):
     class Meta:

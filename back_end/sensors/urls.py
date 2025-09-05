@@ -15,6 +15,7 @@ urlpatterns = [
     path('delete_device/', views.delete_enddevice),
     path('create_broker/', views.create_brokerconnection),
     path('read_broker/', views.read_brokerconnection),
+    path('edit_broker/', views.edit_brokerconnection),
     path('update_broker/', views.update_brokerconnection),
     path('delete_broker/', views.delete_brokerconnection),
     path('detail_sensor/', views.sensor_detail),

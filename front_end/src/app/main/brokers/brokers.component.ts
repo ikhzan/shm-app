@@ -3,7 +3,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrashAlt, faClose, faSearch, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { RestService } from '../../services/rest.service';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from "../../shared/login-modal/login-modal.component";
@@ -15,7 +15,7 @@ export interface Credentials {
 
 @Component({
   selector: 'app-brokers',
-  imports: [NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
+  imports: [ReactiveFormsModule, NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
   templateUrl: './brokers.component.html',
   styleUrl: './brokers.component.scss'
 })
@@ -25,7 +25,6 @@ export class BrokersComponent implements OnInit {
   faClose = faClose
   faEdit = faEdit
   modalDeleteON = false
-  isOn = false;
   formON: boolean = false;
   Math = Math;
   allBrokers: any[] = [];
@@ -34,20 +33,31 @@ export class BrokersComponent implements OnInit {
   searchTerm = '';
   pageSize = 10;
   currentPage = 1;
-  brokerId: number | null = null;
+  brokerId: number = 0;
   isAuthenticated = false;
   loginModalON = false;
   endDevices: any[] = [];
   loadingLora: string | null = "Load Lora"
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
+  brokerForm!: FormGroup
+  isEditMode = false;
 
-  constructor(private restService: RestService,
+  constructor(private fb: FormBuilder, private restService: RestService,
     private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
-    this.loadBrokerData()
+    this.loadBrokerData();
+    this.initForm();
+  }
+
+  get toggleSwitchValue(): boolean {
+    return this.brokerForm.get('toggleSwitch')?.value;
+  }
+
+  get isOn(): boolean {
+    return this.brokerForm.get('toggleSwitch')?.value;
   }
 
   private loadBrokerData(): void {
@@ -61,6 +71,15 @@ export class BrokersComponent implements OnInit {
       error: () => {
         this.isLoading = false;
       }
+    });
+  }
+
+  initForm(): void {
+    this.brokerForm = this.fb.group({
+      device_name: ['', Validators.required],
+      url_path: ['', Validators.required],
+      sensor_type: ['', Validators.required],
+      status: [false],
     });
   }
 
@@ -79,28 +98,46 @@ export class BrokersComponent implements OnInit {
     })
   }
 
-  async onSubmit(form: NgForm) {
-    try {
-      const brokerData = {
-        device_name: form.value['device_name'],
-        url_path: form.value['url_path'],
-        status: this.isOn ? 'online' : 'offline'
-      }
-      const sendData = await this.restService.submitBroker(brokerData);
-      console.log("on-submit response " + sendData);
-      form.reset();
-      this.loadBrokerData()
-    } catch (error) {
-      console.log("error on-submit " + error)
-    }
-  }
-
   applyFilters(): void {
     const filtered = this.allBrokers.filter(b =>
       b.device_name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     const start = (this.currentPage - 1) * this.pageSize;
     this.dataBroker = filtered.slice(start, start + this.pageSize);
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.brokerForm.invalid) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+      const formValue = this.brokerForm.getRawValue();
+      const formData = new FormData();
+
+      formData.append('device_name', formValue.device_name);
+      formData.append('status', formValue.status ? 'online' : 'offline');
+      formData.append('url_path', formValue.url_path ?? '');
+
+      let response;
+      if (this.isEditMode) {
+        response = await this.restService.updateBroker(this.brokerId , formData);
+        console.log('Edit response:', response);
+      } else {
+        response = await this.restService.submitBroker(formData);
+        console.log('Create response:', response);
+      }
+
+      this.brokerForm.reset();
+      this.isEditMode = false;
+      this.isLoading = false;
+      this.loadBrokerData();
+    } catch (error) {
+      console.error('Error during submit:', error);
+      this.isLoading = false;
+    }
   }
 
   onSearch(term: string): void {
@@ -135,7 +172,7 @@ export class BrokersComponent implements OnInit {
   }
 
   closeDeleteModal() {
-    this.brokerId = null;
+    this.brokerId = 0;
     this.modalDeleteON = false
   }
 
@@ -158,8 +195,27 @@ export class BrokersComponent implements OnInit {
     });
   }
 
-  editBroker(){
-    
+  editBroker(id: number) {
+    const broker = this.dataBroker.find(b => b.id === id);
+    if (broker) {
+      this.brokerId = id;
+      this.formON = true;
+      this.isEditMode = true;
+
+      this.brokerForm.patchValue({
+        broker_id: broker.id,
+        device_name: broker.device_name,
+        sensor_type: broker.sensor_type,
+        status: broker.status,
+        url_path: broker.url_path
+      });
+    }else{
+      console.log(`broker not found ${id}`)
+    }
+  }
+
+  loadEditForm() {
+
   }
 
   loadLora() {

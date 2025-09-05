@@ -134,14 +134,13 @@ export class RestService {
     return this.http.get<any[]>(`${this.apiUrl}read_broker/`)
   }
 
-  async submitBroker(brokerData: BrokerData): Promise<string> {
+  async submitBroker(data: FormData): Promise<string> {
     try {
       const token = localStorage.getItem('access_token');
       const headers = new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token
       });
-      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_broker/`, brokerData, { headers }))
+      const response = await firstValueFrom(this.http.post(`${this.apiUrl}create_broker/`, data, { headers }))
       console.log('response ' + response)
       return response.toString();
     } catch (error) {
@@ -162,14 +161,13 @@ export class RestService {
     }
   }
 
-  async updateBroker(brokerData: BrokerData): Promise<void> {
+  async updateBroker(broker_id: number, data: FormData): Promise<void> {
     try {
       const token = localStorage.getItem('access_token');
       const headers = new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token
       });
-      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_broker/`, brokerData, { headers }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_broker/`, data, { headers, params: {id: broker_id} }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)
@@ -198,14 +196,13 @@ export class RestService {
     }
   }
 
-  async updateVehicle(vehicleData: VehicleData): Promise<void> {
+  async updateVehicle(vehicle_id: number, data: FormData): Promise<void> {
     try {
       const token = localStorage.getItem('access_token');
       const headers = new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token
       });
-      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_vehicle/`, vehicleData, { headers }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_vehicle/`, data, { headers, params: { id: vehicle_id } }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)

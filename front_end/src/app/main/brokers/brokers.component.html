@@ -6,58 +6,49 @@
 
   <form
     class="form-group"
-    #brokerForm="ngForm"
-    (ngSubmit)="onSubmit(brokerForm)"
+    [formGroup]="brokerForm"
+    (ngSubmit)="onSubmit()"
     *ngIf="formON"
   >
     <div class="form-control">
       <label for="device_name">Name</label>
       <input
-        class="form-input"
         id="device_name"
+        class="form-input"
         type="text"
-        placeholder="Broker Name"
-        ngModel
-        name="device_name"
+        formControlName="device_name"
+        required
       />
     </div>
     <div class="form-control">
       <label for="sensor_type">Sensor Type</label>
       <input
-        class="form-input"
         id="sensor_type"
+        class="form-input"
         type="text"
-        placeholder="Sensor Type"
-        ngModel
-        name="sensor_type"
+        formControlName="sensor_type"
+        required
       />
     </div>
     <div class="form-control">
       <label for="url_path">URL</label>
       <input
-        class="form-input"
         id="url_path"
+        class="form-input"
         type="text"
-        placeholder="Broker URL"
-        ngModel
-        name="url_path"
+        formControlName="url_path"
+        required
       />
     </div>
     <div class="form-control">
       <label for="status">Status</label>
       <div class="form-toggle">
-        <input
-          type="checkbox"
-          [(ngModel)]="isOn"
-          name="toggleSwitch"
-          class="toggle"
-        />
-        <span>{{ isOn ? "ON" : "OFF" }}</span>
+        <input type="checkbox" formControlName="status" class="toggle" />
+        <span>{{ brokerForm.get("status")?.value ? "ON" : "OFF" }}</span>
       </div>
     </div>
     <div class="form-control">
-      <span></span>
-      <input class="btn" type="submit" value="Submit" />
+      <input class="btn" type="submit" value="Submit" value="{{ isEditMode ? 'Update' : 'Create' }}"/>
     </div>
   </form>
 
@@ -71,14 +62,6 @@
     </ul>
     <p>Manage cloud subscription</p>
   </div>
-
-  <!-- <div class="lora-gateway-info">
-    <app-lora-gateway />
-  </div> -->
-
-  <!-- <div class="lora-app-info">
-    <app-lora-app />
-  </div> -->
 
   <div class="top-table">
     <div class="show-limit flex items-center gap-2">
@@ -125,15 +108,17 @@
         <td>{{ broker.status }}</td>
         <td>{{ broker.url_path }}</td>
         <td *ngIf="isAuthenticated">
-          
           <div class="action-btns">
-            <fa-icon [icon]="faEdit" class="edit-icon"></fa-icon>
+            <fa-icon
+              [icon]="faEdit"
+              class="edit-icon"
+              (click)="editBroker(broker.id)"
+            ></fa-icon>
             <fa-icon
               [icon]="faTrash"
               class="delete-icon"
               (click)="showDeleteModal(broker.id)"
             ></fa-icon>
-            
           </div>
         </td>
       </tr>

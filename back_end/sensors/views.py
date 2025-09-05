@@ -180,19 +180,34 @@ def linked_sensor_device(request):
 # Update
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def update_vehicle(request):
     pk = request.query_params.get('id')
     if not pk:
         return Response({'error': 'Missing id parameter'}, status=400)
-    try:
-        enddevice = Vehicle.objects.get(pk=pk)
-    except Vehicle.DoesNotExist:
-        return Response({'error': 'Vehicle not found'}, status=404)
 
-    serializer = VehicleSerializer(enddevice, data=request.data)
+    try:
+        vehicle = Vehicle.objects.get(pk=pk)
+    except Vehicle.DoesNotExist:
+        return Response({'error': f'Vehicle with id {pk} not found'}, status=404)
+
+    try:
+        end_devices_raw = request.data.get('end_devices', '[]')
+        end_devices_data = json.loads(end_devices_raw)
+    except json.JSONDecodeError:
+        return Response({'end_devices': 'Invalid format'}, status=400)
+
+    update_data = {
+        'name': request.data.get('name', vehicle.name),
+        'image_path': request.FILES.get('image_path', vehicle.image_path),
+        'end_devices': end_devices_data
+    }
+
+    serializer = VehicleRelatedSerializer(instance=vehicle, data=update_data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
+
     return Response(serializer.errors, status=400)
 
 
@@ -350,7 +365,11 @@ def read_brokerconnection(request):
 # Update
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_brokerconnection(request, pk):
+def update_brokerconnection(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+
     try:
         brokerconnections = BrokerConnection.objects.get(pk=pk)
     except BrokerConnection.DoesNotExist:
@@ -361,6 +380,24 @@ def update_brokerconnection(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def edit_brokerconnection(request):
+    pk = request.query_params.get('id')
+    if not pk:
+        return Response({'error': 'Missing id parameter'}, status=400)
+    
+    try:
+        brokerconnections = BrokerConnection.objects.get(pk=pk)
+    except BrokerConnection.DoesNotExist:
+        return Response({'error': 'brokerconnections not found'}, status=404)
+
+    broker_serializer = BrokerConnectionSerializer(brokerconnections,many=True)
+
+    return Response(broker_serializer,status=200)
+
 
 # Delete
 @api_view(['DELETE'])
