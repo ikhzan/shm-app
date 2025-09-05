@@ -133,7 +133,7 @@
               class="sensor-lamp"
               [style.left.%]="sensor.position_x"
               [style.top.%]="sensor.position_y"
-              [ngClass]="getLampClass(sensor.value)"
+              [ngClass]="getLampClass(sensor.last_data.value)"
             >
               <div class="tooltip">
                 <a
