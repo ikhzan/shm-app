@@ -101,6 +101,32 @@ table {
   }
 }
 
+@media screen and (max-width: 700px) {
+  table {
+    display: block; // Change to block for mobile
+    overflow-x: auto; // Allow horizontal scrolling
+    min-height: 400px;
+    width: 100%;
+
+    th,
+    td {
+      display: block; // Stack cells
+      text-align: right; // Align text to the right
+      position: relative; // Position relative for pseudo-elements
+    }
+
+    td::before {
+      content: attr(data-label); // Use data-label for headers
+      position: absolute;
+      left: 0;
+      width: 50%; // Adjust width as needed
+      padding-left: 10px; // Add padding
+      font-weight: bold; // Make it bold
+      text-align: left; // Align text to the left
+    }
+  }
+}
+
 .show-limit {
   font-size: 12px;
   display: flex;
@@ -241,6 +267,12 @@ table {
 .warn {
   background-color: #f1c40f;
   color: #56470d;
+}
+
+.warning {
+  color: #d9534f;
+  font-size: 0.875rem;
+  margin-top: 4px;
 }
 
 .modal {
@@ -405,6 +437,50 @@ table {
     }
   }
 
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+
+    .message {
+      width: 25%;
+    }
+
+    .btns {
+      flex: 1;
+      display: flex;
+      gap: 1rem;
+
+      .btn-cancel {
+        flex: 1;
+        background-color: #c5cdd5;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 1px 2px 2px #666;
+
+        &:hover {
+          box-shadow: none;
+        }
+      }
+
+      .btn-submit {
+        flex: 1;
+        background-color: #113c60;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 1px 2px 2px #666;
+
+        &:hover {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
   .form-control {
     margin-bottom: 0.6rem;
     display: flex;
@@ -452,7 +528,6 @@ table {
       border: none;
       width: 100%;
       padding: 0.5rem;
-      margin-left: 1rem;
       background-color: #113c60;
       color: white;
       border-radius: 5px;
@@ -463,5 +538,11 @@ table {
         box-shadow: none;
       }
     }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .form-group{
+    width: 100%;
   }
 }

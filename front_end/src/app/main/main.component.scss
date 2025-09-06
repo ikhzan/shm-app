@@ -23,10 +23,68 @@
     color: #fff;
     box-shadow: 5px 5px 5px #939393;
 
+    .mobile-menus {
+      display: none;
+
+      .bars-menu, .close-menu{
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .menu-items {
+        position: absolute;
+        top: 3.3rem;
+        right: 3rem;
+        background-color: #f1f1f1;
+        width: 100px;
+        text-align: end;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+
+        .user-menu{
+          border-top: 1px solid #6a9ac1;
+          padding: .5rem;
+          cursor: pointer;
+
+          &:hover{
+            background-color: rgba($color: #0e3d63, $alpha: .3);
+          }
+
+          span{
+            color: #0e3d63;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+          }
+        }
+
+        .menu {
+          padding: .5rem;
+          cursor: pointer;
+
+          &:hover{
+            background-color: rgba($color: #0e3d63, $alpha: .3);
+          }
+
+          a {
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #0e3d63;
+            font-size: 13px;
+            font-weight: bold;
+            width: 100%;
+
+            span{
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+
     .logo {
-      //   font-size: 14px;
-      //   background-color: rgba($color: #adb9c3, $alpha: .5);
-      //   padding: 1rem;
       h1 {
         font-weight: bolder;
         font-size: 15px;
@@ -36,9 +94,9 @@
           font-weight: bolder;
         }
 
-        img{
-         width: 5%;
-         height: 10%; 
+        img {
+          width: 5%;
+          height: 10%;
         }
       }
     }
@@ -115,14 +173,6 @@
             }
           }
         }
-      }
-    }
-
-    @media only screen and (max-width: 900px) {
-      .navbar-items {
-        display: flex;
-        position: relative;
-        bottom: 0;
       }
     }
 
@@ -204,7 +254,6 @@
 
         .user-menu {
           display: none;
-          // min-height: 200px;
           position: absolute;
           background-color: #f1f1f1;
           min-width: 160px;
@@ -269,6 +318,21 @@
             }
           }
         }
+      }
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    .navbar-item {
+      display: none;
+    }
+
+    .navbar {
+      .right-menu {
+        display: none;
+      }
+      .mobile-menus {
+        display: flex;
       }
     }
   }

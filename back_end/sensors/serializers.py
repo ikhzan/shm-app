@@ -115,7 +115,7 @@ class EndDeviceGetSerializer(serializers.ModelSerializer):
             'id',
             'device_id', 'device_name', 'device_status',
             'position_x', 'position_y',
-            'dev_eui', 'join_eui', 'image_path',
+            'dev_eui', 'join_eui', 'image_path','last_data',
             'application_id', 'vehicle', 'broker'
         ]
 

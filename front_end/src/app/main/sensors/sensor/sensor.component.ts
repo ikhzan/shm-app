@@ -124,12 +124,11 @@ export class SensorComponent implements OnInit, OnDestroy {
     this.selectedBrokerId = Number(select.value);
   }
 
-
   async onSubmit(): Promise<void> {
-    if (this.deviceForm.invalid) {
-      alert('Please fill out all required fields.');
-      return;
-    }
+    // if (this.deviceForm.invalid) {
+    //   alert('Please fill out all required fields.');
+    //   return;
+    // }
 
     try {
       this.isLoading = true;
@@ -149,6 +148,7 @@ export class SensorComponent implements OnInit, OnDestroy {
 
       if (this.selectedFile) {
         formData.append('image_path', this.selectedFile);
+        console.log(`File Image ${this.selectedFile}`)
       }
 
       let response;
@@ -236,7 +236,7 @@ export class SensorComponent implements OnInit, OnDestroy {
     if (!this.authService.isAuthenticated()) {
       this.openLoginModal();
     } else {
-      this.formON = !this.formON;
+      this.formON = true;
       this.loadDeviceDataToForm(device_id);
     }
   }

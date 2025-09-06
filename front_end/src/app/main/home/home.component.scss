@@ -195,6 +195,18 @@
     }
   }
 
+  @media screen and (max-width: 700px) {
+    .row {
+      display: block !important;
+      gap: 1rem;
+      justify-content: space-around;
+
+      .card{
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
   .data {
     max-height: 300px; /* Adjust height as needed */
     overflow-y: auto;

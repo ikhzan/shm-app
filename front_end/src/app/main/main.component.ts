@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd, Router  } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFile, faKeyboard, faAngleDown, faListAlt, faUserCircle, faUserAlt, faGear, faSignOut, faMicrophone, faMessage, faPhone, faImage, faVideo, faVoicemail, faContactCard, faLocation, faL } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faKeyboard, faBars, faXmark, faAngleDown, faListAlt, faUserCircle, faUserAlt, faGear, faSignOut, faMicrophone, faMessage, faPhone, faImage, faVideo, faVoicemail, faContactCard, faLocation, faL } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../services/auth.service';
 import { LoginModalComponent } from '../shared/login-modal/login-modal.component';
 import { interval } from 'rxjs';
@@ -31,14 +31,25 @@ export class MainComponent implements OnInit {
   faContact = faContactCard
   faLocation = faLocation
   faKeyboard = faKeyboard
+  faBars = faBars
+  faXmark = faXmark
   faFile = faFile
   isLogin = false
   profilePath = 'assets/user/profile.png'
   isLoggedIn = false;
   isLoginModalVisible = false;
   currentTime = '';
+  isMenu = false;
+  isMenuOpen = true;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isMenuOpen = false;
+      }
+    });
+  }
+
 
   logout() {
     localStorage.removeItem('access_token');
@@ -49,10 +60,19 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn = !!localStorage.getItem('access_token');
+
     interval(1000).subscribe(() => {
       const now = new Date();
       this.currentTime = now.toLocaleString(); // e.g. "18:03:25"
     });
+  }
+
+  openMobileMenu() {
+    this.isMenu = !this.isMenu;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
   }
 
   login() {
@@ -73,6 +93,5 @@ export class MainComponent implements OnInit {
       }
     });
   }
-
 
 }

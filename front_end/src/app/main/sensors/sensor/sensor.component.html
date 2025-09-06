@@ -23,6 +23,15 @@
           formControlName="device_id"
           required
         />
+        <div
+          class="warning"
+          *ngIf="
+            deviceForm.get('device_id')?.touched &&
+            deviceForm.get('device_id')?.hasError('required')
+          "
+        >
+          Device ID is required.
+        </div>
       </div>
 
       <div class="form-control">
@@ -112,7 +121,7 @@
     </form>
 
     <div class="image_container" *ngIf="imagePreview">
-      <img  [src]="imagePreview" class="image_preview" />
+      <img [src]="imagePreview" class="image_preview" />
     </div>
   </div>
 

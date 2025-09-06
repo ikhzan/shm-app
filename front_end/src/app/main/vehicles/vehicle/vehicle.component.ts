@@ -138,32 +138,6 @@ export class VehicleComponent {
     }
   }
 
-  // async onSubmit(form: NgForm) {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('name', form.value['name']);
-  //     if (this.selectedFile) {
-  //       formData.append('image_path', this.selectedFile);
-  //     }
-  //     const sensorPayload = this.placedSensors.map(sensor => ({
-  //       id: sensor.id,
-  //       position_x: sensor.position_x,
-  //       position_y: sensor.position_y
-  //     }));
-
-  //     formData.append('end_devices', JSON.stringify(sensorPayload));
-  //     const sendData = await this.restService.newVehicle(formData);
-  //     console.log("on-submit response " + sendData);
-
-  //     form.reset();
-  //     this.imagePreview = null;
-  //     this.placedSensors = [];
-  //     this.loadVehicleData()
-  //   } catch (error) {
-  //     console.log("error on-submit " + error)
-  //   }
-  // }
-
   showDeleteModal(id: number) {
     console.log("Delete vehicle " + id);
     this.vehicleId = id;
@@ -265,6 +239,10 @@ export class VehicleComponent {
     } else {
       console.log(`vehicle not found ${id}`)
     }
+  }
+
+  cancelAction(){
+    this.formON = false;
   }
 
   deleteVehicle() {

@@ -63,7 +63,7 @@
         object-fit: contain;
       }
 
-      h3{
+      h3 {
         font-weight: 500;
         font-size: 14px;
       }
@@ -71,53 +71,90 @@
 
     .sensors {
       margin-left: 1rem;
-      padding: .5rem;
+      padding: 0.5rem;
       flex: 1;
       border-radius: 5px;
 
-      h4{
+      h4 {
         font-weight: 500;
-        margin-bottom: .5rem;
-        // background-color: rgba($color: #6d87c8, $alpha: 0.2);
+        margin-bottom: 0.5rem;
         width: 50%;
-        padding:.5rem;
       }
 
-      .sensor-list{
+      .sensor-list {
         // background-color: rgba($color: #6d87c8, $alpha: 0.3);
         border-radius: 5px;
         display: flex;
-        gap: .5rem;
+        gap: 0.5rem;
         width: 50%;
-        
-        justify-items: start;
-        padding: .4rem;
-        margin-bottom: .5rem;
 
-        img{
+        justify-items: start;
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+
+        img {
           width: 200px;
         }
 
-        ul{
+        ul {
           background-color: rgba($color: #6d87c8, $alpha: 0.2);
           color: #113c60;
           width: 50%;
-          padding: .4rem;
+          padding: 0.4rem;
           border-radius: 0 5px 5px 0;
         }
 
-        li{
+        li {
           list-style: none;
           font-size: 13px;
-          margin-bottom: .2rem;
+          margin-bottom: 0.2rem;
           font-weight: 400;
         }
 
-        .device_name{
+        .device_name {
           font-size: 14px;
           font-weight: 600;
           text-transform: capitalize;
-          margin-bottom: .5rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    .title {
+      h3 {
+        width: 70%;
+      }
+      h4 {
+        width: 30%;
+      }
+    }
+    .detail {
+      display: block;
+
+      .vehicle {
+        margin-bottom: 1rem;
+        justify-content: center;
+
+        .vehicle_img {
+          width: 100%;
+        }
+      }
+
+      .sensors {
+        width: 100%;
+        margin: 0;
+
+        .sensor-list {
+          display: block;
+          width: 100%;
+          img {
+            width: 100%;
+          }
+          ul {
+            width: 100%;
+          }
         }
       }
     }

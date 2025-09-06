@@ -472,3 +472,90 @@ def get_lora_devices(request):
             return Response({'error': f'{response.text}'},status=204)
     except requests.RequestException as e:
         return Response({'error': str(e)}, status=500)
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def create_loradevice_otaa(request):
+    # OTAA: Over the Air Activation, note: we dont really use for custom device
+    try:
+        server_address = os.getenv("SERVER_ADDRESS","")
+        THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications/humidity-sensor/devices"
+        BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
+
+        headers = {
+            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Content-Type": "application/json"
+        }
+
+        device_id = request.data['device_id']
+        dev_eui = request.data['dev_eui']
+        join_eui = request.data['join_eui']
+
+        end_device = {
+            "end_device": {
+                "ids": {
+                    "device_id": device_id,
+                    "dev_eui": dev_eui,
+                    "join_eui": join_eui
+                },
+                "join_server_address": "zaim-university.eu1.cloud.thethings.industries",
+                "network_server_address": "zaim-university.eu1.cloud.thethings.industries",
+                "application_server_address": "zaim-university.eu1.cloud.thethings.industries",
+                "field_mask": {
+                    "paths": [
+                        "join_server_address",
+                        "network_server_address",
+                        "application_server_address",
+                        "ids.dev_eui",
+                        "ids.join_eui"
+                    ]
+                }
+            }
+        }
+
+        response = requests.post(THINGS_STACK_API_URL, headers=headers, data=end_device)
+
+        if response.status_code == 200:
+             return Response(status=200)
+        else:
+            return Response({'error': f'{response.text}'},status=204)
+
+    except requests.RequestException as e:
+        return Response({'error': str(e)}, status=500)
+    
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def create_loradevice_abp(request):
+    # ABP: Activation by Personalization
+    try:
+        server_address = os.getenv("SERVER_ADDRESS","")
+        THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications/humidity-sensor/devices"
+        BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
+
+        headers = {
+            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        """ 
+        curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $API_KEY" \
+        -d @./is.json \
+        https://thethings.example.com/api/v3/applications/my-test-app/devices
+        {
+            "ids":{ 
+                    "device_id":"test-device-abp",
+                    "application_ids":{  "application_id":"my-test-app" },
+                    "dev_eui":"0000000000000011"
+                },
+            "created_at":"2024-01-10T14:51:53.281866Z",
+            "updated_at":"2024-01-10T14:51:53.281867Z",
+            "version_ids":{},
+            "network_server_address":"thethings.localhost",
+            "application_server_address":"thethings.localhost",
+            "join_server_address":"thethings.localhost",
+            "lora_alliance_profile_ids":{}
+        }
+        
+        """
+    except Exception as ex:
+        print(f"Error {ex}")

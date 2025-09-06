@@ -64,6 +64,64 @@
         </div>
       </div>
     </div>
+    <div class="mobile-menus">
+      <fa-icon
+        [icon]="faBars"
+        class="bars-menu"
+        *ngIf="isMenu == false"
+        (click)="openMobileMenu()"
+      ></fa-icon>
+      <fa-icon
+        [icon]="faXmark"
+        class="close-menu"
+        *ngIf="isMenu == true"
+        (click)="openMobileMenu()"
+      ></fa-icon>
+      <div class="menu-items" *ngIf="isMenu">
+        <div class="menu">
+          <a
+            routerLink="/sensors"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            ><span>Sensors</span></a
+          >
+        </div>
+        <div class="menu">
+          <a
+            routerLink="/vehicles"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            ><span>vehicles</span></a
+          >
+        </div>
+        <div class="menu">
+          <a
+            routerLink="/brokers"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            ><span>Brokers</span></a
+          >
+        </div>
+        <div class="menu">
+          <a
+            routerLink="/dataset"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            ><span>Dataset</span></a
+          >
+        </div>
+        <div class="user-menu">
+          <span class="logout" (click)="logout()" *ngIf="isLoggedIn">
+            <fa-icon [icon]="faSignOut"></fa-icon>
+            <span>Logout</span>
+          </span>
+          <span class="logout" (click)="login()" *ngIf="!isLoggedIn">
+            <fa-icon [icon]="faSignOut"></fa-icon>
+            <span>Login</span>
+          </span>
+        </div>
+      </div>
+    </div>
   </nav>
   <div class="content">
     <router-outlet></router-outlet>
@@ -77,7 +135,7 @@
       </div>
       <div class="footer-right">
         <div class="footer-right-text">
-          <p>ikhzan</p>
+          <p>Mohammad Ikhsan</p>
           <p>{{ currentTime }}</p>
         </div>
       </div>

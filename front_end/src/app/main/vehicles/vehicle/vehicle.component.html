@@ -32,8 +32,12 @@
           (change)="onFileChange($event)"
         />
       </div>
-      <div class="form-control">
-        <input class="btn" type="submit"  value="{{ isEditMode ? 'Update' : 'Create' }}" />
+      <div class="button-group">
+        <div class="message"></div>
+        <div class="btns">
+          <input class="btn-cancel" type="button" value="Cancel" (click)="cancelAction()" />
+          <input class="btn-submit" type="submit" value="{{ isEditMode ? 'Update' : 'Create' }}" />
+        </div>
       </div>
     </form>
 
