@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerService } from '../loading-spinner/loading-spinner.service';
 
 
 @Component({
@@ -14,7 +15,6 @@ import { CommonModule } from '@angular/common';
 export class LoginModalComponent implements OnInit {
   faClose = faClose;
   loginForm!: FormGroup;
-  isLoading = false;
   errorMessage: string | null = null;
 
   @Input() visible = false;
@@ -23,7 +23,7 @@ export class LoginModalComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
   @Output() login = new EventEmitter<{ username: string; password: string }>();
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private loadingService: LoadingSpinnerService) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -38,23 +38,24 @@ export class LoginModalComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.isLoading = true;
+      this.loadingService.show();
       this.errorMessage = null;
 
       this.login.emit(this.loginForm.value);
     } else {
+      this.loadingService.hide();
       this.errorMessage = 'Please fill in both fields.';
     }
 
   }
 
   showError(message: string) {
-    this.isLoading = false;
+    this.loadingService.hide();
     this.errorMessage = message;
   }
 
   resetState() {
-    this.isLoading = false;
+    this.loadingService.hide();
     this.errorMessage = null;
     this.loginForm.reset();
   }

@@ -48,7 +48,12 @@
       </div>
     </div>
     <div class="form-control">
-      <input class="btn" type="submit" value="Submit" value="{{ isEditMode ? 'Update' : 'Create' }}"/>
+      <input
+        class="btn"
+        type="submit"
+        value="Submit"
+        value="{{ isEditMode ? 'Update' : 'Create' }}"
+      />
     </div>
   </form>
 
@@ -63,101 +68,25 @@
     <p>Manage cloud subscription</p>
   </div>
 
-  <div class="top-table">
-    <div class="show-limit flex items-center gap-2">
-      <label for="show">Show:</label>
-      <select (change)="onPageSizeChange($event)">
-        <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">
-          {{ size }}
-        </option>
-      </select>
-      <label>Entries</label>
-    </div>
+  <app-dynamic-table
+    [data]="paginatedData"
+    [columns]="columns"
+    [isAuthenticated]="isAuthenticated"
+    (edit)="editBroker($event)"
+    (delete)="showDeleteModal($event)"
+  />
 
-    <div class="search flex items-center gap-2">
-      <input
-        type="text"
-        placeholder="Search"
-        [(ngModel)]="searchTerm"
-        (input)="onSearch(searchTerm)"
-        class="border px-2 py-1 rounded"
-      />
-      <fa-icon [icon]="faSearch"></fa-icon>
-    </div>
-  </div>
+  <app-delete-data-modal
+    [visible]="modalDeleteON"
+    [title]="'Delete Broker Connection'"
+    [message]="'Are you sure you want to delete this item?'"
+    (cancel)="closeDeleteModal()"
+    (confirm)="deleteBroker()"
+  />
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="check"></th>
-        <th>Name</th>
-        <th>Sensor Type</th>
-        <th>Status</th>
-        <th>URL</th>
-        <th *ngIf="isAuthenticated">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="isLoading">
-        <td colspan="5" class="loading">Loading broker data...</td>
-      </tr>
-      <tr *ngFor="let broker of dataBroker">
-        <td><input type="checkbox" name="" id="{{ broker.id }}" /></td>
-        <td>{{ broker.device_name }}</td>
-        <td>{{ broker.sensor_type }}</td>
-        <td>{{ broker.status }}</td>
-        <td>{{ broker.url_path }}</td>
-        <td *ngIf="isAuthenticated">
-          <div class="action-btns">
-            <fa-icon
-              [icon]="faEdit"
-              class="edit-icon"
-              (click)="editBroker(broker.id)"
-            ></fa-icon>
-            <fa-icon
-              [icon]="faTrash"
-              class="delete-icon"
-              (click)="showDeleteModal(broker.id)"
-            ></fa-icon>
-          </div>
-        </td>
-      </tr>
-      <tr *ngIf="!isLoading && dataBroker.length === 0">
-        <td colspan="5" class="no-data">No broker data available.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="bottom-table flex justify-between items-center mt-4">
-    <div class="page-no">
-      <p>
-        Showing {{ (currentPage - 1) * pageSize + 1 }} to
-        {{ Math.min(currentPage * pageSize, allBrokers.length) }} of
-        {{ allBrokers.length }} entries
-      </p>
-    </div>
-
-    <div class="page-buttons flex gap-2">
-      <button class="prev-button px-3 py-1 border rounded" (click)="prevPage()">
-        Prev
-      </button>
-      <button class="next-button px-3 py-1 border rounded" (click)="nextPage()">
-        Next
-      </button>
-    </div>
-  </div>
+  <app-login-modal
+    [visible]="loginModalON"
+    (cancel)="closeLoginModal()"
+    (login)="handleLogin($event)"
+  />
 </div>
-
-<app-delete-data-modal
-  [visible]="modalDeleteON"
-  [title]="'Delete Broker Connection'"
-  [message]="'Are you sure you want to delete this item?'"
-  (cancel)="closeDeleteModal()"
-  (confirm)="deleteBroker()"
-/>
-
-<app-login-modal
-  [visible]="loginModalON"
-  (cancel)="closeLoginModal()"
-  (login)="handleLogin($event)"
-></app-login-modal>

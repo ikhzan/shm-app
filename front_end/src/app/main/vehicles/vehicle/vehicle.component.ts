@@ -9,6 +9,7 @@ import { LoginModalComponent } from '../../../shared/login-modal/login-modal.com
 import { AuthService } from '../../../services/auth.service';
 import { RestService } from '../../../services/rest.service';
 import { MediaService } from '../../../services/media.service';
+import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
 
 export interface Credentials {
   username: string
@@ -38,7 +39,6 @@ export class VehicleComponent {
   vehicles: any[] = [];
   unlinkedSensors: Sensor[] = [];
   placedSensors: Sensor[] = [];
-  isLoading: boolean = false;
   vehicleId: number = 0;
   isAuthenticated = false;
   modalDeleteON = false
@@ -47,12 +47,12 @@ export class VehicleComponent {
   loginModalON = false;
   vehicleForm!: FormGroup
   isEditMode = false;
-  
 
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private fb: FormBuilder, private readonly authService: AuthService,
-    private readonly restService: RestService, private mediaService: MediaService) {
+    private readonly restService: RestService, private mediaService: MediaService, 
+    private loadingService: LoadingSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -73,15 +73,16 @@ export class VehicleComponent {
   }
 
   private loadVehicleData(): void {
-    this.isLoading = true;
+    this.loadingService.show();
+    
     this.restService.fetchVehicle().subscribe({
       next: (data) => {
         this.vehicles = data.vehicles;
         this.unlinkedSensors = data.unlinked_sensors;
-        this.isLoading = false;
+        this.loadingService.hide();
       },
       error: () => {
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -101,7 +102,7 @@ export class VehicleComponent {
     }
 
     try {
-      this.isLoading = true;
+      this.loadingService.show();
       const formValue = this.vehicleForm.getRawValue();
       const formData = new FormData();
 
@@ -130,11 +131,11 @@ export class VehicleComponent {
       this.selectedFile = null;
       this.imagePreview = null;
       this.isEditMode = false;
-      this.isLoading = false;
+      this.loadingService.hide();
       this.loadVehicleData();
     } catch (error) {
       console.error('Error during submit:', error);
-      this.isLoading = false;
+      this.loadingService.hide();
     }
   }
 

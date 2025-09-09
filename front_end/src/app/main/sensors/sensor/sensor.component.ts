@@ -10,6 +10,7 @@ import { LoginModalComponent } from '../../../shared/login-modal/login-modal.com
 import { RouterLink } from '@angular/router';
 import { MediaService } from '../../../services/media.service';
 import { Subscription } from 'rxjs';
+import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
 
 export interface Credentials {
   username: string
@@ -22,7 +23,7 @@ export interface Credentials {
   templateUrl: './sensor.component.html',
   styleUrl: './sensor.component.scss'
 })
-export class SensorComponent implements OnInit, OnDestroy {
+export class SensorComponent implements OnInit {
   faSearch = faSearch
   faTrash = faTrashAlt
   faClose = faClose
@@ -31,7 +32,6 @@ export class SensorComponent implements OnInit, OnDestroy {
   dataSensor: any[] = [];
   unattachedBrokers: any[] = [];
   selectedBrokerId: number | null = null;
-  isLoading: boolean = false;
   searchTerm = '';
   pageSize = 10;
   currentPage = 1;
@@ -53,7 +53,8 @@ export class SensorComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private restService: RestService,
     private authService: AuthService,
-    private mediaService: MediaService) { }
+    private mediaService: MediaService, 
+    private loadingService: LoadingSpinnerService) { }
 
 
   ngOnInit(): void {
@@ -61,21 +62,21 @@ export class SensorComponent implements OnInit, OnDestroy {
     this.loadSensorData();
     this.initForm();
 
-    this.authSub = this.authService.loginState$.subscribe(status => {
-      this.isAuthenticated = status;
-      console.log(`isAuthenticated ${this.isAuthenticated}`)
-      if (status) {
-        this.formON = true; 
-      } else {
-        this.formON = false;
-      }
-      this.loadSensorData();
-    });
+    // this.authSub = this.authService.loginState$.subscribe(status => {
+    //   this.isAuthenticated = status;
+    //   console.log(`isAuthenticated ${this.isAuthenticated}`)
+    //   if (status) {
+    //     this.formON = true; 
+    //   } else {
+    //     this.formON = false;
+    //   }
+    //   this.loadSensorData();
+    // });
   }
 
-  ngOnDestroy(): void {
-    this.authSub.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.authSub.unsubscribe();
+  // }
 
   initForm(): void {
     this.deviceForm = this.fb.group({
@@ -90,15 +91,15 @@ export class SensorComponent implements OnInit, OnDestroy {
   }
 
   private loadSensorData(): void {
-    this.isLoading = true;
+    this.loadingService.show();
     this.restService.fetchDataDevice().subscribe({
       next: (data) => {
         this.allSensors = data.end_devices;
         this.unattachedBrokers = data.unattached_brokers;
-        this.isLoading = false;
+        this.loadingService.hide();
       },
       error: () => {
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -125,13 +126,13 @@ export class SensorComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit(): Promise<void> {
-    // if (this.deviceForm.invalid) {
-    //   alert('Please fill out all required fields.');
-    //   return;
-    // }
+    if (this.deviceForm.invalid) {
+      alert('Please fill out all required fields.');
+      return;
+    }
 
     try {
-      this.isLoading = true;
+      this.loadingService.show();
       const formValue = this.deviceForm.getRawValue(); // includes disabled fields
       const formData = new FormData();
 
@@ -164,10 +165,10 @@ export class SensorComponent implements OnInit, OnDestroy {
       this.selectedFile = null;
       this.imagePreview = null;
       this.isEditMode = false;
-      this.isLoading = false;
+      this.loadingService.hide();
     } catch (error) {
       console.error('Error during submit:', error);
-      this.isLoading = false;
+      this.loadingService.hide();
     }
   }
 

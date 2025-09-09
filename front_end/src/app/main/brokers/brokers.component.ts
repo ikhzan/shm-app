@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrashAlt, faClose, faSearch, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { RestService } from '../../services/rest.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { DeleteDataModalComponent } from '../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from "../../shared/login-modal/login-modal.component";
+import { DynamicTableComponent, TableColumn } from '../../shared/dynamic-table/dynamic-table.component';
+import { LoadingSpinnerService } from '../../shared/loading-spinner/loading-spinner.service';
 
 export interface Credentials {
   username: string
@@ -15,7 +17,7 @@ export interface Credentials {
 
 @Component({
   selector: 'app-brokers',
-  imports: [ReactiveFormsModule, NgFor, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, LoginModalComponent],
+  imports: [ReactiveFormsModule, FontAwesomeModule, NgIf, FormsModule, DeleteDataModalComponent, DynamicTableComponent, LoginModalComponent],
   templateUrl: './brokers.component.html',
   styleUrl: './brokers.component.scss'
 })
@@ -26,24 +28,42 @@ export class BrokersComponent implements OnInit {
   faEdit = faEdit
   modalDeleteON = false
   formON: boolean = false;
-  Math = Math;
-  allBrokers: any[] = [];
-  dataBroker: any[] = [];
-  isLoading: boolean = false;
-  searchTerm = '';
-  pageSize = 10;
-  currentPage = 1;
   brokerId: number = 0;
   isAuthenticated = false;
   loginModalON = false;
-  endDevices: any[] = [];
-  loadingLora: string | null = "Load Lora"
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
   brokerForm!: FormGroup
   isEditMode = false;
+  paginatedData: any[] = [];
+  columns: TableColumn[] = [
+    {
+      label: 'Name',
+      path: 'device_name',
+    },
+    {
+      label: 'Sensor Type',
+      path: 'sensor_type'
+    },
+
+    {
+      label: 'Status',
+      path: 'status'
+    },
+    {
+      label: 'URL',
+      path: 'url_path'
+    },
+    {
+      label: 'action',
+      path: '',
+      type: 'text',
+      authRequired: true,
+      customRender: 'actions'
+    }
+  ];
 
   constructor(private fb: FormBuilder, private restService: RestService,
-    private authService: AuthService) {
+    private authService: AuthService, private loadingService: LoadingSpinnerService) {
   }
 
   ngOnInit(): void {
@@ -61,15 +81,14 @@ export class BrokersComponent implements OnInit {
   }
 
   private loadBrokerData(): void {
-    this.isLoading = true;
+    this.loadingService.show();
     this.restService.fetchBrokerConnection().subscribe({
       next: (data) => {
-        this.allBrokers = data;
-        this.applyFilters();
-        this.isLoading = false;
+        this.paginatedData = data;
+        this.loadingService.hide();
       },
       error: () => {
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -83,29 +102,6 @@ export class BrokersComponent implements OnInit {
     });
   }
 
-  private loadDataLoraDevices() {
-    this.restService.fetchLoraDevices().subscribe({
-      next: (data) => {
-        console.log(`Data Lora Devices ${data}`)
-        this.loadingLora = "Load Lora"
-        this.endDevices = data.end_devices;
-      },
-      error: (e) => {
-        this.loadingLora = 'Error'
-        console.log(`Error fetch data lora ${e}`)
-        this.loadingLora = "Load Lora"
-      }
-    })
-  }
-
-  applyFilters(): void {
-    const filtered = this.allBrokers.filter(b =>
-      b.device_name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.dataBroker = filtered.slice(start, start + this.pageSize);
-  }
-
   async onSubmit(): Promise<void> {
     if (this.brokerForm.invalid) {
       alert('Please fill out all required fields.');
@@ -113,7 +109,7 @@ export class BrokersComponent implements OnInit {
     }
 
     try {
-      this.isLoading = true;
+      this.loadingService.show();
       const formValue = this.brokerForm.getRawValue();
       const formData = new FormData();
 
@@ -123,7 +119,7 @@ export class BrokersComponent implements OnInit {
 
       let response;
       if (this.isEditMode) {
-        response = await this.restService.updateBroker(this.brokerId , formData);
+        response = await this.restService.updateBroker(this.brokerId, formData);
         console.log('Edit response:', response);
       } else {
         response = await this.restService.submitBroker(formData);
@@ -132,36 +128,11 @@ export class BrokersComponent implements OnInit {
 
       this.brokerForm.reset();
       this.isEditMode = false;
-      this.isLoading = false;
+      this.loadingService.hide();
       this.loadBrokerData();
     } catch (error) {
       console.error('Error during submit:', error);
-      this.isLoading = false;
-    }
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onPageSizeChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.pageSize = +value;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  nextPage(): void {
-    this.currentPage++;
-    this.applyFilters();
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.applyFilters();
+      this.loadingService.hide();
     }
   }
 
@@ -196,7 +167,7 @@ export class BrokersComponent implements OnInit {
   }
 
   editBroker(id: number) {
-    const broker = this.dataBroker.find(b => b.id === id);
+    const broker = this.paginatedData.find(b => b.id === id);
     if (broker) {
       this.brokerId = id;
       this.formON = true;
@@ -209,22 +180,8 @@ export class BrokersComponent implements OnInit {
         status: broker.status,
         url_path: broker.url_path
       });
-    }else{
-      console.log(`broker not found ${id}`)
-    }
-  }
-
-  loadEditForm() {
-
-  }
-
-  loadLora() {
-    if (!this.authService.isAuthenticated()) {
-      this.openLoginModal();
     } else {
-      console.log('user is authenticated and loading data..')
-      this.loadingLora = 'loading...'
-      this.loadDataLoraDevices();
+      console.log(`broker not found ${id}`)
     }
   }
 

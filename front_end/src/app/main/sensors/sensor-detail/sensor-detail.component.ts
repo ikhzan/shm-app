@@ -6,10 +6,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { RestService } from '../../../services/rest.service';
 import { ChartHelper } from '../../utils/chart-helper';
+import { DynamicTableComponent, TableColumn } from "../../../shared/dynamic-table/dynamic-table.component";
+import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
 
 @Component({
   selector: 'app-sensor-detail',
-  imports: [NgFor, DatePipe, FormsModule, FontAwesomeModule, NgIf],
+  imports: [NgFor, FormsModule, FontAwesomeModule, NgIf, DynamicTableComponent],
   providers: [DatePipe],
   templateUrl: './sensor-detail.component.html',
   styleUrl: './sensor-detail.component.scss'
@@ -19,29 +21,57 @@ export class SensorDetailComponent implements OnInit, AfterViewInit {
   deviceId = '';
   sensorData: any[] = []
   isLoading: boolean = false;
-  searchTerm = '';
-  pageSize = 10;
-  currentPage = 1;
-  Math = Math
-  allSensors: any[] = [];
-  dataSensor: any[] = [];
   endDevice: any[] = [];
-  filteredCount = 0;
-  sortDirection: 'asc' | 'desc' = 'asc';
-  sortColumn: string = 'timestamp';
   uniqueDeviceIds: string[] = [];
+  humidityDeviceIds: string[] = [];
+  temperatureDeviceIds: string[] = [];
   humiditySeriesByDevice: { [deviceId: string]: { timestamp: string; value: number }[] } = {};
   temperatureSeriesByDevice: { [deviceId: string]: { timestamp: string; value: number }[] } = {};
   @ViewChildren('humidityCanvas') humidityCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
   @ViewChildren('temperatureCanvas') temperatureCanvases!: QueryList<ElementRef<HTMLCanvasElement>>;
-
-  humidityDeviceIds: string[] = [];
-  temperatureDeviceIds: string[] = [];
+  data: any[] = [];
+  columns: TableColumn[] = [
+    {
+      label: 'id',
+      path: 'id'
+    },
+    {
+      label: 'SHM',
+      path: 'sensor_data.Hum_SHT',
+      class: (val: any) => this.getRangeClass(val ?? 0)
+    },
+    {
+      label: 'Humidity',
+      path: 'sensor_data.Hum_SHT',
+    },
+    {
+      label: 'Battery',
+      path: 'sensor_data.BatV'
+    },
+    {
+      label: 'Temperature',
+      path: 'sensor_data.TempC_SHT',
+      suffix: (val: any) => this.getTempIcon(val)
+    },
+    {
+      label: 'Spreading Factor',
+      path: 'raw_payload.settings.data_rate.lora.spreading_factor'
+    },
+    {
+      label: 'RSSI',
+      path: 'raw_payload.rx_metadata[0].rssi'
+    },
+    {
+      label: 'Timestamp',
+      path: 'timestamp',
+      type: 'date',
+      pipe: 'date',
+      pipeArg: 'medium'
+    }
+  ];
 
   constructor(private route: ActivatedRoute,
-    private restService: RestService,
-    private datePipe: DatePipe
-  ) {
+    private restService: RestService, private loadingService: LoadingSpinnerService) {
 
   }
 
@@ -63,27 +93,29 @@ export class SensorDetailComponent implements OnInit, AfterViewInit {
 
   private loadSensorData(): void {
     this.deviceId = this.route.snapshot.paramMap.get('id')!;
+    this.loadingService.show();
 
     this.restService.fetchDataByDeviceId(this.deviceId).subscribe({
       next: (data) => {
-        this.allSensors = data.sensor_data;
+        this.data = data.sensor_data;
         this.endDevice = data.end_devices;
         console.log("End-device " + data.end_devices)
 
         this.loadHumidityData(data.sensor_data);
         this.loadTemperatureData(data.sensor_data);
 
-
-        this.applyFilters();
         this.isLoading = false;
 
         setTimeout(() => {
           this.renderHumidityCharts();
           this.renderTemperatureCharts();
         }, 0);
+
+        this.loadingService.hide();
       },
       error: () => {
         this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -146,81 +178,15 @@ export class SensorDetailComponent implements OnInit, AfterViewInit {
     return grouped;
   }
 
-
-  applyFilters(): void {
-    const term = this.searchTerm.toLowerCase();
-
-    let filtered = this.allSensors.filter(b => {
-      const formatted = this.datePipe.transform(b.timestamp, 'medium')?.toLowerCase();
-      return formatted?.includes(term);
-    });
-
-    filtered = filtered.sort((a, b) => {
-      const timeA = new Date(a.timestamp).getTime();
-      const timeB = new Date(b.timestamp).getTime();
-      return this.sortDirection === 'asc' ? timeA - timeB : timeB - timeA;
-    });
-
-    this.filteredCount = filtered.length;
-    const totalPages = Math.ceil(this.filteredCount / this.pageSize);
-    this.currentPage = Math.min(this.currentPage, totalPages || 1);
-
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.dataSensor = filtered.slice(start, start + this.pageSize);
-  }
-
-  toggleSort(): void {
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    this.applyFilters();
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onPageSizeChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.pageSize = +value;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  nextPage(): void {
-    const totalPages = Math.ceil(this.filteredCount / this.pageSize);
-    if (this.currentPage < totalPages) {
-      this.currentPage++;
-      this.applyFilters();
-    }
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredCount / this.pageSize);
-  }
-
-  goToPage(page: number): void {
-    this.currentPage = page;
-    this.applyFilters();
-  }
-
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.applyFilters();
-    }
-  }
-
   getRangeClass(value: number): string {
     if (value > 90) {
-      return 'danger';
+      return 'emergency';
     } else if (value > 80) {
-      return 'warning';
+      return 'critical';
     } else if (value > 60) {
-      return 'safe';
+      return 'elevated';
     } else {
-      return 'low';
+      return 'safe';
     }
   }
 

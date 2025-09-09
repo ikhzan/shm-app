@@ -1,0 +1,142 @@
+<div class="table-data">
+  <div class="top-table">
+    <div class="show-limit">
+      <label for="show">Show:</label>
+      <select (change)="onPageSizeChange($event)">
+        <option *ngFor="let size of [10, 20, 50]" [value]="size">
+          {{ size }}
+        </option>
+      </select>
+      <label>Entries</label>
+    </div>
+
+    <div class="search">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+        placeholder="Search..."
+        class="border rounded"
+      />
+      <fa-icon [icon]="faSearch"></fa-icon>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th
+          *ngFor="let col of columns"
+          (click)="sortBy(col.path)"
+          [class.sorted]="sortColumn === col.path"
+          [hidden]="col.authRequired && !isAuthenticated"
+          style="cursor: pointer"
+        >
+          {{ col.label }}
+          <span *ngIf="sortColumn === col.path">
+            {{ sortDirection === "asc" ? "▲" : "▼" }}
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of paginatedData">
+        <td
+          *ngFor="let col of columns"
+          [ngClass]="col.class?.(getValue(row, col.path))"
+          [hidden]="col.authRequired && !isAuthenticated"
+        >
+          <ng-container *ngIf="col.customRender === 'actions'">
+            <div class="action-btns">
+              <fa-icon
+                [icon]="faEdit"
+                class="edit-icon"
+                (click)="editRow(row)"
+              ></fa-icon>
+              <fa-icon
+                 [icon]="faTrash"
+                class="delete-icon"
+                (click)="confirmDelete(row)"
+              ></fa-icon>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!col.customRender">
+            <a *ngIf="col.type === 'link'" [routerLink]="col.linkTo?.(row)">
+              {{ getValue(row, col.path) ?? "N/A" }}
+            </a>
+
+            <span *ngIf="col.type === 'date'">
+              {{ getValue(row, col.path) | date : col.pipeArg }}
+            </span>
+
+            <span *ngIf="!col.type || col.type === 'text'">
+              {{ getValue(row, col.path) ?? "N/A" }}
+              <span *ngIf="col.suffix">
+                {{ col.suffix(getValue(row, col.path)) }}
+              </span>
+            </span>
+          </ng-container>
+
+          <!-- Default rendering fallback -->
+         
+
+          <!-- <a *ngIf="col.type === 'link'" [routerLink]="col.linkTo?.(row)">
+            {{ getValue(row, col.path) ?? "N/A" }}
+          </a>
+
+          <span *ngIf="col.pipe === 'date'">
+            {{ getValue(row, col.path) | date : col.pipeArg }}
+          </span>
+
+          <span *ngIf="!col.type && !col.pipe">
+            {{ getValue(row, col.path) ?? "N/A" }}
+            <span *ngIf="col.suffix">
+              {{ col.suffix(getValue(row, col.path)) }}
+            </span>
+          </span> -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-table">
+    <div class="page-no">
+      <p>
+        Showing {{ (currentPage - 1) * pageSize + 1 }} to
+        {{ Math.min(currentPage * pageSize, filteredCount) }} of
+        {{ filteredCount }} entries
+      </p>
+    </div>
+
+    <div class="page-buttons">
+      <button
+        class="prev-button"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+      >
+        Prev
+      </button>
+
+      <div
+        class="page-control"
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+      >
+        <button
+          (click)="goToPage(i + 1)"
+          [class.active]="currentPage === i + 1"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+
+      <button
+        class="next-button"
+        (click)="nextPage()"
+        [disabled]="currentPage * pageSize >= filteredCount"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,33 +1,4 @@
 .home {
-  .error,
-  .high {
-    background-color: red;
-    color: #fff;
-  }
-  .disconnected,
-  .elevated {
-    background-color: orange;
-    color: #000;
-  }
-  .connected,
-  .safe {
-    background-color: green;
-    color: #f7f7f7;
-  }
-  .moderate {
-    background-color: yellow;
-  }
-  .critical {
-    background-color: #c0392b;
-    color: #fff;
-    box-shadow: 0 0 10px #e74c3c;
-    animation: pulse 1s infinite;
-  }
-  .emergency {
-    background-color: #8e44ad;
-    color: #f7f7f7;
-  }
-
   .row {
     display: flex;
     flex-wrap: wrap;
@@ -35,30 +6,37 @@
     gap: 0.5rem;
 
     .card {
+      flex: 1 2 calc(40% - 1rem);
       background-color: #f7f7f7;
       box-shadow: 5px 5px 5px #939393;
       border-radius: 5px;
-      max-width: 100%;
-      flex: 1;
+      // max-width: 50%;
       box-sizing: border-box;
 
       .title {
         background-color: #113c60;
         color: #f7f7f7;
         min-width: 100px;
-        padding: 5px;
+        padding: 0.7rem;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
+
+        h5 {
+          text-transform: capitalize;
+          font-weight: 500;
+          font-size: 14px;
+        }
       }
 
       .body {
         font-size: 13px;
         padding: 1rem;
 
-        .ships {
-          display: flex;
-          gap: 0.5rem;
-        }
+        // .ships {
+        //   display: flex;
+        //   flex-wrap: wrap;
+        //   gap: 0.5rem;
+        // }
 
         .sensor-lamp {
           position: absolute;
@@ -201,7 +179,7 @@
       gap: 1rem;
       justify-content: space-around;
 
-      .card{
+      .card {
         margin-bottom: 1rem;
       }
     }
@@ -292,12 +270,16 @@
       background-color: #113c60;
       color: #f7f7f7;
       min-width: 100px;
-      padding: 5px;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       margin-bottom: 1rem;
-      font-size: 14px;
-      text-transform: uppercase;
+      padding: 0.7rem;
+
+      h4 {
+        text-transform: capitalize;
+        font-weight: 500;
+        font-size: 14px;
+      }
     }
 
     .body {
@@ -314,23 +296,6 @@
           color: white;
         }
       }
-    }
-  }
-
-  .row-vehicles {
-    border: 1px solid green;
-    display: flex;
-    flex-wrap: wrap; // allows wrapping to next line
-    gap: 1rem;
-
-    .vehicle-card {
-      flex: 1 1 300px;
-      max-width: 400px;
-      box-sizing: border-box;
-      background: #fff;
-      border-radius: 6px;
-      padding: 1rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
   }
 }

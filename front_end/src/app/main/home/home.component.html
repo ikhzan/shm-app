@@ -22,7 +22,7 @@
           </ul>
         </div>
         <div class="connection-status">
-          <h3 class="status {{ status }}">Websocket: {{ status }}</h3>
+          <h3 class="status {{ status }}">Server: {{ status }}</h3>
           <span
             class="retry"
             *ngIf="status === 'disconnected'"
@@ -161,75 +161,7 @@
           each data point typically includes:
         </p>
       </div>
-      <div class="top-table">
-        <div class="show-limit flex items-center gap-2">
-          <label for="show">Show:</label>
-          <select (change)="onPageSizeChange($event)">
-            <option *ngFor="let size of [5, 10, 20, 50]" [value]="size">
-              {{ size }}
-            </option>
-          </select>
-          <label>Entries</label>
-        </div>
-
-        <div class="search flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search"
-            [(ngModel)]="searchTerm"
-            (input)="onSearch(searchTerm)"
-            class="border px-2 py-1 rounded"
-          />
-
-          <fa-icon [icon]="faSearch"></fa-icon>
-        </div>
-      </div>
-      <table class="sensor-table">
-        <thead>
-          <tr>
-            <th>Device ID</th>
-            <th>SHM</th>
-            <th>Battery (V)</th>
-            <th>Temp (°C)</th>
-            <th>Humidity (%)</th>
-            <th>Spread Factor</th>
-            <th>RSSI</th>
-            <th>Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="isLoading">
-            <td colspan="5" class="loading">Loading sensor data...</td>
-          </tr>
-          <tr *ngFor="let r of dataSensor">
-            <td>
-              <a class="device_id" [routerLink]="['/sensors', r.device_id]">{{
-                r.device_id
-              }}</a>
-            </td>
-            <td class="{{ getRangeClass(r.sensor_data?.Hum_SHT ?? 0) }}">
-              {{ r.sensor_data?.Hum_SHT ?? "N/A" }}
-            </td>
-            <td>{{ r.sensor_data?.BatV ?? "N/A" }}</td>
-            <td>
-              {{ r.sensor_data?.TempC_SHT ?? "N/A" }}
-              <span *ngIf="r.sensor_data?.TempC_SHT as temp">
-                {{ getTempIcon(temp) }}
-              </span>
-            </td>
-            <td>{{ r.sensor_data?.Hum_SHT ?? "N/A" }}</td>
-            <td>
-              {{
-                r.raw_payload?.settings?.data_rate?.lora?.spreading_factor ??
-                  "N/A"
-              }}
-            </td>
-            <!-- <td>{{ r.latitude }}, {{ r.longitude }}</td> -->
-            <td>{{ r.raw_payload?.rx_metadata?.[0]?.rssi ?? 'N/A' }}</td>
-            <td>{{ r.timestamp | date : "medium" }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <app-dynamic-table [data]="data" [columns]="columns" />
     </div>
   </div>
 </div>

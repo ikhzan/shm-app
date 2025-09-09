@@ -237,6 +237,7 @@
         display: flex;
         align-items: center;
         font-weight: bold;
+        cursor: pointer;
 
         img {
           width: 2rem;
@@ -244,16 +245,16 @@
           border-radius: 100%;
         }
 
-        &:hover {
-          cursor: pointer;
-          .user-menu {
-            display: block;
-            transition: all 0.3s ease-in-out;
-          }
-        }
+        // &:hover {
+        //   cursor: pointer;
+        //   .user-menu {
+        //     display: block;
+        //     transition: all 0.3s ease-in-out;
+        //   }
+        // }
 
         .user-menu {
-          display: none;
+          // display: none;
           position: absolute;
           background-color: #f1f1f1;
           min-width: 160px;
@@ -293,6 +294,7 @@
           }
 
           .row-two {
+
             .logout {
               display: flex;
               align-items: center;

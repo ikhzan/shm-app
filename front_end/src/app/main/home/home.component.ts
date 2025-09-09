@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { RouterLink } from '@angular/router';
+import { DynamicTableComponent, TableColumn } from "../../shared/dynamic-table/dynamic-table.component";
+import { MediaService } from '../../services/media.service';
+import { LoadingSpinnerService } from '../../shared/loading-spinner/loading-spinner.service';
 
 interface Sensor {
   x: number; // left %
@@ -18,41 +21,71 @@ interface Sensor {
 
 @Component({
   selector: 'app-home',
-  imports: [NgClass, NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule, RouterLink],
+  imports: [NgClass, NgFor, NgIf, DatePipe, FormsModule, FontAwesomeModule, RouterLink, DynamicTableComponent],
   templateUrl: './home.component.html',
+  providers: [DatePipe],
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   faSearch = faSearch;
   messages: any[] = [];
   status: string = "unknown";
-  dataSensor: any[] = [];
-  displayedColumns: string[] = ['device_id', 'timestamp', 'battery', 'temperature', 'humidity', 'location'];
-  Math = Math;
-  allSensors: any[] = [];
-  isLoading: boolean = false;
-  searchTerm = '';
-  pageSize = 10;
-  currentPage = 1;
-  shipHull = 'assets/ships/ship-hull.gif'
-  sukhoi = 'assets/ships/sukhoi-su-35.gif'
-  chs6 = 'assets/ships/chs6.gif'
-  chinook = 'assets/ships/chnook.png'
-  baseUrl: string = 'http://localhost:8000';
+  data: any[] = [];
+  columns: TableColumn[] = [
+    {
+      label: 'Device ID',
+      path: 'device_id',
+      type: 'link',
+      linkTo: (row: any) => ['/sensors', row.device_id]
+    },
+    {
+      label: 'SHM',
+      path: 'sensor_data.Hum_SHT',
+      class: (val: any) => this.getRangeClass(val ?? 0)
+    },
+    {
+      label: 'Humidity',
+      path: 'sensor_data.Hum_SHT',
+    },
+    {
+      label: 'Battery',
+      path: 'sensor_data.BatV'
+    },
+    {
+      label: 'Temperature',
+      path: 'sensor_data.TempC_SHT',
+      suffix: (val: any) => this.getTempIcon(val)
+    },
+    {
+      label: 'Spreading Factor',
+      path: 'raw_payload.settings.data_rate.lora.spreading_factor'
+    },
+    {
+      label: 'RSSI',
+      path: 'raw_payload.rx_metadata[0].rssi'
+    },
+    {
+      label: 'Timestamp',
+      path: 'timestamp',
+      type: 'date',
+      pipe: 'date',
+      pipeArg: 'medium'
+    }
+  ];
   sensors: Sensor[] = [];
   isReconnecting = false;
   reconnectStatus = "Retry";
   vehicles: any[] = [];
   linkedSensors: any[] = [];
 
-  constructor(private brokerService: BrokerService, private restService: RestService) {
+  constructor(private brokerService: BrokerService, 
+    private restService: RestService, 
+    private mediaService: MediaService, private loadingService: LoadingSpinnerService) {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
     this.loadSensorData();
     this.loadLinkedDevices();
-    // Refresh sensor data when a new message arrives
     this.brokerService.messages$.subscribe(message => {
       this.messages.unshift(message);
       this.loadSensorData();
@@ -70,7 +103,6 @@ export class HomeComponent implements OnInit {
     this.brokerService.reconnectStatus$.subscribe({
       next: status => {
         this.reconnectStatus = status;
-        // Reset only when reconnect is complete or failed
         if (status === 'Connected' || status === 'Failed') {
           this.isReconnecting = false;
         }
@@ -83,14 +115,14 @@ export class HomeComponent implements OnInit {
   }
 
   private loadSensorData(): void {
+    this.loadingService.show();
     this.restService.fetchDataSensor().subscribe({
       next: (data) => {
-        this.allSensors = data;
-        this.applyFilters();
-        this.isLoading = false;
+        this.data = data;
+        this.loadingService.hide();
       },
       error: () => {
-        this.isLoading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -143,39 +175,6 @@ export class HomeComponent implements OnInit {
     console.log(`Placed at x: ${sensor.x}%, y: ${sensor.y}%`);
   }
 
-  applyFilters(): void {
-    const filtered = this.allSensors.filter(b =>
-      b.device_id.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.dataSensor = filtered.slice(start, start + this.pageSize);
-  }
-
-  onSearch(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onPageSizeChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.pageSize = +value;
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  nextPage(): void {
-    this.currentPage++;
-    this.applyFilters();
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.applyFilters();
-    }
-  }
-
   getTempIcon(temp: number | null | undefined): string {
     if (temp == null) return '❓'; // Unknown
     if (temp >= 35) return '🔥';  // Extreme heat
@@ -187,7 +186,7 @@ export class HomeComponent implements OnInit {
   }
 
   getImageUrl(imagePath: string): string {
-    return this.baseUrl + imagePath; // Construct the full image URL
+    return this.mediaService.getImageUrl(imagePath); // Construct the full image URL
   }
 
 }

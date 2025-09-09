@@ -45,8 +45,8 @@
     </div>
     <div class="right-menu">
       <div class="user">
-        <img src="{{ profilePath }}" alt="" />
-        <div class="user-menu">
+        <img src="{{ profilePath }}" alt="" (click)="openMenu()" />
+        <div class="user-menu" *ngIf="isOpen">
           <div class="row-one" *ngIf="isLoggedIn">
             <fa-icon [icon]="faUser"></fa-icon>
             <span>{{ username }}</span>
@@ -57,7 +57,7 @@
               <span>Logout</span>
             </span>
             <span class="logout" (click)="login()" *ngIf="!isLoggedIn">
-              <fa-icon [icon]="faSignOut"></fa-icon>
+              <fa-icon [icon]="faUserAlt"></fa-icon>
               <span>Login</span>
             </span>
           </div>
@@ -66,56 +66,30 @@
     </div>
     <div class="mobile-menus">
       <fa-icon
-        [icon]="faBars"
-        class="bars-menu"
-        *ngIf="isMenu == false"
-        (click)="openMobileMenu()"
+        [icon]="isMenu ? faXmark : faBars"
+        class="menu-toggle"
+        (click)="toggleMenu()"
       ></fa-icon>
-      <fa-icon
-        [icon]="faXmark"
-        class="close-menu"
-        *ngIf="isMenu == true"
-        (click)="openMobileMenu()"
-      ></fa-icon>
+
       <div class="menu-items" *ngIf="isMenu">
-        <div class="menu">
-          <a
-            routerLink="/sensors"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            ><span>Sensors</span></a
-          >
-        </div>
-        <div class="menu">
-          <a
-            routerLink="/vehicles"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            ><span>vehicles</span></a
-          >
-        </div>
-        <div class="menu">
-          <a
-            routerLink="/brokers"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            ><span>Brokers</span></a
-          >
-        </div>
-        <div class="menu">
-          <a
-            routerLink="/dataset"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            ><span>Dataset</span></a
-          >
-        </div>
+        <ng-container *ngFor="let item of menuLinks">
+          <div class="menu" (click)="toggleMenu()">
+            <a
+              [routerLink]="item.link"
+              routerLinkActive="active"
+              aria-current="page"
+            >
+              <span>{{ item.label }}</span>
+            </a>
+          </div>
+        </ng-container>
+
         <div class="user-menu">
-          <span class="logout" (click)="logout()" *ngIf="isLoggedIn">
+          <span class="logout" *ngIf="isLoggedIn" (click)="logout()">
             <fa-icon [icon]="faSignOut"></fa-icon>
             <span>Logout</span>
           </span>
-          <span class="logout" (click)="login()" *ngIf="!isLoggedIn">
+          <span class="logout" *ngIf="!isLoggedIn" (click)="login()">
             <fa-icon [icon]="faSignOut"></fa-icon>
             <span>Login</span>
           </span>
