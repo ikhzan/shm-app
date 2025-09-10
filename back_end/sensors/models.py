@@ -66,3 +66,16 @@ class EndDevice(models.Model):
 
     def __str__(self) -> str:
         return self.device_name
+
+class LoraApp(models.Model):
+    application_id = models.CharField(max_length=100, null=False, default='application id')
+    name = models.CharField(max_length=100, null=True, default='name')
+    description = models.CharField(max_length=100, null=True, default='')
+    network_server_address = models.CharField(max_length=100, null=True, default='')
+    application_server_address = models.CharField(max_length=100, null=True, default='')
+    join_server_address = models.CharField(max_length=100, null=True, default='')
+    created_at = models.CharField(max_length=100, null=False, default='')
+    updated_at = models.CharField(max_length=100, null=True, default='')
+
+    def __str__(self) -> str:
+        return self.application_id

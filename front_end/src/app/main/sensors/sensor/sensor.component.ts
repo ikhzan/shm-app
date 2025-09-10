@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { MediaService } from '../../../services/media.service';
 import { Subscription } from 'rxjs';
 import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
+import { FileHelper } from '../../utils/file-helper';
 
 export interface Credentials {
   username: string
@@ -53,7 +54,7 @@ export class SensorComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private restService: RestService,
     private authService: AuthService,
-    private mediaService: MediaService, 
+    private mediaService: MediaService,
     private loadingService: LoadingSpinnerService) { }
 
 
@@ -224,6 +225,11 @@ export class SensorComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
+
+      if (!FileHelper.isSafeImage(this.selectedFile)) {
+        alert('Invalid file type or suspicious content.');
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = () => {

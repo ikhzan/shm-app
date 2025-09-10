@@ -71,7 +71,7 @@
   <app-dynamic-table
     [data]="paginatedData"
     [columns]="columns"
-    [isAuthenticated]="isAuthenticated"
+    [isAuthenticated]="this.isAuthenticated"
     (edit)="editBroker($event)"
     (delete)="showDeleteModal($event)"
   />

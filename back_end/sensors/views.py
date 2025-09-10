@@ -431,6 +431,29 @@ def sync_devices(devices):
             defaults=device_data
         )
 
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_lora_app(request):
+    try:
+        server_address = os.getenv("SERVER_ADDRESS","")
+        THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications"
+        BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
+
+        headers = {
+            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        response = requests.get(THINGS_STACK_API_URL, headers=headers)
+
+        if response.status_code == 200:
+            return Response(status=200)
+        else:
+            return Response(status=500)
+    except Exception as ex:
+        print(f"Error fetch lora application")
+        return Response({ "error": ex},status=500)
+
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_lora_devices(request):

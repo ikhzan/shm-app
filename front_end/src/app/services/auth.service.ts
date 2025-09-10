@@ -17,7 +17,7 @@ export class AuthService {
   private authStatus = new BehaviorSubject<boolean>(this.hasToken());
   private apiUrl = 'http://localhost:8000/api/';
   private loginState = new BehaviorSubject<boolean>(false);
-  loginState$ = this.loginState.asObservable();
+  public loginState$ = this.loginState.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -38,11 +38,17 @@ export class AuthService {
     this.loginState.next(state);
   }
 
+  isLoggedIn(): boolean {
+    return this.loginState.getValue();
+  }
+
+
   // 🚪 Logout: Clear tokens
   logout(): void {
     localStorage.removeItem(this.accessTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
     this.authStatus.next(false);
+    this.setLoggedIn(false);
   }
 
   // ✅ Check if user is logged in

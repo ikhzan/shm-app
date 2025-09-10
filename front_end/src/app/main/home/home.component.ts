@@ -186,7 +186,7 @@ export class HomeComponent implements OnInit {
   }
 
   getImageUrl(imagePath: string): string {
-    return this.mediaService.getImageUrl(imagePath); // Construct the full image URL
+    return this.mediaService.getImageUrl(imagePath);
   }
 
 }

@@ -1,0 +1,37 @@
+<div class="profile">
+  <div class="title">
+    <h3>Profile</h3>
+    <h4>User</h4>
+  </div>
+
+  <section class="intro">
+    <h4>Information</h4>
+    <p>Background of the developer or writer</p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus
+      quaerat exercitationem iusto quasi dicta. Ullam dolores aliquam, ut
+      voluptatem illo doloribus officia provident consequuntur fuga dignissimos
+      non magnam? Beatae, rerum reiciendis.
+    </p>
+  </section>
+  <div class="profile-data">
+    <div class="tab-nav">
+      <a
+        routerLink="/profile/person"
+        routerLinkActive="active-tab"
+        [routerLinkActiveOptions]="{ exact: true }"
+        aria-current="page"
+        >Personal Info</a
+      >
+      <a routerLink="/profile/education" routerLinkActive="active-tab"
+        >Education</a
+      >
+      <a routerLink="/profile/experiences" routerLinkActive="active-tab"
+        >Experiences</a
+      >
+    </div>
+    <div class="tab-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFile, faKeyboard, faBars, faXmark, faAngleDown, faListAlt, faUserCircle, faUserAlt, faGear, faSignOut, faMicrophone, faMessage, faPhone, faImage, faVideo, faVoicemail, faContactCard, faLocation, faL } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faBars, faXmark, faAngleDown, faSun, faMoon, faUserCircle, faUserAlt, faGear, faSignOut, faContactCard, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../services/auth.service';
 import { LoginModalComponent } from '../shared/login-modal/login-modal.component';
 import { interval } from 'rxjs';
@@ -17,24 +17,18 @@ import { LoadingSpinnerService } from '../shared/loading-spinner/loading-spinner
 export class MainComponent implements OnInit {
   title = 'front_end';
   username = localStorage.getItem('username');
-  faListSquares = faListAlt
+  faRightToBracket = faRightToBracket
   faAngleDown = faAngleDown;
   faUser = faUserCircle
   faUserAlt = faUserAlt
   faGear = faGear
   faSignOut = faSignOut
-  faMicrophone = faMicrophone
-  faMessage = faMessage
-  faPhone = faPhone
-  faImage = faImage
-  faVideo = faVideo
-  faVoicemail = faVoicemail
   faContact = faContactCard
-  faLocation = faLocation
-  faKeyboard = faKeyboard
   faBars = faBars
   faXmark = faXmark
   faFile = faFile
+  faSun = faSun
+  faMoon = faMoon
   isLogin = false
   profilePath = 'assets/user/profile.png'
   isLoggedIn = false;
@@ -43,12 +37,14 @@ export class MainComponent implements OnInit {
   isMenu = false;
   isMenuOpen = true;
   isOpen = false;
+  currentTheme: 'light' | 'dark' = 'light';
 
   menuLinks = [
     { label: 'Sensors', link: '/sensors' },
     { label: 'Vehicles', link: '/vehicles' },
     { label: 'Brokers', link: '/brokers' },
-    { label: 'Dataset', link: '/dataset' }
+    { label: 'Dataset', link: '/dataset' },
+    { label: 'Lora', link: '/lora' }
   ];
 
   constructor(private authService: AuthService, private router: Router, private loadingService: LoadingSpinnerService) {
@@ -72,6 +68,9 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    this.setTheme(savedTheme as 'light' | 'dark');
+
     this.isLoggedIn = !!localStorage.getItem('access');
 
     interval(1000).subscribe(() => {
@@ -112,5 +111,18 @@ export class MainComponent implements OnInit {
   openMenu() {
     this.isOpen = !this.isOpen;
   }
+
+  profile() {
+    this.router.navigate(['/profile']);
+    this.isOpen = false;
+    this.isMenuOpen = false;
+  }
+
+  setTheme(theme: 'light' | 'dark') {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(theme);
+    this.currentTheme = theme;
+  }
+
 
 }

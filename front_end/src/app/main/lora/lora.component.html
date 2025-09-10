@@ -1,0 +1,23 @@
+<div class="lora">
+  <div class="title">
+    <h3>Lora</h3>
+    <h4>Load Lora</h4>
+  </div>
+  <section class="info">
+    <h4>LoRaWAN</h4>
+    <p>What is LoRaWAN</p>
+  </section>
+  <nav class="tab-nav">
+    <a
+      routerLink="/lora/app"
+      routerLinkActive="active-tab"
+      [routerLinkActiveOptions]="{ exact: true }"
+      aria-current="page"
+      >Application</a
+    >
+    <a routerLink="/lora/gateway" routerLinkActive="active-tab">Gateway</a>
+  </nav>
+  <div class="tab-content">
+    <router-outlet />
+  </div>
+</div>

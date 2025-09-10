@@ -42,8 +42,28 @@
           ><span>Dataset</span></a
         >
       </div>
+      <div class="navbar-item">
+        <a
+          routerLink="/lora"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><span>Lora</span></a
+        >
+      </div>
     </div>
     <div class="right-menu">
+      <div class="theme-menu">
+        <fa-icon
+          [icon]="faSun"
+          (click)="setTheme('light')"
+          [class.active]="currentTheme === 'light'"
+        />
+        <fa-icon
+          [icon]="faMoon"
+          (click)="setTheme('dark')"
+          [class.active]="currentTheme === 'dark'"
+        />
+      </div>
       <div class="user">
         <img src="{{ profilePath }}" alt="" (click)="openMenu()" />
         <div class="user-menu" *ngIf="isOpen">
@@ -52,12 +72,16 @@
             <span>{{ username }}</span>
           </div>
           <div class="row-two">
+            <span class="logout" (click)="profile()" *ngIf="isLoggedIn">
+              <fa-icon [icon]="faUserAlt"></fa-icon>
+              <span>Profile</span>
+            </span>
             <span class="logout" (click)="logout()" *ngIf="isLoggedIn">
               <fa-icon [icon]="faSignOut"></fa-icon>
               <span>Logout</span>
             </span>
             <span class="logout" (click)="login()" *ngIf="!isLoggedIn">
-              <fa-icon [icon]="faUserAlt"></fa-icon>
+              <fa-icon [icon]="faRightToBracket"></fa-icon>
               <span>Login</span>
             </span>
           </div>

@@ -5,8 +5,6 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env') 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -15,11 +13,27 @@ SECRET_KEY = 'django-insecure-+0lt@3dq7c0^8svps-63-q^u^d%1j@+p05s@4e369paq7=g=x5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-   "http://localhost:4200"
-]
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = ["http://localhost:4200"]
+else:
+    ALLOWED_HOSTS = ['shmapp.online', 'www.shmapp.online']
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = [
+        "http://207.154.240.92","https://shmapp.online","https://www.shmapp.online"
+    ]
 
 
 SIMPLE_JWT = {
@@ -41,7 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'sensors'
+    'sensors',
+    'team'
 ]
 
 MIDDLEWARE = [
@@ -132,11 +147,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-import os
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+import os
+STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+else:
+    STATIC_ROOT = '/var/www/shm-static/'
+    MEDIA_ROOT = '/var/www/shm-media/'

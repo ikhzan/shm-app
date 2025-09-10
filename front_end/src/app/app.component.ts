@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-import { LoadingSpinnerService } from './shared/loading-spinner/loading-spinner.service';
-import { Observable } from 'rxjs';
-import { AsyncPipe, CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',

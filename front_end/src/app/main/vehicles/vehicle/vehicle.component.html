@@ -30,6 +30,7 @@
           name="image_path"
           type="file"
           (change)="onFileChange($event)"
+          accept="image/*"
         />
       </div>
       <div class="button-group">
@@ -65,9 +66,7 @@
           class="ship-image"
           (click)="placeHolder($event)"
         />
-
         <div class="grid-overlay"></div>
-
         <div
           *ngFor="let sensor of placedSensors"
           class="sensor-lamp"

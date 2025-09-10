@@ -10,6 +10,7 @@ import { AuthService } from '../../../services/auth.service';
 import { RestService } from '../../../services/rest.service';
 import { MediaService } from '../../../services/media.service';
 import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
+import { FileHelper } from '../../utils/file-helper';
 
 export interface Credentials {
   username: string
@@ -51,7 +52,7 @@ export class VehicleComponent {
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private fb: FormBuilder, private readonly authService: AuthService,
-    private readonly restService: RestService, private mediaService: MediaService, 
+    private readonly restService: RestService, private mediaService: MediaService,
     private loadingService: LoadingSpinnerService) {
   }
 
@@ -74,7 +75,7 @@ export class VehicleComponent {
 
   private loadVehicleData(): void {
     this.loadingService.show();
-    
+
     this.restService.fetchVehicle().subscribe({
       next: (data) => {
         this.vehicles = data.vehicles;
@@ -194,6 +195,12 @@ export class VehicleComponent {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
 
+      if (!FileHelper.isSafeImage(this.selectedFile)) {
+        alert('Invalid file type or suspicious content.');
+        return;
+      }
+
+
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result as string;
@@ -225,10 +232,10 @@ export class VehicleComponent {
         console.log(`Image_path ${this.imagePreview}`)
       }
 
-      if(vehicle.end_devices != null){
+      if (vehicle.end_devices != null) {
         this.placedSensors = vehicle.end_devices;
         console.log(`End-device ${vehicle.end_devices}`)
-      }else{
+      } else {
         console.log(`No end-devices`)
       }
 
@@ -242,7 +249,7 @@ export class VehicleComponent {
     }
   }
 
-  cancelAction(){
+  cancelAction() {
     this.formON = false;
   }
 

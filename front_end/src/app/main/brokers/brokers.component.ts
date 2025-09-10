@@ -67,9 +67,12 @@ export class BrokersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isAuthenticated = this.authService.isAuthenticated();
+    // this.isAuthenticated = this.authService.isAuthenticated();
     this.loadBrokerData();
-    this.initForm();
+    this.authService.loginState$.subscribe(state => {
+      this.isAuthenticated = state;
+      this.initForm();
+    });
   }
 
   get toggleSwitchValue(): boolean {

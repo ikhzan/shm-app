@@ -31,6 +31,7 @@ urlpatterns = [
     path('update_gateway/', views.update_gateway),
     path('delete_gateway/', views.delete_gateway),
     path('lora/devices/', views.get_lora_devices),
+    path('lora/apps/',views.get_lora_app),
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
