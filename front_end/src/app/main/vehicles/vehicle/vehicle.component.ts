@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTrashCan, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { DeleteDataModalComponent } from '../../../shared/delete-data-modal/delete-data-modal.component';
 import { LoginModalComponent } from '../../../shared/login-modal/login-modal.component';
 import { AuthService } from '../../../services/auth.service';
@@ -34,6 +34,8 @@ interface Sensor {
   styleUrl: './vehicle.component.scss'
 })
 export class VehicleComponent {
+  faTrashCan = faTrashCan
+  faEdit = faEdit
   faSearch = faSearch;
   formON: boolean = false;
   allVehicles: any[] = [];

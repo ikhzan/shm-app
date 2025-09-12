@@ -1,7 +1,13 @@
 <div class="lora">
   <div class="title">
     <h3>Lora</h3>
-    <h4>Load Lora</h4>
+    <h4
+      (click)="loadLoraApp()"
+      class="loading-lora"
+      *ngIf="loadingLora != null"
+    >
+      {{ loadingLora }}
+    </h4>
   </div>
   <section class="info">
     <h4>LoRaWAN</h4>

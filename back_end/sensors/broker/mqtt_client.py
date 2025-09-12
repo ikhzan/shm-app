@@ -8,6 +8,7 @@ import asyncio
 from ..models import SensorReading, BrokerConnection, EndDevice
 from ..serializers import EndDeviceLastDataSerializer
 from django.utils.dateparse import parse_datetime
+from django.utils.timezone import now
 
 load_dotenv()
 
@@ -25,16 +26,30 @@ def create_sensor_reading(device_info, data, decoded, location):
             else {}
         )
 
+        raw_ts = data.get("received_at")
+
+        if isinstance(raw_ts, str):
+            # Normalize Zulu time and try parsing
+            timestamp = parse_datetime(raw_ts.replace("Z", "+00:00"))
+            if not timestamp:
+                timestamp = now()
+        else:
+            timestamp = now()
+
+        latitude=location.get("latitude") if location else None
+        longitude=location.get("longitude") if location else None
+
+        sensor_data["latitude"] = latitude
+        sensor_data["longitude"] = longitude
+
         reading = SensorReading(
-            device_id=device_info.get("device_id"),
-            application_id=device_info.get("application_ids", {}).get("application_id"),
-            timestamp=parse_datetime(data.get("received_at")),
-
-            latitude=location.get("latitude") if location else None,
-            longitude=location.get("longitude") if location else None,
-
-            sensor_data=sensor_data,
-            raw_payload=data
+            device_id = device_info.get("device_id"),
+            application_id = device_info.get("application_ids", {}).get("application_id"),
+            timestamp = timestamp,
+            latitude = latitude,
+            longitude = longitude,
+            sensor_data = sensor_data,
+            raw_payload = data
         )
         reading.save()
         update_enddevice(device_info.get("device_id"),sensor_data)
@@ -42,7 +57,7 @@ def create_sensor_reading(device_info, data, decoded, location):
         return reading
 
     except Exception as e:
-        print(f"❌ Error parsing TTN payload: {e}")
+        print(f"❌ create_sensor_reading Error parsing TTN payload: {e}")
 
 def update_enddevice(device_id, last_data):
     try:

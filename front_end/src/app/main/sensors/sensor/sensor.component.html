@@ -133,6 +133,19 @@
           alt="{{ sensor.device_name }}"
           class="sensor_img"
         />
+
+        <div class="sensor-actions" *ngIf="isAuthenticated">
+          <fa-icon
+            [icon]="faEdit"
+            class="edit"
+            (click)="editSensor(sensor.device_id)"
+          />
+          <fa-icon
+            [icon]="faTrashCan"
+            class="delete"
+            (click)="showDeleteModal(sensor.id)"
+          />
+        </div>
       </div>
 
       <div class="sensor-footer">
@@ -144,7 +157,6 @@
               >{{ sensor.device_name }}</a
             >
           </h3>
-          <p>{{ sensor.device_id }}</p>
           <p>Broker: {{ sensor.broker?.device_name }}</p>
         </div>
 
@@ -153,15 +165,6 @@
           [ngClass]="getStatusClass(sensor.device_status)"
         >
           {{ sensor.device_status }}
-        </div>
-
-        <div class="sensor-actions" *ngIf="isAuthenticated">
-          <button class="edit" (click)="editSensor(sensor.device_id)">
-            Edit
-          </button>
-          <button class="delete" (click)="showDeleteModal(sensor.id)">
-            Delete
-          </button>
         </div>
       </div>
     </div>

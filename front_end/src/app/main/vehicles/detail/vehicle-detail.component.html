@@ -22,12 +22,17 @@
         <img [src]="getImage(sensor.image_path)" alt="" />
         <ul>
           <li class="device_name">{{ sensor.device_name }}</li>
-          <li>Device ID: {{ sensor.device_id }}</li>
-          <li>Status: {{ sensor.device_status }}</li>
-          <li>Position: {{ sensor.position_x }}%</li>
-          <li>Position: {{ sensor.position_y }}%</li>
+          <li><h4>Device ID</h4> <h4>: {{ sensor.device_id }}</h4> </li>
+          <li><h4>Status</h4> <h4>: {{ sensor.device_status }}</h4> </li>
+          <li><h4>Position x</h4><h4>: {{ sensor.position_x }}%</h4></li>
+          <li><h4>Position y</h4> <h4>: {{ sensor.position_y }}%</h4></li>
+          <li><h4>Latitude</h4><h4>: {{ sensor.last_data?.latitude }}</h4> </li>
+          <li><h4>Longitude</h4> <h4>: {{ sensor.last_data?.longitude }}</h4> </li>
         </ul>
       </div>
+    </div>
+    <div class="map-container">
+      <div [id]="'map-' + vehicle.name"></div>
     </div>
     <ng-template #noDevices class="sensors">
       <p class="sensors">No sensors assigned to this vehicle.</p>

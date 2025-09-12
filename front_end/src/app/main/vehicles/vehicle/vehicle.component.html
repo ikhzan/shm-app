@@ -36,8 +36,17 @@
       <div class="button-group">
         <div class="message"></div>
         <div class="btns">
-          <input class="btn-cancel" type="button" value="Cancel" (click)="cancelAction()" />
-          <input class="btn-submit" type="submit" value="{{ isEditMode ? 'Update' : 'Create' }}" />
+          <input
+            class="btn-cancel"
+            type="button"
+            value="Cancel"
+            (click)="cancelAction()"
+          />
+          <input
+            class="btn-submit"
+            type="submit"
+            value="{{ isEditMode ? 'Update' : 'Create' }}"
+          />
         </div>
       </div>
     </form>
@@ -91,6 +100,18 @@
           alt="{{ vehicle.name }}"
           class="sensor_img"
         />
+        <div class="sensor-actions" *ngIf="isAuthenticated">
+          <fa-icon
+            [icon]="faEdit"
+            class="edit"
+            (click)="editVehicle(vehicle.id)"
+          />
+          <fa-icon
+            [icon]="faTrashCan"
+            class="delete"
+            (click)="showDeleteModal(vehicle.id)"
+          />
+        </div>
       </div>
 
       <div class="sensor-footer">
@@ -105,13 +126,6 @@
               vehicle.end_devices?.length > 0 ? vehicle.end_devices.length : 0
             }})
           </p>
-        </div>
-
-        <div class="sensor-actions" *ngIf="isAuthenticated">
-          <button class="edit" (click)="editVehicle(vehicle.id)">Edit</button>
-          <button class="delete" (click)="showDeleteModal(vehicle.id)">
-            Delete
-          </button>
         </div>
       </div>
     </div>

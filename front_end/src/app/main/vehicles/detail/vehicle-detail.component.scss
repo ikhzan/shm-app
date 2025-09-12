@@ -55,7 +55,6 @@
 
     .vehicle {
       justify-content: start;
-      // border: 1px solid green;
 
       .vehicle_img {
         max-width: 400px;
@@ -70,10 +69,9 @@
     }
 
     .sensors {
-      margin-left: 1rem;
       padding: 0.5rem;
-      flex: 1;
       border-radius: 5px;
+      width: 50%;
 
       h4 {
         font-weight: 500;
@@ -82,33 +80,33 @@
       }
 
       .sensor-list {
-        // background-color: rgba($color: #6d87c8, $alpha: 0.3);
         border-radius: 5px;
         display: flex;
-        gap: 0.5rem;
-        width: 50%;
-
-        justify-items: start;
         padding: 0.4rem;
         margin-bottom: 0.5rem;
-
+       
         img {
-          width: 200px;
+          width: 150px;
         }
 
         ul {
           background-color: rgba($color: #6d87c8, $alpha: 0.2);
           color: #113c60;
-          width: 50%;
+          width: 100%;
           padding: 0.4rem;
           border-radius: 0 5px 5px 0;
         }
 
         li {
           list-style: none;
-          font-size: 13px;
-          margin-bottom: 0.2rem;
-          font-weight: 400;
+          display: flex;
+
+          h4{
+            font-size: 12px;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: 400;
+          }
         }
 
         .device_name {
@@ -132,6 +130,7 @@
     }
     .detail {
       display: block;
+      width: 50%;
 
       .vehicle {
         margin-bottom: 1rem;
@@ -145,6 +144,7 @@
       .sensors {
         width: 100%;
         margin: 0;
+        flex: 1;
 
         .sensor-list {
           display: block;
@@ -159,4 +159,18 @@
       }
     }
   }
+}
+
+::ng-deep .map-container {
+  border: 2px solid red;
+  height: 400px;
+  width: 40%;
+  border-radius: 10px;
+}
+
+::ng-deep .map-container > div {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  border-radius: 10px;
 }

@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrashAlt, faClose, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faClose, faSearch, faTrashCan, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RestService } from '../../../services/rest.service';
@@ -9,7 +9,6 @@ import { DeleteDataModalComponent } from '../../../shared/delete-data-modal/dele
 import { LoginModalComponent } from '../../../shared/login-modal/login-modal.component';
 import { RouterLink } from '@angular/router';
 import { MediaService } from '../../../services/media.service';
-import { Subscription } from 'rxjs';
 import { LoadingSpinnerService } from '../../../shared/loading-spinner/loading-spinner.service';
 import { FileHelper } from '../../utils/file-helper';
 
@@ -28,6 +27,8 @@ export class SensorComponent implements OnInit {
   faSearch = faSearch
   faTrash = faTrashAlt
   faClose = faClose
+  faTrashCan = faTrashCan
+  faEdit = faEdit
   modalDeleteON = false
   allSensors: any[] = [];
   dataSensor: any[] = [];
@@ -48,7 +49,6 @@ export class SensorComponent implements OnInit {
   deviceForm!: FormGroup
   endDevicesData: any[] = [];
   isEditMode = false;
-  private authSub!: Subscription;
   @ViewChild(LoginModalComponent) loginModal!: LoginModalComponent;
 
   constructor(private fb: FormBuilder,
@@ -62,22 +62,7 @@ export class SensorComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.loadSensorData();
     this.initForm();
-
-    // this.authSub = this.authService.loginState$.subscribe(status => {
-    //   this.isAuthenticated = status;
-    //   console.log(`isAuthenticated ${this.isAuthenticated}`)
-    //   if (status) {
-    //     this.formON = true; 
-    //   } else {
-    //     this.formON = false;
-    //   }
-    //   this.loadSensorData();
-    // });
   }
-
-  // ngOnDestroy(): void {
-  //   this.authSub.unsubscribe();
-  // }
 
   initForm(): void {
     this.deviceForm = this.fb.group({
@@ -167,6 +152,7 @@ export class SensorComponent implements OnInit {
       this.imagePreview = null;
       this.isEditMode = false;
       this.loadingService.hide();
+      this.loadSensorData()
     } catch (error) {
       console.error('Error during submit:', error);
       this.loadingService.hide();

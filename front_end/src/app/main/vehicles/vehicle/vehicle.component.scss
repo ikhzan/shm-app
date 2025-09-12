@@ -10,10 +10,9 @@
   }
 
   @media screen and (max-width: 700px) {
-    .vehicle-form{
+    .vehicle-form {
       display: block;
     }
-
   }
 
   .sensor-lamp {
@@ -62,7 +61,7 @@
     }
   }
 
-  .shops{
+  .shops {
     padding: 1rem;
   }
 
@@ -169,12 +168,14 @@
       align-items: center;
       justify-content: center;
       padding: 0.5rem;
+      position: relative;
     }
 
     .sensor_img {
       max-width: 100%;
       max-height: 160px;
       object-fit: contain;
+      position: relative;
     }
 
     .sensor-footer {
@@ -228,33 +229,42 @@
     }
 
     .sensor-actions {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      justify-content: space-between;
       display: flex;
       gap: 0.5rem;
 
       .edit {
-        background-color: #155724;
-        color: #eee;
-
-        &:hover {
-          background-color: rgba($color: #155724, $alpha: 0.3);
+        cursor: pointer;
+        background-color: #ddefe2;
+        color: #155724;
+        padding: 0.5rem;
+        
+        &:hover{
+          background-color: rgba($color: #ddefe2, $alpha: .5);
         }
       }
 
       .delete {
-        background-color: #721c24;
-        color: #eee;
+        cursor: pointer;
+        background-color: #e9c6c9;
+        color: #721c24;
+        padding: 0.5rem;
 
-        &:hover {
-          background-color: rgba($color: #721c24, $alpha: 0.3);
+        &:hover{
+          background-color: rgba($color: #e9c6c9, $alpha: .5);
         }
       }
 
       button {
         padding: 4px 8px;
         font-size: 0.75rem;
-        border: none;
         border-radius: 4px;
         cursor: pointer;
+
+        
       }
     }
   }
@@ -302,5 +312,4 @@
       }
     }
   }
-
 }

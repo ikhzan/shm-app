@@ -82,6 +82,13 @@ export class RestService {
     });
   }
 
+  fetchLoraApp(): Observable<any> {
+    const token = localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.apiUrl}lora/apps/`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+  }
+
   fetchLinkedDevices(): Observable<{ vehicles: Vehicle[] }> {
     return this.http.get<{ vehicles: Vehicle[] }>(`${this.apiUrl}linked_devices/`);
   }
@@ -167,7 +174,7 @@ export class RestService {
       const headers = new HttpHeaders({
         'Authorization': 'Bearer ' + token
       });
-      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_broker/`, data, { headers, params: {id: broker_id} }))
+      const response = await firstValueFrom(this.http.put(`${this.apiUrl}update_broker/`, data, { headers, params: { id: broker_id } }))
       console.log('response ' + response)
     } catch (error) {
       console.log("error update broker " + error)

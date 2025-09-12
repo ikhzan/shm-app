@@ -437,16 +437,20 @@ def sync_devices(devices):
 def get_lora_app(request):
     try:
         server_address = os.getenv("SERVER_ADDRESS","")
+        # https://zaim-university.eu1.cloud.thethings.industries/api/v3/applications
         THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications"
+        print(f"url: {THINGS_STACK_API_URL}")
         BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
 
         headers = {
             "Authorization": f"Bearer {BEARER_TOKEN}",
             "Content-Type": "application/json"
         }
-        response = requests.get(THINGS_STACK_API_URL, headers=headers)
+        response = requests.get(THINGS_STACK_API_URL)
 
         if response.status_code == 200:
+            data = response.json()
+            print(f"Response {data}")
             return Response(status=200)
         else:
             return Response(status=500)

@@ -18,17 +18,20 @@ import { ProfileComponent } from './main/profile/profile.component';
 import { PersonalInfoComponent } from './main/profile/personal-info/personal-info.component';
 import { EducationComponent } from './main/profile/education/education.component';
 import { ExperiencesComponent } from './main/profile/experiences/experiences.component';
+import { TeamComponent } from './main/team/team.component';
 
 export const routes: Routes = [
     {
         path: '', component: MainComponent, children: [
             { path: '', component: HomeComponent },
-            { path: 'profile', component: ProfileComponent, children: [
-                { path: '', redirectTo: 'person', pathMatch: 'full'},
-                { path: 'person', component: PersonalInfoComponent},
-                { path: 'education', component: EducationComponent},
-                { path: 'experiences', component: ExperiencesComponent}
-            ]},
+            {
+                path: 'profile', component: ProfileComponent, children: [
+                    { path: '', redirectTo: 'person', pathMatch: 'full' },
+                    { path: 'person', component: PersonalInfoComponent },
+                    { path: 'education', component: EducationComponent },
+                    { path: 'experiences', component: ExperiencesComponent }
+                ]
+            },
             {
                 path: 'sensors', component: SensorsComponent, children: [
                     { path: '', component: SensorComponent },
@@ -51,6 +54,7 @@ export const routes: Routes = [
             { path: 'brokers', component: BrokersComponent },
             { path: 'chat', component: ChatComponent },
             { path: 'dataset', component: DatasetComponent },
+            { path: 'teams', component: TeamComponent}
         ]
     },
     { path: '**', component: NotfoundComponent }
