@@ -99,7 +99,7 @@
       .edit {
         cursor: pointer;
         background-color: #d4edda;
-        color: #155724;
+        color: green;
         padding: 0.5rem;
         
         &:hover {
@@ -110,7 +110,7 @@
       .delete {
         cursor: pointer;
         background-color: #e9c6c9;
-        color: #721c24;
+        color: red;
         padding: 0.5rem;
         &:hover {
           background: rgba($color: #e9c6c9, $alpha: .5);

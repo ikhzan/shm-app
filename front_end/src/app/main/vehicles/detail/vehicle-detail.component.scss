@@ -73,7 +73,7 @@
       border-radius: 5px;
       width: 50%;
 
-      h4 {
+      .sub-title {
         font-weight: 500;
         margin-bottom: 0.5rem;
         width: 50%;
@@ -82,15 +82,14 @@
       .sensor-list {
         border-radius: 5px;
         display: flex;
-        padding: 0.4rem;
         margin-bottom: 0.5rem;
-       
+
         img {
           width: 150px;
         }
 
         ul {
-          background-color: rgba($color: #6d87c8, $alpha: 0.2);
+          background-color: rgba($color: #6d87c8, $alpha: 0.1);
           color: #113c60;
           width: 100%;
           padding: 0.4rem;
@@ -100,12 +99,17 @@
         li {
           list-style: none;
           display: flex;
+          margin-bottom: 0.3rem;
 
-          h4{
+          .data-label {
+            width: 20%;
             font-size: 12px;
-            align-items: center;
-            margin-bottom: 0;
             font-weight: 400;
+          }
+
+          .data-text {
+            font-size: 12px;
+            width: 70%;
           }
         }
 
@@ -114,6 +118,7 @@
           font-weight: 600;
           text-transform: capitalize;
           margin-bottom: 0.5rem;
+          border-bottom: 1px solid #113c60;
         }
       }
     }

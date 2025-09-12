@@ -436,27 +436,34 @@ def sync_devices(devices):
 @api_view(['GET'])
 def get_lora_app(request):
     try:
-        server_address = os.getenv("SERVER_ADDRESS","")
-        # https://zaim-university.eu1.cloud.thethings.industries/api/v3/applications
-        THINGS_STACK_API_URL = f"https://{server_address}/api/v3/applications"
-        print(f"url: {THINGS_STACK_API_URL}")
-        BEARER_TOKEN = os.getenv("AUTH_TOKEN","")
+        server_address = os.getenv("SERVER_ADDRESS", "")
+        bearer_token = os.getenv("AUTH_TOKEN", "")
+
+        if not server_address or not bearer_token:
+            return Response({ "error": "Missing SERVER_ADDRESS or AUTH_TOKEN" }, status=400)
+
+        api_url = f"https://{server_address}/api/v3/applications"
+        print(f"Requesting: {api_url}")
 
         headers = {
-            "Authorization": f"Bearer {BEARER_TOKEN}",
+            "Authorization": f"Bearer {bearer_token}",
             "Content-Type": "application/json"
         }
-        response = requests.get(THINGS_STACK_API_URL)
+
+        response = requests.get(api_url, headers=headers)
 
         if response.status_code == 200:
             data = response.json()
-            print(f"Response {data}")
-            return Response(status=200)
+            print(f"Response: {data}")
+            return Response(data, status=200)
         else:
-            return Response(status=500)
+            print(f"Failed with status {response.status_code}: {response.text}")
+            return Response({ "error": response.text }, status=response.status_code)
+
     except Exception as ex:
-        print(f"Error fetch lora application")
-        return Response({ "error": ex},status=500)
+        print(f"Error fetching LoRa applications: {ex}")
+        return Response({ "error": str(ex) }, status=500)
+
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -475,7 +482,7 @@ def get_lora_devices(request):
         if response.status_code == 200:
             data = response.json()
             devices = data.get('end_devices', [])
-
+            print(f"get devices {data}")
             for item in devices:
                 ids = item.get('ids', {})
                 device_data = {

@@ -16,18 +16,18 @@
       *ngIf="vehicle.end_devices?.length > 0; else noDevices"
       class="sensors"
     >
-      <h4>Sensors</h4>
+      <h4 class="sub-title">Sensors</h4>
       <p>These sensors are attached here</p>
       <div class="sensor-list" *ngFor="let sensor of vehicle.end_devices">
         <img [src]="getImage(sensor.image_path)" alt="" />
         <ul>
           <li class="device_name">{{ sensor.device_name }}</li>
-          <li><h4>Device ID</h4> <h4>: {{ sensor.device_id }}</h4> </li>
-          <li><h4>Status</h4> <h4>: {{ sensor.device_status }}</h4> </li>
-          <li><h4>Position x</h4><h4>: {{ sensor.position_x }}%</h4></li>
-          <li><h4>Position y</h4> <h4>: {{ sensor.position_y }}%</h4></li>
-          <li><h4>Latitude</h4><h4>: {{ sensor.last_data?.latitude }}</h4> </li>
-          <li><h4>Longitude</h4> <h4>: {{ sensor.last_data?.longitude }}</h4> </li>
+          <li><h4 class="data-label">Device ID</h4> <h4 class="data-text">: {{ sensor.device_id }}</h4> </li>
+          <li><h4 class="data-label">Status</h4> <h4 class="data-text">: {{ sensor.device_status }}</h4> </li>
+          <li><h4 class="data-label">Position x</h4><h4 class="data-text">: {{ sensor.position_x }}%</h4></li>
+          <li><h4 class="data-label">Position y</h4> <h4 class="data-text">: {{ sensor.position_y }}%</h4></li>
+          <li><h4 class="data-label">Latitude</h4><h4 class="data-text">: {{ sensor.last_data?.latitude }}</h4> </li>
+          <li><h4 class="data-label">Longitude</h4> <h4 class="data-text">: {{ sensor.last_data?.longitude }}</h4> </li>
         </ul>
       </div>
     </div>
